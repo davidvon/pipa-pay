@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from './App'
-
 import Wechat from './Wechat'
 import Home from './Home'
-import Yi from './yi'
 import Icon from './demos/Icon'
 import Switch from './demos/Switch'
 import Radio from './demos/Radio'
@@ -97,9 +95,6 @@ router.map({
   },
   '/demo/wechat': {
     component: Wechat
-  },
-  '/demo/yi': {
-    component: Yi
   },
   '/component/icon': {
     component: Icon
