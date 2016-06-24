@@ -4,7 +4,7 @@
       <p>{{title}}</p>
     </div>
     <div class="weui_cell_ft" v-show="!readonly" style="font-size:0">
-      <a @click="sub()" class="vux-number-selector vux-number-selector-sub needsclick":class="{'vux-number-disabled':disabledMin}">-</a>
+      <a @click="sub()" class="vux-number-selector vux-number-selector-sub needsclick":class="{'vux-number-disabled':disabledMin}">－</a>
       <input v-model="value" class="vux-number-input" :style="{width: width+'px'}" number :readonly="!fillable" pattern="[0-9]*"/>
       <a @click="add()" class="vux-number-selector vux-number-selector-plus needsclick" :class="{'vux-number-disabled':disabledMax}">+</a>
     </div>
@@ -75,7 +75,7 @@ export default {
 <style lang="less">
 .vux-number-input {
   float:left;
-  height:20px;
+  height:25px;
   font-size:20px;
   color: #666;
   appearance: none;
@@ -86,9 +86,9 @@ export default {
 }
 .vux-number-selector {
   float:left;
-  height:20px;
-  font-size:25px;
-  line-height:18px;
+  height:25px;
+  font-size:26px;
+  line-height:22px;
   color:#3cc51f;
   border:1px solid #ececec;
 }
@@ -97,7 +97,7 @@ export default {
 }
 .vux-number-selector-sub {
   border-right:none;
-  padding:3px 10px;
+  padding:3px 2px;
   border-radius:2px 0 0 2px;
 }
 .vux-number-selector-plus {
