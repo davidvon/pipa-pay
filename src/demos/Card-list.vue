@@ -32,40 +32,40 @@
       Flexbox, FlexboxItem
     },
 
-//import Masker from '../components/masker'
-  data () {
-    return {
-      menus: {
-        menu1: '购卡',
-        menu2: '付款',
-        menu3: '赠送卡',
-        menu4: '在线购物',
-        menu5: '用卡说明'
-      },
-      card:{
-        list: [{
-          price: 600000.5,
-          title: '沃尔玛GIFT卡',
-          logo:"./static/demo/card_logo.png",
-          img: './static/demo/card_blue.png',
-          expireDate:'2018-05'
-        }, {
-          price: 732000.1,
-          title: '沃尔玛VIP至尊卡',
-          logo:"./static/demo/card_logo.png",
-          img: './static/demo/card_green.png',
-          expireDate:'2016-10'
-        }, {
-          price: 800000.3,
-          title: '沃尔玛洗车卡',
-          logo:"./static/demo/card_logo.png",
-          img: './static/demo/card_red.png',
-          expireDate:'2019-12'
-        }]
-      },
-      showMenus: false
+    //import Masker from '../components/masker'
+    data () {
+      return {
+        menus: {
+          menu1: '购卡',
+          menu2: '付款',
+          menu3: '赠送卡',
+          menu4: '在线购物',
+          menu5: '用卡说明'
+        },
+        card:{
+          list: [{
+            price: 600000.5,
+            title: '沃尔玛GIFT卡',
+            logo:"./static/demo/card_logo.png",
+            img: './static/demo/card_blue.png',
+            expireDate:'2018-05'
+          }, {
+            price: 732000.1,
+            title: '沃尔玛VIP至尊卡',
+            logo:"./static/demo/card_logo.png",
+            img: './static/demo/card_green.png',
+            expireDate:'2016-10'
+          }, {
+            price: 800000.3,
+            title: '沃尔玛洗车卡',
+            logo:"./static/demo/card_logo.png",
+            img: './static/demo/card_red.png',
+            expireDate:'2019-12'
+          }]
+        },
+        showMenus: false
+      }
     }
-  }
 }
 </script>
 

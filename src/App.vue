@@ -15,6 +15,5 @@
 body {
   font-family: Helvetica, sans-serif;
   background-color: #fbf9fe;
-  padding-bottom:50px;
 }
 </style>

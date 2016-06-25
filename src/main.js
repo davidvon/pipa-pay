@@ -1,6 +1,7 @@
 import Home from './Home'
 import Buy from './demos/Buy'
 import CardList from './demos/Card-list'
+import Pay from './demos/Pay'
 
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -98,6 +99,10 @@ router.map({
   '/cards': {
     component: CardList
   },
+  '/pay': {
+    component: Pay
+  },
+
   '/demo/wechat': {
     component: Wechat
   },

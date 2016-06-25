@@ -264,11 +264,11 @@ export default {
   text-align: center;
 }
 
-body {
-  font-family: Helvetica, sans-serif;
-  background-color: #fbf9fe;
-  padding-bottom: 50px;
-}
+/*body {*/
+  /*font-family: Helvetica, sans-serif;*/
+  /*background-color: #fbf9fe;*/
+  /*padding-bottom: 50px;*/
+/*}*/
 
 .firefox .weui_cells:after {
   transform-origin: 50% 50%;
