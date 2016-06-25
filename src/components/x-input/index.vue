@@ -157,17 +157,39 @@ export default {
       }
 
       if (this.min) {
-        if (this.value.length < this.min) {
+        if (this.type === 'number') {
+          if (Number(this.value) < this.min) {
+            this.errors.min = this.$interpolate('最少应该输入大于或等于{{min}}的值哦')
+            this.valid = false
+            this.forceShowError = true
+            return
+          } else {
+            this.forceShowError = false
+            delete this.errors.min
+          }
+        } else if (this.value.length < this.min) {
           this.errors.min = this.$interpolate('最少应该输入{{min}}个字符哦')
           this.valid = false
+          this.forceShowError = true
           return
         } else {
+          this.forceShowError = false
           delete this.errors.min
         }
       }
 
       if (this.max) {
-        if (this.value.length > this.max) {
+        if (this.type === 'number') {
+          if (Number(this.value) > this.max) {
+            this.errors.max = this.$interpolate('最少应该输入小于或等于{{max}}的值哦')
+            this.valid = false
+            this.forceShowError = true
+            return
+          } else {
+            this.forceShowError = false
+            delete this.errors.max
+          }
+        } else if (this.value.length > this.max) {
           this.errors.max = this.$interpolate('最多可以输入{{max}}个字符哦')
           this.valid = false
           this.forceShowError = true

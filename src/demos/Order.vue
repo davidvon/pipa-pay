@@ -16,7 +16,7 @@
       <div class="popover fade bottom in" style="display: block;">
         <div class="arrow"></div>
         <div class="popover-content">
-          <x-input class="other-money" type="number" placeholder="1-1000" :value.sync="otherMoney" keyboard="number" @on-change="change"></x-input>
+          <x-input class="other-money" focus="true" placeholder="1-1000" type="number" :min=1 :max=1000 :value.sync="otherMoney" keyboard="number"></x-input>
         </div>
       </div>
     </div>
@@ -25,26 +25,30 @@
       <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{sum*money || sum*otherMoney}}</span></cell>
     </group>
     <group>
-      <switch title="需要发票(邮寄到付)"></switch>
-      <x-input title="发票抬头" placeholder="单位名称或个人姓名"></x-input>
-      <x-input title="发票内容" placeholder="单位名称或个人姓名"></x-input>
-      <x-input title="收件人" placeholder="姓名"></x-input>
-      <x-input title="联系电话" placeholder="手机号码" keyboard="number" is-type="china-mobile"></x-input>
-      <x-input title="邮政编码" placeholder="邮政编码" keyboard="number" :min="6" :max="6"></x-input>
-      <x-input title="详细地址" placeholder="省份 城市 街道 详细地址"></x-input>
+      <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
+      <div v-show="invoice.enable">
+      <x-input title="发票抬头" :value.sync="invoice.title" placeholder="单位名称或个人姓名"></x-input>
+      <cell title="发票内容" :value.sync="invoice.content" is-link @click="invoice.select=true"></cell>
+      <x-input title="收件人" :min=3 :max=4 :value.sync="invoice.name" placeholder="姓名"></x-input>
+      <x-input title="联系电话" :value.sync="invoice.phone" placeholder="手机号码" keyboard="number" is-type="china-mobile"></x-input>
+      <x-input title="邮政编码" :value.sync="invoice.zip" placeholder="邮政编码" keyboard="number" :min="6" :max="6"></x-input>
+      <x-input title="详细地址" :value.sync="invoice.address" placeholder="省份 城市 街道 详细地址"></x-input>
+      </div>
+      <actionsheet :show.sync="invoice.select" :menus="invoice.menus" @on-click-menu="invoiceContentSelect"></actionsheet>
     </group>
     <box gap="20px">
-      <x-button :text="button.name" :disabled="button.disable" type="primary" @click="buy"></x-button>
+      <x-button :disabled="buyButtonDisable" type="primary" @click="buy">购卡</x-button>
     </box>
   </div>
+  <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
 </template>
 
 <script>
-import { Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box } from '../components'
+import { Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 
 export default {
   components: {
-    Checker, CheckerItem, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box
+    Checker, CheckerItem, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
   },
   data () {
     return {
@@ -52,23 +56,54 @@ export default {
       otherMoney: "",
       sum:1,
       menus: {
-        menu1: 'Take Photo',
-        menu2: 'Choose from photos'
+        menu1: '付款',
+        menu2: '我的卡包',
+        menu3: '赠送卡',
+        menu4: '在线购物',
+        menu5: '用卡说明'
       },
       showMenus: false,
-      button:{
-        name:'购买',
-        disable:false
+      invoice:{
+        enable:false,
+        select:false,
+        titleValid:true,
+        title:'',
+        name:'',
+        phone:'',
+        zip:'',
+        address:'',
+        menus: {
+          menu1: '商品一批',
+          menu2: '食品一批',
+          menu3: '日用品一批'
+        },
+        content: '商品一批'
+      },
+      alert:{
+        message:'',
+        show: false
       }
     }
   },
+  computed: {
+    buyButtonDisable: function () {
+      return !((this.money>0 || this.otherMoney.length>0) && this.invoice_valid())
+    }
+  },
   methods: {
-    change (val) {
-      console.log(val)
+    invoiceContentSelect (item){
+       this.invoice.content = this.invoice.menus[item]
     },
-    buy () {
-      this.button.name = '提交中...'
-      this.button.disable = true
+    buy (){
+        if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
+          this.alert.message = '输入的其他金额不符合要求'
+          this.alert.show = true
+        }
+    },
+    invoice_valid(){
+      return (!this.invoice.enable ||
+      (this.invoice.title.length>0 && this.invoice.name.length>0 && this.invoice.phone.length>0 &&
+       this.invoice.zip.length>0 && this.invoice.address.length>0 && this.invoice.content.length>0))
     }
   }
 }
