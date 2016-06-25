@@ -1,8 +1,11 @@
+import Home from './Home'
+import Buy from './demos/Buy'
+import CardList from './demos/Card-list'
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from './App'
 import Wechat from './Wechat'
-import Home from './Home'
 import Icon from './demos/Icon'
 import Switch from './demos/Switch'
 import Radio from './demos/Radio'
@@ -58,7 +61,6 @@ import Countdown from './demos/Countdown'
 import XHeader from './demos/X-header'
 import Inview from './demos/Inview'
 import InlineCalendar from './demos/Inline-calendar'
-import Order from './demos/Order'
 import ScrollerFull from './demos/Scroller-full'
 import NumberRoller from './demos/Number-roller'
 import Timeline from './demos/Timeline'
@@ -90,8 +92,11 @@ router.map({
   '/': {
     component: Home
   },
-  '/order': {
-    component: Order
+  '/buy': {
+    component: Buy
+  },
+  '/cards': {
+    component: CardList
   },
   '/demo/wechat': {
     component: Wechat
@@ -260,9 +265,6 @@ router.map({
   },
   '/component/inline-calendar': {
     component: InlineCalendar
-  },
-  '/component/checker': {
-    component: Order
   },
   '/component/scroller/full': {
     component: ScrollerFull
