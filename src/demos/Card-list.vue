@@ -2,19 +2,19 @@
   <div class='card-list'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
-    <div class="weui_cells_title">你共有{{card.list.length}}张礼品卡</div>
+    <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{card.list.length}}</span>张礼品卡</div>
 
     <div style="margin:10px;" v-for="item in card.list">
       <masker style="border-radius:10px;" color="000" :opacity="0">
         <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
         <div slot="content" class="content">
           <flexbox>
-            <flexbox-item :span="1/3"><img style="height:35px;" :src="logo"/></flexbox-item>
-            <flexbox-item class="title" :span="2/3">{{item.title}}</flexbox-item>
+            <flexbox-item :span="1/3"><img style="height:35px;" :src="item.logo"/></flexbox-item>
+            <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
           </flexbox>
           <flexbox>
-            <flexbox-item class="card-money" :span="1/4">余额: <span class="money-symbol">￥</span><span class="money">5</span></flexbox-item>
-            <flexbox-item class="card-valid" :span="3/4">有效期至19年06月</flexbox-item>
+            <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
+            <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
           </flexbox>
         </div>
       </masker>
@@ -42,18 +42,25 @@
         menu4: '在线购物',
         menu5: '用卡说明'
       },
-      logo:"./static/demo/card_logo.png",
       card:{
-        sum:2,
         list: [{
+          price: 600000.5,
           title: '沃尔玛GIFT卡',
-          img: './static/demo/card_blue.png'
+          logo:"./static/demo/card_logo.png",
+          img: './static/demo/card_blue.png',
+          expireDate:'2018-05'
         }, {
+          price: 732000.1,
           title: '沃尔玛VIP至尊卡',
-          img: './static/demo/card_green.png'
+          logo:"./static/demo/card_logo.png",
+          img: './static/demo/card_green.png',
+          expireDate:'2016-10'
         }, {
+          price: 800000.3,
           title: '沃尔玛洗车卡',
-          img: './static/demo/card_red.png'
+          logo:"./static/demo/card_logo.png",
+          img: './static/demo/card_red.png',
+          expireDate:'2019-12'
         }]
       },
       showMenus: false
@@ -104,11 +111,8 @@
   font-size: 22px;
   width: 100%;
 }
-.card-list .money-symbol{
-  color:#ff4a00;font-size:16px
-}
 .card-list .money{
-  color:#ff4a00;font-size:18px
+  color:#E01F1F;font-size:15px
 }
 
 </style>
