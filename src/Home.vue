@@ -6,8 +6,7 @@
             </h1>
             <p class="vux-notice" style="color:#fff">沃尔玛礼品卡</p>
         </div>
-        <div>
-
+        <div class="bg">
         <flexbox class="vux-1px-tb" :gutter="0">
             <flexbox-item class="vux-1px-r">
                 <a class="item item5" href="#buy">
@@ -68,15 +67,15 @@
     .home{
       background-color: #fbf9fe;
     }
+    .home .bg{
+      background-color: #fff;
+    }
     .home .vue-home.center{
         margin-top:0;
         /*margin-bottom: 15px;*/
         text-align: center;
         padding:20px 0;
         background-color: #5c69c7;
-    }
-    .home .vux-flexbox-item {
-        background-color: #fff;
     }
     .home .item {
         display: block;
