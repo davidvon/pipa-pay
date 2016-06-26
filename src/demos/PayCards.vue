@@ -84,6 +84,7 @@
 
 <style lang="less">
 .pay-cards .vux-masker{
+  width: 370px;
   -webkit-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   -moz-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   box-shadow: 0 4px 4px rgba(0,0,0,0.2);
@@ -113,10 +114,10 @@
 }
 
 .pay-cards .img {
-  padding-bottom: 33%;
+  padding-bottom: 125px;
   display: block;
   position: relative;
-  max-width: 100%;
+  width: 370px;
   background-size: cover;
   background-position: center center;
   cursor: pointer;
@@ -130,7 +131,7 @@
   width: 100%;
 }
 .pay-cards .money{
-  color:#E01F1F;font-size:15px
+  color:red;font-size:15px
 }
 
 </style>

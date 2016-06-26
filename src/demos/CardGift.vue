@@ -4,37 +4,41 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{card.list.length}}</span>张礼品卡</div>
 
-    <div style="margin:15px;" v-for="item in card.list">
-      <masker style="border-radius:10px;" color="000" :opacity="0">
-        <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
-        <div slot="content" class="content">
-          <flexbox class="card-title">
-            <flexbox-item :span="1/3"><img style="height:35px;" :src="item.logo"/></flexbox-item>
-            <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
-          </flexbox>
-          <flexbox class="card-property">
-            <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
-            <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
-          </flexbox>
-        </div>
-      </masker>
-    </div>
+    <checker class="center" :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected" @on-change="onCardSelect">
+      <checker-item :value="$index" style="margin:4px;" v-for="item in card.list">
+        <masker style="border-radius:10px;" color="000" :opacity="0">
+          <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
+          <div slot="content" class="content">
+            <flexbox class="card-title">
+              <flexbox-item :span="1/3"><img style="height:35px;" :src="item.logo"/></flexbox-item>
+              <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
+              <img class="icon-card-select" :src="$index==cardSelect.index ? cardSelect.icon.selected:cardSelect.icon.default"/>
+            </flexbox>
+            <flexbox class="card-property">
+              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
+              <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
+            </flexbox>
+          </div>
+        </masker>
+      </checker-item>
+    </checker>
   </div>
 </template>
 
 <script>
-  import { Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
+  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
 
   export default {
     components: {
-      Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
+      Checker, CheckerItem, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
       Flexbox, FlexboxItem
     },
 
     //import Masker from '../components/masker'
     data () {
       return {
+        cardIndex:1,
         menus: {
           menu1: '购卡',
           menu2: '付款',
@@ -63,14 +67,28 @@
             expireDate:'2019-12'
           }]
         },
-        showMenus: false
+        showMenus: false,
+        cardSelect: {
+          icon:{
+              default: './static/demo/ico_sel.png',
+              selected: './static/demo/ico_selon.png'
+          },
+          index: -1
+        }
+      }
+    },
+    methods: {
+      onCardSelect (index){
+        this.cardSelect.index = index
       }
     }
 }
 </script>
 
 <style lang="less">
+
 .cards .vux-masker{
+  width: 330px;
   -webkit-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   -moz-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   box-shadow: 0 4px 4px rgba(0,0,0,0.2);
@@ -100,10 +118,10 @@
 }
 
 .cards .img {
-  padding-bottom: 33%;
+  padding-bottom: 125px;
   display: block;
   position: relative;
-  max-width: 100%;
+  width: 330px;
   background-size: cover;
   background-position: center center;
   cursor: pointer;
@@ -112,12 +130,18 @@
 
 .cards .title {
   color: #fff;
-  font-weight: 500;
-  font-size: 22px;
-  width: 100%;
+  margin-left: 12px;
+  font-size: 19px;
 }
 .cards .money{
-  color:#E01F1F;font-size:15px
+  color:red;font-size:15px
+}
+.cards .card-item{
+  position: relative;
 }
 
+.cards .icon-card-select{
+  margin: -30px;
+  width: 25px;
+}
 </style>

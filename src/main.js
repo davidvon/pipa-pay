@@ -102,7 +102,7 @@ router.map({
     name: 'pay_cards',
     component: PayCards
   },
-  '/pay/card/:merchantId/:cardId': {
+  '/pay/code/:merchantId/:cardId': {
     name: 'pay_by_card',
     component: PayCode
   },
