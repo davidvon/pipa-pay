@@ -12,6 +12,12 @@
           <div class="line left"></div>
           <div class="line right"></div>
         </div>
+        <div class="code-img">
+           <barcode :width=1.4 :display-value=true :code.sync="serialCode"></barcode>
+        </div>
+        <div class="code-img">
+           <qrcode :size="200" :value.sync="serialCode"></qrcode>
+        </div>
       </div>
       <br>
     </div>
@@ -19,12 +25,17 @@
 </template>
 
 <script>
+  import { Barcode, Qrcode} from '../components'
   export default {
-  components: {},
+  components: {
+    Barcode,
+    Qrcode
+  },
   data () {
     return {
        title:'沃尔玛(中国)',
-       money: 5
+       money: 5,
+       serialCode: '2336000003845248151'
     }
   }
 }
@@ -40,7 +51,7 @@
   .pay .pay-card {
     width:95%;
     margin:20px auto;
-    height: 550px;
+    height: 570px;
     background-color:#FFF;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -87,5 +98,8 @@
     float: right;
     margin:10px 15px;
     color: white;
+  }
+  .pay .code-img{
+    margin: 20px;
   }
 </style>

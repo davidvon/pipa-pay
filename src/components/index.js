@@ -67,6 +67,8 @@ import Badge from './badge'
 import Dialog from './dialog'
 import Card from './card'
 import Previewer from './previewer'
+import Barcode from './barcode'
+import Qrcode from './qrcode'
 
 const vux = {
   Radio,
@@ -139,7 +141,9 @@ const vux = {
   Badge,
   Dialog,
   Card,
-  Previewer
+  Previewer,
+  Barcode,
+  Qrcode
 }
 
 module.exports = vux
