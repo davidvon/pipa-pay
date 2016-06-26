@@ -1,5 +1,5 @@
 <template>
-  <div class='wx-cards'>
+  <div class='wx-cards card'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title">你共有 <span style="color:#6A6AD6">{{card.list.length}}</span>张礼品卡</div>
@@ -9,7 +9,7 @@
         <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
         <div slot="content" class="content">
           <flexbox>
-            <flexbox-item :span="1/3"><img style="height:35px;" :src="item.logo"/></flexbox-item>
+            <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
             <flexbox-item :span="2/3">
               <div class="title">{{item.title}}</div>
               <div class="sub-title">有效期至{{item.expireDate}}</div>
@@ -76,24 +76,6 @@
 </script>
 
 <style lang="less">
-.wx-cards .vux-masker{
-  width: 370px;
-  -webkit-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
-  -moz-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
-  box-shadow: 0 4px 4px rgba(0,0,0,0.2);
-}
-.wx-cards .vux-masker .content{
-  padding: 15px;
-}
-
-.wx-cards .card-property{
-  margin-top: 28px;
-}
-.wx-cards .card-money{
-  color:grey;
-  font-size: 14px;
-}
-
 .wx-cards .wxcard-enable{
   margin-left: 0!important;
   color:grey;
@@ -107,31 +89,17 @@
   text-align: right;
 }
 
-.wx-cards .img {
-  padding-bottom: 125px;
-  display: block;
-  position: relative;
-  width: 370px;
-  background-size: cover;
-  background-position: center center;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
 .wx-cards .title {
+  margin-top: 6px;
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   width: 100%;
 }
 
 .wx-cards .sub-title{
   color: #fff;
-  font-size: 13px;
+  font-size: 12px;
   width: 100%;
-}
-
-.wx-cards .money{
-  color:red;font-size:15px
 }
 
 </style>

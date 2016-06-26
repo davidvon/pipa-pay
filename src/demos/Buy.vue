@@ -121,7 +121,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #fff;
-  margin: 5px 10px;
+  margin: 5px;
 }
 .order .money-item-selected {
   background: #ffffff url(../assets/demo/checker/active.png) no-repeat right bottom;

@@ -16,7 +16,7 @@
            <barcode :width=1.4 :display-value=true :code.sync="serialCode"></barcode>
         </div>
         <div class="code-img">
-           <qrcode :size="200" :value.sync="serialCode"></qrcode>
+           <qrcode :size="100" :value.sync="serialCode"></qrcode>
         </div>
       </div>
       <br>
