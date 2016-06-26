@@ -16,9 +16,9 @@
                 </a>
             </flexbox-item>
             <flexbox-item class="vux-1px-r">
-                <a class="item item6" href="#pay">
+                <a class="item item6" href="#pay/cards">
                     <div class="img icon-pay"></div>
-                    <div class="text">付款</div>
+                    <div class="text">支付</div>
                 </a>
             </flexbox-item>
             <flexbox-item>
@@ -31,7 +31,7 @@
 
         <flexbox class="vux-1px-b" :gutter="0">
             <flexbox-item class="vux-1px-r">
-                <a class="item item5" href="#cards">
+                <a class="item item5" href="#gift">
                     <div class="img icon-share"></div>
                     <div class="text">赠送卡</div>
                 </a>

@@ -1,18 +1,18 @@
 <template>
-  <div class='card-list'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
+  <div class='cards'>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">赠送卡</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{card.list.length}}</span>张礼品卡</div>
 
-    <div style="margin:10px;" v-for="item in card.list">
+    <div style="margin:15px;" v-for="item in card.list">
       <masker style="border-radius:10px;" color="000" :opacity="0">
         <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
         <div slot="content" class="content">
-          <flexbox>
+          <flexbox class="card-title">
             <flexbox-item :span="1/3"><img style="height:35px;" :src="item.logo"/></flexbox-item>
             <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
           </flexbox>
-          <flexbox>
+          <flexbox class="card-property">
             <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
             <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
           </flexbox>
@@ -70,31 +70,36 @@
 </script>
 
 <style lang="less">
-.card-list .vux-masker{
+.cards .vux-masker{
   -webkit-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   -moz-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
   box-shadow: 0 4px 4px rgba(0,0,0,0.2);
 }
-.card-list .vux-masker .content{
+.cards .vux-masker .content{
   padding: 15px;
 }
 
-.card-list .vux-flexbox{
-  margin-top: 20px;
+.cards .card-title{
+  margin-top: 10px;
 }
 
-.card-list .card-money{
+.cards .card-property{
+  margin-top: 25px;
+}
+
+.cards .card-money{
   color:grey;
   font-size: 14px;
 }
 
-.card-list .card-valid{
+.cards .card-valid{
+  margin-left: 0!important;
   color:grey;
   font-size: 14px;
   text-align: right;
 }
 
-.card-list .img {
+.cards .img {
   padding-bottom: 33%;
   display: block;
   position: relative;
@@ -105,13 +110,13 @@
   border-radius: 10px;
 }
 
-.card-list .title {
+.cards .title {
   color: #fff;
   font-weight: 500;
   font-size: 22px;
   width: 100%;
 }
-.card-list .money{
+.cards .money{
   color:#E01F1F;font-size:15px
 }
 

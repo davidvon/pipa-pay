@@ -1,9 +1,9 @@
 import Home from './Home'
 import Buy from './demos/Buy'
-import Cards from './demos/Cards'
+import CardGift from './demos/CardGift'
 import WxCards from './demos/WxCards'
-import Pay from './demos/Pay'
-
+import PayCode from './demos/PayCode'
+import PayCards from './demos/PayCards'
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from './App'
@@ -95,16 +95,23 @@ router.map({
     component: Home
   },
   '/buy': {
+    name: 'buy',
     component: Buy
   },
-  '/cards': {
-    component: Cards
+  '/pay/cards': {
+    name: 'pay_cards',
+    component: PayCards
+  },
+  '/pay/card/:merchantId/:cardId': {
+    name: 'pay_by_card',
+    component: PayCode
+  },
+  '/gift': {
+    name: 'gift',
+    component: CardGift
   },
   'wxcards': {
     component: WxCards
-  },
-  '/pay': {
-    component: Pay
   },
 
   '/demo/wechat': {
