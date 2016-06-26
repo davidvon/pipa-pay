@@ -1,6 +1,7 @@
 import Home from './Home'
 import Buy from './demos/Buy'
-import CardList from './demos/Card-list'
+import Cards from './demos/Cards'
+import WxCards from './demos/WxCards'
 import Pay from './demos/Pay'
 
 import Vue from 'vue'
@@ -97,7 +98,10 @@ router.map({
     component: Buy
   },
   '/cards': {
-    component: CardList
+    component: Cards
+  },
+  'wxcards': {
+    component: WxCards
   },
   '/pay': {
     component: Pay
