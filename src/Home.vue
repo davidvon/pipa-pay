@@ -55,10 +55,10 @@
 <script>
     import { Flexbox, FlexboxItem } from './components/'
     export default {
-        components: {
-            Flexbox,
-            FlexboxItem
-        }
+      components: {
+        Flexbox,
+        FlexboxItem
+      }
     }
 </script>
 
