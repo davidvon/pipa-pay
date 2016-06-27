@@ -91,8 +91,8 @@ Vue.use(Router)
 Vue.config.devtools = true
 
 const router = new Router({
-  history: true,            // html5模式 去掉锚点
-  saveScrollPosition: true  // 记住页面的滚动位置 html5模式适用
+  history: false            // html5模式 去掉锚点
+  // saveScrollPosition: true  // 记住页面的滚动位置 html5模式适用
 })
 
 router.map({
