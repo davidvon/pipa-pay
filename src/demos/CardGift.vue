@@ -51,8 +51,8 @@
         showMenus: false,
         cardSelect: {
           icon:{
-              default: './static/demo/ico_sel.png',
-              selected: './static/demo/ico_selon.png'
+              default: '/static/demo/ico_sel.png',
+              selected: '/static/demo/ico_selon.png'
           },
           index: -1
         }

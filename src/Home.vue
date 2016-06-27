@@ -9,19 +9,19 @@
         <div class="bg">
         <flexbox class="vux-1px-tb" :gutter="0">
             <flexbox-item class="vux-1px-r">
-                <a class="item item5" href="#buy">
+                <a class="item item5" href="/buy">
                     <div class="img icon-order"></div>
                     <div class="text">购卡</div>
                 </a>
             </flexbox-item>
             <flexbox-item class="vux-1px-r">
-                <a class="item item6" href="#pay/cards">
+                <a class="item item6" href="/pay/cards">
                     <div class="img icon-pay"></div>
                     <div class="text">支付</div>
                 </a>
             </flexbox-item>
             <flexbox-item>
-                <a class="item item7" href="#wxcards">
+                <a class="item item7" href="/wxcards">
                     <div class="img icon-mycard"></div>
                     <div class="text">我的卡包</div>
                 </a>
@@ -30,7 +30,7 @@
 
         <flexbox class="vux-1px-b" :gutter="0">
             <flexbox-item class="vux-1px-r">
-                <a class="item item5" href="#gift">
+                <a class="item item5" href="/gift">
                     <div class="img icon-share"></div>
                     <div class="text">赠送卡</div>
                 </a>
