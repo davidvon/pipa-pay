@@ -2,9 +2,9 @@
   <div class='wx-cards card'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
-    <div class="weui_cells_title">你共有 <span style="color:#6A6AD6">{{card.list.length}}</span>张礼品卡</div>
+    <div class="weui_cells_title">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
 
-    <div style="margin:15px;" v-for="item in card.list">
+    <div style="margin:15px;" v-for="item in cards">
       <masker style="border-radius:10px;" color="000" :opacity="0">
         <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
         <div slot="content" class="content">
@@ -28,14 +28,13 @@
 <script>
   import { Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
+  import Const from '../services/const'
 
   export default {
     components: {
       Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
       Flexbox, FlexboxItem
     },
-
-    //import Masker from '../components/masker'
     data () {
       return {
         menus: {
@@ -45,31 +44,17 @@
           menu4: '在线购物',
           menu5: '用卡说明'
         },
-        card:{
-          list: [{
-            price: 600000.5,
-            title: '沃尔玛GIFT卡',
-            logo:"./static/demo/card_logo.png",
-            img: './static/demo/card_blue.png',
-            expireDate:'2018-05',
-            wxCardEnable:true
-          }, {
-            price: 732000.1,
-            title: '沃尔玛VIP至尊卡',
-            logo:"./static/demo/card_logo.png",
-            img: './static/demo/card_green.png',
-            expireDate:'2016-10',
-            wxCardEnable:true
-          }, {
-            price: 800000.3,
-            title: '沃尔玛洗车卡',
-            logo:"./static/demo/card_logo.png",
-            img: './static/demo/card_red.png',
-            expireDate:'2019-12',
-            wxCardEnable:false
-          }]
-        },
+        cards: [],
         showMenus: false
+      }
+    },
+    route: {
+      data (transition){
+        var _this = this
+        this.$http.get(Const.API_URL + '/cards').then(function (response) {
+          if (response && response.data)
+            _this.cards = response.data
+        })
       }
     }
 }

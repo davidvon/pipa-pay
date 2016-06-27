@@ -6,6 +6,7 @@ import PayCode from './demos/PayCode'
 import PayCards from './demos/PayCards'
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueResource from 'vue-resource'
 import App from './App'
 import Wechat from './Wechat'
 import Icon from './demos/Icon'
@@ -85,6 +86,7 @@ import Previewer from './demos/Previewer'
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
 
+Vue.use(VueResource)
 Vue.use(Router)
 Vue.config.devtools = true
 
