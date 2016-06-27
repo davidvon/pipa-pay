@@ -7,7 +7,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),
-    publicPath: 'https://o3e85j0cv.qnssl.com/static/',
+    publicPath: 'http://7xvpyd.com1.z0.glb.clouddn.com/static',
     filename: '[name].js'
   },
   stats: {
@@ -25,8 +25,8 @@ module.exports = {
   module: {
     preLoaders: [
       {
-        test: /\.js$/, 
-        loader: "eslint-loader", 
+        test: /\.js$/,
+        loader: "eslint-loader",
         exclude: /node_modules/
       }
     ],
