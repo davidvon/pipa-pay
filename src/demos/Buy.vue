@@ -37,7 +37,7 @@
       <actionsheet :show.sync="invoice.select" :menus="invoice.menus" @on-click-menu="invoiceContentSelect"></actionsheet>
     </group>
     <box gap="20px">
-      <x-button :disabled="buyButtonDisable" type="primary" @click="buy">购卡</x-button>
+      <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
   </div>
   <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
@@ -94,11 +94,34 @@ export default {
     invoiceContentSelect (item){
        this.invoice.content = this.invoice.menus[item]
     },
-    buy (){
-        if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
-          this.alert.message = '输入的其他金额不符合要求'
-          this.alert.show = true
+    wxPay(data){
+      wx && wx.chooseWXPay({
+        timestamp: data.timeStamp, //时间戳
+        nonceStr: data.nonceStr, //随机串
+        package: data.package,   //扩展包
+        signType: data.signType, //MD5
+        paySign: data.paySign,  //微信签名
+        success: function (res) {
+          // 支付成功后的回调函数
         }
+      });
+    },
+    buyCard(){
+        var self = this
+        if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
+          self.alertMessage('输入的其他金额不符合要求')
+        }
+        this.$http.post('/api/order/payable?orderid=' + orderid, function (data) {
+          if (data.result == '0') return wxPay(data);
+          else if (data.result == '1') return self.alertMessage("订单已完成现金支付，请等待商家确认");
+          else if (data.result == '255') return self.alertMessage("订单已完成支付");
+          else return self.alertMessage("支付异常，请稍后再试");
+        }, "json")
+    },
+    alertMessage(msg){
+      console.log(msg)
+      this.alert.message = msg
+      this.alert.show = true
     },
     invoice_valid(){
       return (!this.invoice.enable ||

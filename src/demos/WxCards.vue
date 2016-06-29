@@ -51,7 +51,7 @@
     route: {
       data (transition){
         var _this = this
-        this.$http.get(Const.API_URL + '/cards').then(function (response) {
+        this.$http.get(Const.apiUrl + '/cards').then(function (response) {
           if (response && response.data)
             _this.cards = response.data
         })
