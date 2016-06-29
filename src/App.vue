@@ -8,7 +8,7 @@
 
 <script>
   import Const from './services/const'
-  import { wechat_share } from './services/wechat'
+  import { wechat_share } from './services/wxlib'
 
   export default {
     components: {
@@ -16,7 +16,7 @@
     ready: function () {
       var _this = this
       var url = location.href.split('#')[0]
-      this.$http.get(Const.apiUrl + '/weixin/sign?url='+ url).then(function (response) {
+      this.$http.get(Const.apiUrl + '/weixin/jsapi_sign?url='+ url).then(function (response) {
       if (response && response.data)
         wx.config({
           debug: true,

@@ -45,17 +45,38 @@
           menu5: '用卡说明'
         },
         cards: [],
+        cards_online:[],
         showMenus: false
       }
     },
     route: {
       data (transition){
-        var _this = this
+        var self = this
         this.$http.get(Const.apiUrl + '/cards').then(function (response) {
           if (response && response.data)
-            _this.cards = response.data
+            self.cards = response.data
         })
       }
+    },
+    ready: function () {
+      var self = this
+      var url = location.href.split('#')[0]
+      this.$http.get(Const.apiUrl + '/weixin/card_sign').then(function (response) {
+        if (response && response.data)
+          var data = response.data
+          wx.chooseCard({
+            shopId: data['shopId'], // 门店Id
+            cardType: data['carType'], // 卡券类型
+            cardId: data['carId'], // 卡券Id
+            timestamp: data['timestamp'], // 卡券签名时间戳
+            nonceStr: data['nonceStr'], // 卡券签名随机串
+            signType: data['signType'], // 签名方式，默认'SHA1'
+            cardSign: data['cardSign'], // 卡券签名
+            success: function (res) {
+              self.cards_online = res.cardList; // 用户选中的卡券列表信息
+            }
+          })
+      })
     }
 }
 </script>
