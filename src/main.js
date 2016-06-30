@@ -1,5 +1,6 @@
 import Home from './Home'
 import Buy from './demos/Buy'
+import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
 import WxCards from './demos/WxCards'
 import PayCode from './demos/PayCode'
@@ -102,6 +103,10 @@ router.map({
   '/buy': {
     name: 'buy',
     component: Buy
+  },
+  '/buy/result/:merchantId/:orderId': {
+    name: 'buy_result',
+    component: BuyResult
   },
   '/pay/cards': {
     name: 'pay_cards',

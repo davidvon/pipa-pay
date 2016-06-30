@@ -21,8 +21,8 @@
       </div>
     </div>
     <group>
-      <x-number title="数量" :min="1" :max="10" :value.sync="sum" type="inline"></x-number>
-      <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{sum*money || sum*otherMoney}}</span></cell>
+      <x-number title="数量" :min="1" :max="10" :value.sync="count" type="inline"></x-number>
+      <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{count*money || count*otherMoney}}</span></cell>
     </group>
     <group>
       <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
@@ -43,7 +43,9 @@
   <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
 </template>
 
+
 <script>
+import Const from '../services/const'
 import { Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 
 export default {
@@ -54,7 +56,7 @@ export default {
     return {
       money: 50,
       otherMoney: "",
-      sum:1,
+      count:1,
       menus: {
         menu1: '付款',
         menu2: '我的卡包',
@@ -94,7 +96,7 @@ export default {
     invoiceContentSelect (item){
        this.invoice.content = this.invoice.menus[item]
     },
-    wxPay(data){
+    wxPay(data, res){
       wx && wx.chooseWXPay({
         timestamp: data.timeStamp, //时间戳
         nonceStr: data.nonceStr, //随机串
@@ -103,6 +105,7 @@ export default {
         paySign: data.paySign,  //微信签名
         success: function (res) {
           // 支付成功后的回调函数
+          this.$route.router.go({name: 'buy_result', params: {merchantId: data.merchantId, orderId: res.orderid} });
         }
       });
     },
@@ -111,10 +114,16 @@ export default {
         if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
           self.alertMessage('输入的其他金额不符合要求')
         }
-        this.$http.post('/api/order/payable?orderid=' + orderid, function (data) {
-          if (data.result == '0') return wxPay(data);
-          else if (data.result == '1') return self.alertMessage("订单已完成现金支付，请等待商家确认");
-          else if (data.result == '255') return self.alertMessage("订单已完成支付");
+        var data = {
+           price : (self.money|| Number(self.otherMoney))*self.count,
+           count: self.count,
+           merchantId: 1,  //商户ID
+           openid: 'o0bNHtwjsZPE_ajW6DB6vbPz6e1E'
+        }
+        this.$http.post(Const.apiUrl + 'card/buy', data, function (res) {
+          if (res.result == 0) return wxPay(data, res);
+          else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");
+          else if (res.result == 255) return self.alertMessage("订单已完成支付");
           else return self.alertMessage("支付异常，请稍后再试");
         }, "json")
     },
