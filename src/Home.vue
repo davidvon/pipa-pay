@@ -9,40 +9,40 @@
     <div class="bg">
       <flexbox class="vux-1px-tb" :gutter="0">
         <flexbox-item class="vux-1px-r">
-          <a class="item item5" href="#buy">
+          <a class="item" href="#buy">
             <div class="img icon-order"></div>
             <div class="text">购卡</div>
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item item6" href="#pay/cards">
+          <a class="item" href="#pay/cards">
             <div class="img icon-pay"></div>
             <div class="text">支付</div>
           </a>
         </flexbox-item>
-        <flexbox-item>
-          <a class="item item7" href="#member-cards">
-            <div class="img icon-mycard"></div>
-            <div class="text">我的卡包</div>
+        <flexbox-item class="vux-1px-r">
+          <a class="item" href="#gift">
+            <div class="img icon-share"></div>
+            <div class="text">赠送卡</div>
           </a>
         </flexbox-item>
       </flexbox>
 
       <flexbox class="vux-1px-b" :gutter="0">
         <flexbox-item class="vux-1px-r">
-          <a class="item item5" href="#gift">
-            <div class="img icon-share"></div>
-            <div class="text">赠送卡</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item item6">
+          <a class="item">
             <div class="img icon-buy"></div>
             <div class="text">在线购物</div>
           </a>
         </flexbox-item>
+        <flexbox-item class="vux-1px-r">
+          <a class="item" href="#member-cards">
+            <div class="img icon-mycard"></div>
+            <div class="text">我的卡包</div>
+          </a>
+        </flexbox-item>
         <flexbox-item>
-          <a class="item item7" href="/#guide">
+          <a class="item" href="/#guide">
             <div class="img icon-desc"></div>
             <div class="text">购卡指引</div>
           </a>
@@ -50,19 +50,19 @@
       </flexbox>
       <flexbox class="vux-1px-b" :gutter="0">
         <flexbox-item class="vux-1px-r">
-          <a class="item item5" href="#help">
+          <a class="item" href="#help">
             <div class="img icon-help"></div>
             <div class="text">帮助中心</div>
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item item6" href="/#notice">
+          <a class="item" href="/#notice">
             <div class="img icon-guide"></div>
             <div class="text">电子卡章程</div>
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item item7" href=""></a>
+          <a class="item" href=""></a>
         </flexbox-item>
       </flexbox>
     </div>
