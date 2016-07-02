@@ -21,7 +21,7 @@
                 </a>
             </flexbox-item>
             <flexbox-item>
-                <a class="item item7" href="#wxcards">
+                <a class="item item7" href="#member-cards">
                     <div class="img icon-mycard"></div>
                     <div class="text">我的卡包</div>
                 </a>

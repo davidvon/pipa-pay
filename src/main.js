@@ -2,9 +2,11 @@ import Home from './Home'
 import Buy from './demos/Buy'
 import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
-import WxCards from './demos/WxCards'
-import PayCode from './demos/PayCode'
 import PayCards from './demos/PayCards'
+import PayCode from './demos/PayCode'
+import PayRecords from './demos/PayRecords'
+
+import MemberCards from './demos/MemberCards'
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
@@ -108,20 +110,25 @@ router.map({
     name: 'buy_result',
     component: BuyResult
   },
+  '/member-cards': {
+    name: 'memcards',
+    component: MemberCards
+  },
   '/pay/cards': {
-    name: 'pay_cards',
+    name: 'paycards',
     component: PayCards
   },
-  '/pay/code/:merchantId/:cardId': {
-    name: 'pay_by_card',
+  '/pay/:cardId': {
+    name: 'pay',
     component: PayCode
+  },
+  '/pay/records': {
+      name: 'pay_records',
+      component: PayRecords
   },
   '/gift': {
     name: 'gift',
     component: CardGift
-  },
-  'wxcards': {
-    component: WxCards
   },
 
   '/demo/wechat': {

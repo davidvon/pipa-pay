@@ -15,10 +15,10 @@
               <img class="icon-card-select" :src="$index==cardSelect.index ? cardSelect.icon.selected:cardSelect.icon.default"/>
             </flexbox>
             <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
+              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.balance}}</span></flexbox-item>
               <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
             </flexbox>
-          </div>
+          </div>`
         </masker>
       </checker-item>
     </checker>
@@ -66,7 +66,7 @@
     route: {
       data (transition){
         var _this = this
-        this.$http.get(Const.API_URL + '/cards').then(function (response) {
+        this.$http.get(Const.API_URL + '/cards/oDF3iY9P32sK_5GgYiRkjsCo45bk').then(function (response) {
           if (response && response.data)
             _this.cards = response.data
         })

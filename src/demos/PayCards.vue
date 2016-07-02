@@ -2,24 +2,31 @@
   <div class='card'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">支付</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
-    <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
-
-    <div style="margin:15px;" card-id="{{item.cardId}}" merchant-id={{item.merchantId}} v-for="item in cards" @click="payCode">
-      <masker style="border-radius:10px;" color="000" :opacity="0">
-        <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
-        <div slot="content" class="content">
-          <flexbox class="card-title">
-            <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
-            <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
-          </flexbox>
-          <flexbox class="card-property">
-            <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.price}}</span></flexbox-item>
-            <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
-          </flexbox>
-        </div>
-      </masker>
+    <div>
+      <div class="weui_cells_title" v-show="!no_data_display">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+      <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards">
+        <masker style="border-radius:10px;" color="000" :opacity="0">
+          <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
+          <div slot="content" class="content">
+            <flexbox class="card-title">
+              <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
+              <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
+            </flexbox>
+            <flexbox class="card-property">
+              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span></flexbox-item>
+              <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
+            </flexbox>
+          </div>
+        </masker>
+      </div>
+      <div class="not_card" v-show="no_data_display">
+        <p class="ncd_p1"><span class="ico_nocard"></span></p>
+        <p class="ncd_p2">暂无可消费的电子卡</p>
+        <p class="ncd_p3"><button class="blue_btn btn-buy" type="button" @click="buyCard">购买电子卡</button></p>
+      </div>
     </div>
   </div>
+  <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
 </template>
 
 <script>
@@ -42,29 +49,91 @@
           menu5: '用卡说明'
         },
         cards: [],
-        showMenus: false
-      }
-    },
-    methods:{
-      payCode (e){
-        console.log(e);
-        var attrs = e.currentTarget.attributes;
-        var cardId = (attrs['card-id'] && attrs['card-id'].value) || 0;
-        var merchantId = (attrs['merchant-id'] && attrs['merchant-id'].value) || 0;
-        this.$route.router.go({name: 'pay_by_card', params: {merchantId: merchantId, cardId: cardId} });
+        cards_online:[],
+        showMenus: false,
+        no_data_display: false,
+        alert:{ message:'', show: false}
       }
     },
     route: {
       data (transition){
-        var _this = this
-        this.$http.get(Const.API_URL + '/cards').then(function (response) {
-          if (response && response.data)
-            _this.cards = response.data
+        var self = this
+        this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+          console.log(response)
+          var data = response.data
+          if (data && data.result==0)
+            self.cards = data.data
+            if(self.cards.length==0) self.no_data_display=true
         })
       }
+    },
+    ready: function () {
+      var self = this
+      var url = location.href.split('#')[0]
+      this.$http.get(Const.apiUrl + 'weixin/card_sign').then(function (response) {
+        if (response && response.data)
+          var data = response.data
+          wx.chooseCard({
+            shopId: data['shopId'], // 门店Id
+            cardType: data['carType'], // 卡券类型
+            cardId: data['carId'], // 卡券Id
+            timestamp: data['timestamp'], // 卡券签名时间戳
+            nonceStr: data['nonceStr'], // 卡券签名随机串
+            signType: data['signType'], // 签名方式，默认'SHA1'
+            cardSign: data['cardSign'], // 卡券签名
+            success: function (res) {
+              self.cards_online = res.cardList; // 用户选中的卡券列表信息
+            }
+          })
+      })
+    },
+    methods:{
+      alertMsg(msg){
+        this.alert.message = msg
+        this.alert.show = true
+      },
+      buyCard (e){
+        self.$route.router.go({name: 'buy'})
+      },
+      cardConsume(e){
+        var obj = this.$(e.currentTarget);
+        var attrs = obj.data;
+        var cardId = (attrs['data-cardid'] && attrs['data-cardid'].value) || 0;
+        if(!cardId){
+          alertMsg('请选择需要赠送的会员卡！');
+          return;
+        }
+        self.$route.router.go({name: 'pay', params: {cardId:cardId}})
+      }
     }
-}
+  }
 </script>
 
 <style lang="less">
+.wx-cards .wxcard-enable{
+  margin-left: 0!important;
+  color:grey;
+  font-size: 14px;
+  text-align: right;
+}
+.wx-cards .wxcard-disable{
+  margin-left: 0!important;
+  color:red;
+  font-size: 14px;
+  text-align: right;
+}
+
+.wx-cards .title {
+  margin-top: 6px;
+  color: #fff;
+  font-size: 18px;
+  width: 100%;
+}
+
+.wx-cards .sub-title{
+  color: #fff;
+  font-size: 12px;
+  width: 100%;
+}
+
 </style>

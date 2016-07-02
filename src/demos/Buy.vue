@@ -81,10 +81,7 @@ export default {
         },
         content: '商品一批'
       },
-      alert:{
-        message:'',
-        show: false
-      }
+      alert:{ message:'', show: false}
     }
   },
   computed: {
@@ -105,7 +102,7 @@ export default {
         paySign: data.paySign,  //微信签名
         success: function (res) {
           // 支付成功后的回调函数
-          this.$route.router.go({name: 'buy_result', params: {merchantId: data.merchantId, orderId: res.orderid} });
+          this.$route.router.go({name: 'buy_result', params: {merchantId: data.merchantId, orderNo: res.orderId} });
         }
       });
     },
@@ -118,7 +115,7 @@ export default {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,
            merchantId: 1,  //商户ID
-           openid: 'o0bNHtwjsZPE_ajW6DB6vbPz6e1E'
+           openid: Const.openid
         }
         this.$http.post(Const.apiUrl + 'card/buy', data, function (res) {
           if (res.result == 0) return wxPay(data, res);
@@ -128,7 +125,6 @@ export default {
         }, "json")
     },
     alertMessage(msg){
-      console.log(msg)
       this.alert.message = msg
       this.alert.show = true
     },
