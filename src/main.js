@@ -5,7 +5,9 @@ import CardGift from './demos/CardGift'
 import PayCards from './demos/PayCards'
 import PayCode from './demos/PayCode'
 import PayRecords from './demos/PayRecords'
-
+import CardHelp from './demos/CardHelp'
+import CardGuide from './demos/CardGuide.vue'
+import CardNotice from './demos/CardNotice.vue'
 import MemberCards from './demos/MemberCards'
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -130,7 +132,18 @@ router.map({
     name: 'gift',
     component: CardGift
   },
-
+  '/help': {
+    name: 'help',
+    component: CardHelp
+  },
+  '/guide': {
+    name: 'guide',
+    component: CardGuide
+  },
+  '/notice': {
+    name: 'notice',
+    component: CardNotice
+  },
   '/demo/wechat': {
     component: Wechat
   },
