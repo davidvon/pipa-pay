@@ -1,7 +1,7 @@
 <template>
   <div class="pay">
     <div class="background">
-      <a class="detail" href="/#pay/records">交易明细</a>
+      <a class="detail" @click="payDetail">交易明细</a>
       <br>
       <div class="pay-card">
         <div>
@@ -77,6 +77,9 @@
           self.reload()
           self.refresh()
         }, 60000);
+      },
+      payDetail(){
+        this.$route.router.go({name: 'pay_records', params: {'cardId':this.cardId}})
       }
     },
     ready(){
