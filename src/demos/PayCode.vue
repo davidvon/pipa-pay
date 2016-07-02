@@ -74,7 +74,8 @@
       refresh(){
         var self = this
         this.timer = setTimeout(function(){
-          self.reload();
+          self.reload()
+          self.refresh()
         }, 60000);
       }
     },
