@@ -39,8 +39,8 @@
     <box gap="20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
+    <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
   </div>
-  <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
 </template>
 
 

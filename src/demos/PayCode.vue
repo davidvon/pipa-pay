@@ -1,7 +1,7 @@
 <template>
   <div class="pay">
     <div class="background">
-      <a class="detail" href="/#consume-records">交易明细</a>
+      <a class="detail" href="/#pay/records">交易明细</a>
       <br>
       <div class="pay-card">
         <div>
@@ -13,7 +13,7 @@
           <div class="line right"></div>
         </div>
         <div class="code-img">
-          <barcode :width=1.4 :display-value=true :code.sync="card.qrcode"></barcode>
+          <barcode :width=1.4 style="max-height:200px;" :display-value=true :code.sync="card.qrcode"></barcode>
         </div>
         <div class="code-img">
           <qrcode :size="64" :value.sync="card.qrcode"></qrcode>
@@ -21,27 +21,28 @@
       </div>
       <br>
     </div>
+    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
-  <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
 </template>
 
 <script>
-  import { Barcode, Qrcode} from '../components'
+  import Const from '../services/const'
+  import {Barcode, Qrcode, Alert, Loading} from '../components'
   export default {
-    components: {
-      Barcode,
-      Qrcode
-    },
+    components: {Barcode, Qrcode, Alert, Loading},
     data () {
       return {
+        timer: null,
         cardId: '',
         card: {
           status: 0,
           merchantName: '',
           cardName: '',
-          balance: '',
-          code: ''
+          balance: 0,
+          qrcode: ''
         },
+        loading: false,
         alert: {message: '', show: false}
       }
     },
@@ -56,16 +57,35 @@
         this.alert.show = true
       },
       reload(){
+        this.loading = true
         var self = this
-        this.$http.post(Const.apiUrl + 'card/consume/code', {cardId: this.cardId}).then(function (response) {
-          var data = response.data
-          if (data && data.result == 0)
-            if (data.result['status'] != 1) {
-              alertMsg('该卡正在转赠中或已过期，不可使用');
-              return
+        this.$http.post(Const.apiUrl + 'card/pay/code', {cardId: this.cardId}).then(function (response) {
+          self.loading = false
+          var ret = response.data
+          if (ret && ret.result == 0){
+            if (ret.data.status != 1) {
+              self.alertMsg('该卡正在转赠中或已过期，不可使用');
+            } else {
+              self.card = ret.data
             }
-          self.card = data.data
+          }
         })
+      },
+      refresh(){
+        var self = this
+        this.timer = setTimeout(function(){
+          self.reload();
+        }, 60000);
+      }
+    },
+    ready(){
+      this.reload()
+      this.refresh()
+    },
+    beforeDestroy(){
+      if(this.timer){
+        clearTimeout(this.timer)
+        this.timer = null
       }
     }
   }

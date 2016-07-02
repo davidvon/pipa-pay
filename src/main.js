@@ -123,8 +123,8 @@ router.map({
     component: PayCode
   },
   '/pay/records': {
-      name: 'pay_records',
-      component: PayRecords
+    name: 'pay_records',
+    component: PayRecords
   },
   '/gift': {
     name: 'gift',

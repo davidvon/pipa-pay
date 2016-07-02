@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     render () {
+      if(this.value == '') return
       const qrcode = new QRCodeImpl(-1, ErrorCorrectLevel[this.level])
       qrcode.addData(this.value)
       qrcode.make()

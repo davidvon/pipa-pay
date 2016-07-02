@@ -4,7 +4,7 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div>
       <div class="weui_cells_title" v-show="!no_data_display">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
-      <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards">
+      <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
           <div slot="content" class="content">
@@ -25,8 +25,8 @@
         <p class="ncd_p3"><button class="blue_btn btn-buy" type="button" @click="buyCard">购买电子卡</button></p>
       </div>
     </div>
+    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
   </div>
-  <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
 </template>
 
 <script>
@@ -67,43 +67,42 @@
         })
       }
     },
-    ready: function () {
-      var self = this
-      var url = location.href.split('#')[0]
-      this.$http.get(Const.apiUrl + 'weixin/card_sign').then(function (response) {
-        if (response && response.data)
-          var data = response.data
-          wx.chooseCard({
-            shopId: data['shopId'], // 门店Id
-            cardType: data['carType'], // 卡券类型
-            cardId: data['carId'], // 卡券Id
-            timestamp: data['timestamp'], // 卡券签名时间戳
-            nonceStr: data['nonceStr'], // 卡券签名随机串
-            signType: data['signType'], // 签名方式，默认'SHA1'
-            cardSign: data['cardSign'], // 卡券签名
-            success: function (res) {
-              self.cards_online = res.cardList; // 用户选中的卡券列表信息
-            }
-          })
-      })
-    },
+//    ready: function () {
+//      var self = this
+//      var url = location.href.split('#')[0]
+//      this.$http.get(Const.apiUrl + 'weixin/card_sign').then(function (response) {
+//        if (response && response.data)
+//          var data = response.data
+//          wx.chooseCard({
+//            shopId: data['shopId'], // 门店Id
+//            cardType: data['carType'], // 卡券类型
+//            cardId: data['carId'], // 卡券Id
+//            timestamp: data['timestamp'], // 卡券签名时间戳
+//            nonceStr: data['nonceStr'], // 卡券签名随机串
+//            signType: data['signType'], // 签名方式，默认'SHA1'
+//            cardSign: data['cardSign'], // 卡券签名
+//            success: function (res) {
+//              self.cards_online = res.cardList; // 用户选中的卡券列表信息
+//            }
+//          })
+//      })
+//    },
     methods:{
       alertMsg(msg){
         this.alert.message = msg
         this.alert.show = true
       },
-      buyCard (e){
+      buyCard (){
         self.$route.router.go({name: 'buy'})
       },
       cardConsume(e){
-        var obj = this.$(e.currentTarget);
-        var attrs = obj.data;
+        var attrs = e.currentTarget.attributes;
         var cardId = (attrs['data-cardid'] && attrs['data-cardid'].value) || 0;
         if(!cardId){
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
-        self.$route.router.go({name: 'pay', params: {cardId:cardId}})
+        this.$route.router.go({name: 'pay', params: {'cardId':cardId}})
       }
     }
   }

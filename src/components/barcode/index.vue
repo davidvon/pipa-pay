@@ -5,7 +5,9 @@
     import JsBarCode from './JsBarcode.code128.min'
     export default{
       ready () {
-        this._barcode = JsBarcode(this.$el, this.code, {
+        this._barcode = null
+        if(this.code != '')
+          this._barcode = JsBarcode(this.$el, this.code, {
           displayValue:this.displayValue,
           width: this.width,
           height: this.height
@@ -31,7 +33,8 @@
       },
       watch: {
         code (code) {
-          this._barcode = JsBarcode("#barcode", this.code, {
+          if(this.code != null)
+            this._barcode = JsBarcode("#barcode", this.code, {
             displayValue:this.displayValue,
             width: this.width,
             height: this.height
