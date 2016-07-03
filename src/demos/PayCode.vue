@@ -79,7 +79,7 @@
         }, 60000);
       },
       payDetail(){
-        this.$route.router.go({name: 'pay_records', params: {'cardId':this.cardId}})
+        this.$route.router.go({name: 'pay_records', params: {cardId:this.cardId}})
       }
     },
     ready(){

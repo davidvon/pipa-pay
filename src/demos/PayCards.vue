@@ -102,7 +102,7 @@
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
-        this.$route.router.go({name: 'pay', params: {'cardId':cardId}})
+        this.$route.router.go({name: 'pay', params: {cardId:cardId}})
       }
     }
   }

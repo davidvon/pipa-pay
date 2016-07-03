@@ -35,7 +35,7 @@
       <flexbox-item></flexbox-item>
       <flexbox-item>
         <div style="padding:5px">
-          <x-button :disabled="cardIndex==-1" type="primary" @click="onGive">赠送</x-button>
+          <x-button :disabled="cardIndex==-1" type="primary" @click="onShare">赠送</x-button>
         </div>
       </flexbox-item>
     </flexbox>
@@ -78,8 +78,8 @@
         this.cardIdSelect = this.cards[index].cardId
         this.cardIndex = index
       },
-      onGive(){
-        this.$route.router.go({name:'gift-share', params:{'cardId': this.cardIdSelect}});
+      onShare(){
+        this.$route.router.go({name:'gift_share', params:{cardId:this.cardIdSelect}});
       },
       onBuyCard(){
         this.$route.router.go({name: 'buy'})
@@ -96,7 +96,7 @@
           if (ret && ret.result==0){
             self.cards = ret.data
             if(self.cards.length==0)
-              this.no_data = true
+              self.no_data = true
           }
         })
       }

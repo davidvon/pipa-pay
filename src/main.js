@@ -3,6 +3,7 @@ import Buy from './demos/Buy'
 import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
 import CardGiftShare from './demos/CardGiftShare'
+import CardGiftShareResult from './demos/CardGiftShareResult'
 import PayCards from './demos/PayCards'
 import PayCode from './demos/PayCode'
 import PayRecords from './demos/PayRecords'
@@ -103,6 +104,7 @@ const router = new Router({
 
 router.map({
   '/': {
+    name: 'home',
     component: Home
   },
   '/buy': {
@@ -133,9 +135,13 @@ router.map({
     name: 'gift',
     component: CardGift
   },
-  '/gift/share': {
-    name: 'gift-share',
+  '/gift/share/:cardId': {
+    name: 'gift_share',
     component: CardGiftShare
+  },
+  '/gift/share/result/:cardId': {
+    name: 'gift_share_result',
+    component: CardGiftShareResult
   },
   '/help': {
     name: 'help',

@@ -8,7 +8,7 @@
 
 <script>
   import Const from './services/const'
-  import { wechat_share } from './services/wxlib'
+  import { onMenuShareTimeline, onMenuShareAppMessage } from './services/wxlib'
 
   export default {
     components: {
@@ -28,7 +28,8 @@
         });
 
         wx.ready(function(){
-          wechat_share(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+          onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+          onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
         });
       })
     }
