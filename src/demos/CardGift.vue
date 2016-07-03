@@ -1,45 +1,65 @@
 <template>
-  <div class='card gift'>
+  <div class='wx-cards card gift flex' id="walmart_15_1">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">赠送卡</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
-
-    <checker class="center" :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected" @on-change="onCardSelect">
-      <checker-item :value="$index" style="margin:4px;" v-for="item in cards">
-        <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
-          <div slot="content" class="content">
-            <flexbox class="card-title">
-              <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
-              <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
-              <img class="icon-card-select" :src="$index==cardSelect.index ? cardSelect.icon.selected:cardSelect.icon.default"/>
-            </flexbox>
-            <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.balance}}</span></flexbox-item>
-              <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
-            </flexbox>
-          </div>`
-        </masker>
-      </checker-item>
-    </checker>
+    <div class="content card-list ">
+      <!--没有数据-->
+      <div class="not_card" v-show="no_data">
+        <p class="ncd_p1"><span class="ico_nocard"></span></p>
+        <p class="ncd_p2">暂无可赠送的电子卡~~</p>
+        <p class="ncd_p3"><x-button type="primary" @click="onBuyCard">购买电子卡</x-button></p>
+      </div>
+      <checker :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected" @on-change="onCardSelect">
+        <checker-item :value="$index" v-for="item in cards">
+          <div class="donation_dov">
+            <div class="card_item" data-id="{{$index}}" :class="$index==cardIndex ? 'on':''">
+              <div class="card_itop">
+                <div class="card_it1"><span class="card_img"><img :src="item.img" alt=""></span></div>
+                <div class="card_it2">{{item.title}}</div>
+              </div>
+              <div class="card_ibtm">
+                <div class="card_ib1">余额: <span class="col4">￥<em>{{item.balance}}</em></span></div>
+                <div class="card_ib2">有效期至{{item.expireDate}}</div>
+              </div>
+            </div>
+          </div>
+        </checker-item>
+      </checker>
+    </div>
+    <tabbar>
+    <flexbox>
+      <flexbox-item>
+        <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
+      </flexbox-item>
+      <flexbox-item></flexbox-item>
+      <flexbox-item>
+        <div style="padding:5px">
+          <x-button :disabled="cardIndex==-1" type="primary" @click="onGive">赠送</x-button>
+        </div>
+      </flexbox-item>
+    </flexbox>
+    </tabbar>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
-    Flexbox, FlexboxItem } from '../components'
+  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
+    XButton, Loading } from '../components'
   import Const from '../services/const'
 
   export default {
     components: {
-      Checker, CheckerItem, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
-      Flexbox, FlexboxItem
+      Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
+      XButton, Loading
     },
 
     //import Masker from '../components/masker'
     data () {
       return {
-        cardIndex:1,
+        cardIndex:-1,
+        cardIdSelect:'',
         menus: {
           menu1: '购卡',
           menu2: '付款',
@@ -49,26 +69,35 @@
         },
         cards: [],
         showMenus: false,
-        cardSelect: {
-          icon:{
-              default: '/static/demo/ico_sel.png',
-              selected: '/static/demo/ico_selon.png'
-          },
-          index: -1
-        }
+        loading: false,
+        no_data: false
       }
     },
     methods: {
       onCardSelect (index){
-        this.cardSelect.index = index
+        this.cardIdSelect = this.cards[index].cardId
+        this.cardIndex = index
+      },
+      onGive(){
+        this.$route.router.go({name:'give-share', params:{'cardId': this.cardIdSelect}});
+      },
+      onBuyCard(){
+        this.$route.router.go({name: 'buy'})
       }
     },
     route: {
       data (transition){
-        var _this = this
-        this.$http.get(Const.API_URL + '/cards/oDF3iY9P32sK_5GgYiRkjsCo45bk').then(function (response) {
-          if (response && response.data)
-            _this.cards = response.data
+        var self = this
+        self.loading = true
+        this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+          self.loading = false
+          console.log(response)
+          var ret = response.data
+          if (ret && ret.result==0){
+            self.cards = ret.data
+            if(self.cards.length==0)
+              this.no_data = true
+          }
         })
       }
     }

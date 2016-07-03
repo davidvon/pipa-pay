@@ -27,7 +27,7 @@
     },
     data () {
       return {
-        no_data_display: false,
+        no_data: false,
         rechargeTotal:0,
         expendTotal:0,
         records:[]
@@ -43,7 +43,7 @@
           var ret = response.data
           if (ret && ret.result==0){
             self.records = ret.data.records
-            if(self.records.length==0) self.no_data_display=true
+            if(self.records.length==0) self.no_data=true
           }
         })
       }

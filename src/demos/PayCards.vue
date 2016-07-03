@@ -3,7 +3,7 @@
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">支付</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div>
-      <div class="weui_cells_title" v-show="!no_data_display">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+      <div class="weui_cells_title" v-show="!no_data">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
@@ -19,7 +19,7 @@
           </div>
         </masker>
       </div>
-      <div class="not_card" v-show="no_data_display">
+      <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
         <p class="ncd_p3"><button class="blue_btn btn-buy" type="button" @click="buyCard">购买电子卡</button></p>
@@ -51,7 +51,7 @@
         cards: [],
         cards_online:[],
         showMenus: false,
-        no_data_display: false,
+        no_data: false,
         alert:{ message:'', show: false}
       }
     },
@@ -63,7 +63,7 @@
           var data = response.data
           if (data && data.result==0)
             self.cards = data.data
-            if(self.cards.length==0) self.no_data_display=true
+            if(self.cards.length==0) self.no_data=true
         })
       }
     },
