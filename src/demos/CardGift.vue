@@ -79,7 +79,7 @@
         this.cardIndex = index
       },
       onGive(){
-        this.$route.router.go({name:'give-share', params:{'cardId': this.cardIdSelect}});
+        this.$route.router.go({name:'gift-share', params:{'cardId': this.cardIdSelect}});
       },
       onBuyCard(){
         this.$route.router.go({name: 'buy'})
