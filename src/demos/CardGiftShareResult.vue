@@ -15,10 +15,10 @@
       <p class="fp_pt"><span class="fp_sp1">分享时间</span> <span class="fp_sp2 card-gtime">{{share.datetime}}</span></p>
       <p class="fp_pt"><span class="fp_sp1">状态</span> <span class="fp_sp2 card-status">{{share.status}}</span></p>
 
-      <div class="lk_person border b_top2 none ruser">
-        <div class="lk_person_d1"><img src="" alt="" data-help="/theme/card/image/tx.jpg" class="give-ruser"></div>
+      <div class="lk_person border b_top2 ruser" v-show="share.acquireUserImg.length>0">
+        <div class="lk_person_d1"><img :src="share.acquireUserImg" class="give-ruser"></div>
         <div class="lk_person_d2">
-          <p class="lk_name give-ruser-name"></p>
+          <p class="lk_name give-ruser-name">{{share.acquireUserName}}</p>
           <p><em class="give-ruser-time"></em>领取</p>
         </div>
       </div>

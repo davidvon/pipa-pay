@@ -8,7 +8,7 @@
       <div class="content">
         <p class="donation_top">请输入转赠留言</p>
         <div class="donation_text border b_top_btm">
-          <x-textarea :max="30" :placeholder="shareContent" :value.sync="shareContent"></x-textarea>
+          <x-textarea :max="30" :placeholder="content" :value.sync="content"></x-textarea>
         </div>
         <p class="donation_btn">
           <x-button type="primary" @click="maskShow=true">转赠</x-button>
@@ -39,11 +39,8 @@
       return {
         cardId: '',
         maskShow: false,
-        share: {
-          content: '小小卡片，浓浓情义',
-          callBackUrl: '',
-          logo: ''
-        },
+        content: '小小卡片，浓浓情义',
+        shareUrl:'',
         card: {
           sign: '',
           cardId: '',
@@ -77,7 +74,7 @@
             cardId: self.card.cardId,
             sign: self.card.sign,
             timestamp: self.card.timestamp,
-            content: self.share.content}).then(function (response) {
+            content: self.content}).then(function (response) {
           var res = response.data
           if(res.result != 0) return
           self.$route.router.go({name: 'gift_share_result', params:{cardId: self.card.cardId }})
@@ -86,8 +83,8 @@
       onShare(){
         var self = this
         if (!this.card || !this.share) return
-        onMenuShareAppMessage(this.share.callBackUrl, '点击领取' + this.card.cardName,
-          this.share.content, this.share.logo, function () {
+        onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
+          self.content, self.card.logo, function () {
             self.updateCardStatus()
           })
       },
@@ -104,6 +101,7 @@
           self.alertMsg('该卡已经转赠,无法再继续转赠')
         } else {
           self.card = res.data.card
+          self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign;
 //          self.updateCardStatus()
         }
       })

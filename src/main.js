@@ -4,6 +4,7 @@ import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
 import CardGiftShare from './demos/CardGiftShare'
 import CardGiftShareResult from './demos/CardGiftShareResult'
+import CardGiftReceive from './demos/CardGiftReceive'
 import PayCards from './demos/PayCards'
 import PayCode from './demos/PayCode'
 import PayRecords from './demos/PayRecords'
@@ -142,6 +143,10 @@ router.map({
   '/gift/share/result/:cardId': {
     name: 'gift_share_result',
     component: CardGiftShareResult
+  },
+  '/gift/receive/:sign': {
+    name: 'gift_receive',
+    component: CardGiftReceive
   },
   '/help': {
     name: 'help',

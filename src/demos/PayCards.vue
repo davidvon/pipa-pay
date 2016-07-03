@@ -2,7 +2,7 @@
   <div class='card'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">支付</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
-    <div>
+    <div class="content">
       <div class="weui_cells_title" v-show="!no_data">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
@@ -93,7 +93,7 @@
         this.alert.show = true
       },
       buyCard (){
-        self.$route.router.go({name: 'buy'})
+        this.$route.router.go({name: 'buy'})
       },
       cardConsume(e){
         var attrs = e.currentTarget.attributes;

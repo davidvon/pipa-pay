@@ -2,7 +2,7 @@
   <div class='wx-cards card gift flex' id="walmart_15_1">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">赠送卡</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
-    <div class="weui_cells_title">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+    <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content card-list ">
       <!--没有数据-->
       <div class="not_card" v-show="no_data">
@@ -28,7 +28,7 @@
       </checker>
     </div>
     <tabbar>
-    <flexbox>
+    <flexbox v-show="!no_data">
       <flexbox-item>
         <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
       </flexbox-item>

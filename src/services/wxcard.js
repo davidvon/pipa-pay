@@ -13,7 +13,7 @@ export function wxAddCard(self, openid, url_root, callback){
       }
       console.log('invoking wx:' + wx_cards)
       wx.addCard({
-        cardList: wx_cards, // 需要添加的卡券列表
+        cardList: wx_cards,            // 需要添加的卡券列表
         success: function (res) {
           var cardList = res.cardList; // 添加的卡券列表信息
           console.log('add success:' + cardList)
@@ -22,4 +22,18 @@ export function wxAddCard(self, openid, url_root, callback){
       });
     }
   })
+}
+
+export function wxOpenCard(self, wxCardId, code, callback) {
+  wx.openCard({
+    cardList: [{
+      cardId: wxCardId,
+      code: code
+    }],
+    success: function(res){
+      var cardList = res.cardList;
+      callback && callback(cardList)
+    }
+  });
+
 }
