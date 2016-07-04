@@ -77,7 +77,7 @@
           return;
         }
         wxAddCard(self, Const.openid, Const.apiUrl, function (cardList) {
-          this.$http.post(Const.apiUrl + 'weixin/card/status/update', {openid:Const.openid, cards: cardList}, function (res) {
+          self.$http.post(Const.apiUrl + 'weixin/card/status/update', {openid:Const.openid, cards: cardList}, function (res) {
             self.$route.router.go({name: 'memcards'})
           }, "json")
         })
