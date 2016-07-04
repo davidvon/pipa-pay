@@ -22,7 +22,7 @@
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
-        <p class="ncd_p3"><button class="blue_btn btn-buy" type="button" @click="buyCard">购买电子卡</button></p>
+        <p class="ncd_p3"><x-button type="primary" @click="onBuyCard">购买电子卡</x-button></p>
       </div>
     </div>
     <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
@@ -92,7 +92,7 @@
         this.alert.message = msg
         this.alert.show = true
       },
-      buyCard (){
+      onBuyCard (){
         this.$route.router.go({name: 'buy'})
       },
       cardConsume(e){

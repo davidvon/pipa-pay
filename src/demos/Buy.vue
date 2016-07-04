@@ -81,6 +81,7 @@ export default {
         },
         content: '商品一批'
       },
+      cardId: 'pDF3iY9tv9zCGCj4jTXFOo1DxHdo',
       alert:{ message:'', show: false}
     }
   },
@@ -93,16 +94,17 @@ export default {
     invoiceContentSelect (item){
        this.invoice.content = this.invoice.menus[item]
     },
-    wxPay(data, res){
+    wxPay(res){
+      var self = this
       wx && wx.chooseWXPay({
-        timestamp: data.timeStamp, //时间戳
-        nonceStr: data.nonceStr, //随机串
-        package: data.package,   //扩展包
-        signType: data.signType, //MD5
-        paySign: data.paySign,  //微信签名
+        timestamp: res.timeStamp, //时间戳
+        nonceStr: res.nonceStr, //随机串
+        package: res.package,   //扩展包
+        signType: res.signType, //MD5
+        paySign: res.paySign,  //微信签名
         success: function (res) {
           // 支付成功后的回调函数
-          this.$route.router.go({name: 'buy_result', params: {merchantId: data.merchantId, orderNo: res.orderId} });
+          self.$route.router.go({name: 'buy_result', params: {cardId: self.cardId, orderNo: res.orderId} });
         }
       });
     },
@@ -114,11 +116,11 @@ export default {
         var data = {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,
-           merchantId: 1,  //商户ID
-           openid: Const.openid
+           openId: Const.openid,
+           cardId:self.cardId
         }
         this.$http.post(Const.apiUrl + 'card/buy', data, function (res) {
-          if (res.result == 0) return wxPay(data, res);
+          if (res.result == 0) return self.wxPay(res);
           else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");
           else if (res.result == 255) return self.alertMessage("订单已完成支付");
           else return self.alertMessage("支付异常，请稍后再试");
