@@ -67,26 +67,31 @@
         })
       }
     },
-//    ready: function () {
-//      var self = this
-//      var url = location.href.split('#')[0]
-//      this.$http.get(Const.apiUrl + 'weixin/card_sign').then(function (response) {
-//        if (response && response.data)
-//          var data = response.data
-//          wx.chooseCard({
-//            shopId: data['shopId'], // 门店Id
-//            cardType: data['carType'], // 卡券类型
-//            cardId: data['carId'], // 卡券Id
-//            timestamp: data['timestamp'], // 卡券签名时间戳
-//            nonceStr: data['nonceStr'], // 卡券签名随机串
-//            signType: data['signType'], // 签名方式，默认'SHA1'
-//            cardSign: data['cardSign'], // 卡券签名
-//            success: function (res) {
-//              self.cards_online = res.cardList; // 用户选中的卡券列表信息
-//            }
-//          })
-//      })
-//    },
+    ready: function () {
+      var self = this
+      var url = location.href.split('#')[0]
+      this.$http.post(Const.apiUrl + 'weixin/card_sign').then(function (response) {
+        if (response && response.data){
+          var item = response.data
+          if(item.result == 0){
+            var data = item.data
+            wx.chooseCard({
+              shopId: data['shopId'], // 门店Id
+              cardType: data['carType'], // 卡券类型
+              cardId: data['carId'], // 卡券Id
+              timestamp: data['timestamp'], // 卡券签名时间戳
+              nonceStr: data['nonceStr'], // 卡券签名随机串
+              signType: data['signType'], // 签名方式，默认'SHA1'
+              cardSign: data['cardSign'], // 卡券签名
+              success: function (res) {
+                self.cards_online = res.cardList; // 用户选中的卡券列表信息
+                alert(self.cards_online)
+              }
+            })
+          }
+        }
+      })
+    },
     methods:{
       alertMsg(msg){
         this.alert.message = msg

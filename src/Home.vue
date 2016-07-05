@@ -82,6 +82,12 @@
 <style scoped>
   @import './styles/1px.less';
 
+  .demo-icon {
+    font-family: 'vux-demo';
+    font-size: 20px;
+    padding-right: 10px;
+    color: #04BE02;
+  }
   .home {
     background-color: #fbf9fe;
   }
