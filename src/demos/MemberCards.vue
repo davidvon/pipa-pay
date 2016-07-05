@@ -4,7 +4,7 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content">
-      <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
+      <div style="margin:15px;" data-globalid="{{item.globalId}}" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
           <div slot="content" class="content">
@@ -67,18 +67,20 @@
         var self = this
         console.log(e);
         var attrs = e.currentTarget.attributes;
-        var wxCardId = (attrs['data-cardid'] && attrs['data-cardid'].value) || 0;
-        var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
-        var merchantId = (attrs['data-merchantid'] && attrs['data-merchantid'].value) || 0;
-        var status = (attrs['data-status'] && attrs['data-status'].value) || 0;
-        if (status == 3) return
-        if (status == 1) {
-          wxOpenCard(self, wxCardId, cardCode);
+        var cardGlobalId = attrs['data-globalid'].value;
+        var cardId = attrs['data-cardid'].value;
+        var status = attrs['data-status'].value;
+        if (status >= 3) return
+        if (status == 1 || status == 2) {
+          var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
+          wxOpenCard(self, cardId, cardCode);
           return;
         }
-        wxAddCard(self, Const.openid, Const.apiUrl, function (cardList) {
-          self.$http.post(Const.apiUrl + 'weixin/card/status/update', {openid:Const.openid, cards: cardList}, function (res) {
-            self.$route.router.go({name: 'memcards'})
+        wxAddCard(self, cardGlobalId, Const.openid, Const.apiUrl, function (cardList) {
+          self.$http.post(Const.apiUrl + 'card/status/update', {openid:Const.openid, cards: cardList}, function (res) {
+            if(res == 0){
+              self.$route.router.go({name: 'memcards'})
+            }
           }, "json")
         })
       }
