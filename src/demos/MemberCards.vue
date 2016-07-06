@@ -4,7 +4,7 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content">
-      <div style="margin:15px;" data-globalid="{{item.globalId}}" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
+      <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
           <div slot="content" class="content">
@@ -54,8 +54,8 @@
         },
         no_data: false,
         cards: [],
-        statusStr: ['未放入微信卡包', '已放入微信卡包', '已赠送'],
-        statusClass: ['wxcard-disable', 'wxcard-enable', ''],
+        statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已赠送'],
+        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable'],
         showMenus: false
       }
     },
@@ -67,19 +67,21 @@
         var self = this
         console.log(e);
         var attrs = e.currentTarget.attributes;
+        var index = attrs['data-index'].value
         var cardGlobalId = attrs['data-globalid'].value;
         var cardId = attrs['data-cardid'].value;
         var status = attrs['data-status'].value;
         if (status >= 3) return
-        if (status == 1 || status == 2) {
+        if (status == 2) {
           var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
           wxOpenCard(self, cardId, cardCode);
           return;
         }
         wxAddCard(self, cardGlobalId, Const.openid, Const.apiUrl, function (cardList) {
-          self.$http.post(Const.apiUrl + 'card/status/update', {openid:Const.openid, cards: cardList}, function (res) {
-            if(res == 0){
-              self.$route.router.go({name: 'memcards'})
+          self.$http.post(Const.apiUrl + 'card/add/status/update', {openid:Const.openid, cardGlobalId: cardGlobalId}, function (res) {
+            if(res.result == 0){
+              self.cards[Number(index)].cardCode = res.data
+              self.cards[Number(index)].status = 2
             }
           }, "json")
         })

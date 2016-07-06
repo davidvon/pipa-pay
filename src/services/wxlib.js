@@ -1,4 +1,4 @@
-export function onMenuShareAppMessage(link, title, desc, logo, callback=null, errback=null){
+export function onMenuShareAppMessage(link, title, desc, logo, callback, errback){
   wx && wx.onMenuShareAppMessage({
     title: title, // 分享标题
     desc: desc, // 分享描述
@@ -13,7 +13,7 @@ export function onMenuShareAppMessage(link, title, desc, logo, callback=null, er
   });
 }
 
-export function onMenuShareTimeline(link, title, desc, logo, callback=null, errback=null){
+export function onMenuShareTimeline(link, title, desc, logo, callback, errback){
   wx && wx.onMenuShareTimeline({
     title: title, // 分享标题
     link: link, // 分享链接

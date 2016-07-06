@@ -4,6 +4,7 @@ import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
 import CardGiftShare from './demos/CardGiftShare'
 import CardGiftShareResult from './demos/CardGiftShareResult'
+import CardActive from './demos/CardActive'
 import CardGiftReceive from './demos/CardGiftReceive'
 import PayCards from './demos/PayCards'
 import PayCode from './demos/PayCode'
@@ -46,11 +47,15 @@ router.map({
     name: 'memcards',
     component: MemberCards
   },
+  '/card/active': {
+    name: 'active',
+    component: CardActive
+  },
   '/pay/cards': {
     name: 'paycards',
     component: PayCards
   },
-  '/pay/:cardId': {
+  '/pay/:cardId/:cardCode': {
     name: 'pay',
     component: PayCode
   },
@@ -62,7 +67,7 @@ router.map({
     name: 'gift',
     component: CardGift
   },
-  '/gift/share/:cardId': {
+  '/gift/share/:cardId/:cardCode': {
     name: 'gift_share',
     component: CardGiftShare
   },

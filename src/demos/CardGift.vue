@@ -19,7 +19,7 @@
                 <div class="card_it2">{{item.title}}</div>
               </div>
               <div class="card_ibtm">
-                <div class="card_ib1">余额: <span class="col4">￥<em>{{item.balance}}</em></span></div>
+                <div class="card_ib1">余额: <span class="col4">￥<em>{{item.amount}}</em></span></div>
                 <div class="card_ib2">有效期至{{item.expireDate}}</div>
               </div>
             </div>
@@ -60,6 +60,7 @@
       return {
         cardIndex:-1,
         cardIdSelect:'',
+        cardCodeSelect:'',
         menus: {
           menu1: '购卡',
           menu2: '付款',
@@ -76,10 +77,11 @@
     methods: {
       onCardSelect (index){
         this.cardIdSelect = this.cards[index].cardId
+        this.cardCodeSelect = this.cards[index].cardCode
         this.cardIndex = index
       },
       onShare(){
-        this.$route.router.go({name:'gift_share', params:{cardId:this.cardIdSelect}});
+        this.$route.router.go({name:'gift_share', params:{cardId:this.cardIdSelect, cardCode:this.cardCodeSelect}});
       },
       onBuyCard(){
         this.$route.router.go({name: 'buy'})

@@ -4,7 +4,7 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="content">
       <div class="weui_cells_title" v-show="!no_data">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
-      <div style="margin:15px;" data-cardid="{{item.cardId}}" v-for="item in cards" @click="cardConsume">
+      <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
           <div slot="content" class="content">
@@ -70,16 +70,14 @@
     ready: function () {
       var self = this
       var url = location.href.split('#')[0]
-      this.$http.post(Const.apiUrl + 'weixin/card_sign').then(function (response) {
+      this.$http.post(Const.apiUrl + 'weixin/card/choose/sign').then(function (response) {
         if (response && response.data){
           var data = response.data
+          console.log(response.data)
           wx.chooseCard({
-            shopId: data['shopId'], // 门店Id
-            cardType: data['carType'], // 卡券类型
-            cardId: data['carId'], // 卡券Id
             timestamp: data['timestamp'], // 卡券签名时间戳
             nonceStr: data['nonceStr'], // 卡券签名随机串
-            signType: data['signType'], // 签名方式，默认'SHA1'
+            signType: 'SHA1',         // 签名方式，默认'SHA1'
             cardSign: data['cardSign'], // 卡券签名
             success: function (res) {
               self.cards_online = res.cardList; // 用户选中的卡券列表信息
@@ -99,12 +97,13 @@
       },
       cardConsume(e){
         var attrs = e.currentTarget.attributes;
-        var cardId = (attrs['data-cardid'] && attrs['data-cardid'].value) || 0;
+        var cardId = attrs['data-cardid'].value;
+        var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
         if(!cardId){
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
-        this.$route.router.go({name: 'pay', params: {cardId:cardId}})
+        this.$route.router.go({name: 'pay', params: {cardId:cardId, cardCode:cardCode}})
       }
     }
   }

@@ -15,8 +15,7 @@ export function wxAddCard(self, cardGlobalId, openid, url_root, callback){
       wx.addCard({
         cardList: wx_cards,            // 需要添加的卡券列表
         success: function (res) {
-          alert('已添加卡券：' + JSON.stringify(res.cardList));
-          console.log('add success:' + JSON.stringify(res.cardList))
+          console.log('add card success:' + JSON.stringify(res.cardList))
           callback && callback(res.cardList)
         }
       });

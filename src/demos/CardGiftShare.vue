@@ -38,6 +38,7 @@
     data () {
       return {
         cardId: '',
+        cardCode:'',
         maskShow: false,
         content: '小小卡片，浓浓情义',
         shareUrl:'',
@@ -60,6 +61,7 @@
     route: {
       data (transition){
         this.cardId = transition.to.params.cardId
+        this.cardCode = transition.to.params.cardCode
       }
     },
     methods: {
@@ -71,20 +73,20 @@
         var self = this
         this.$http.post(Const.apiUrl + 'card/share',
           { openId:Const.openid,
-            cardId: self.card.cardId,
             sign: self.card.sign,
             timestamp: self.card.timestamp,
             content: self.content}).then(function (response) {
           var res = response.data
           if(res.result != 0) return
-          self.$route.router.go({name: 'gift_share_result', params:{cardId: self.card.cardId }})
+          self.$route.router.go({name: 'gift_share_result', params:{cardId: self.cardId, cardCode: self.cardCode }})
         })
       },
       onShare(){
         var self = this
-        if (!this.card || !this.share) return
+        self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign;
         onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
           self.content, self.card.logo, function () {
+            self.maskShow = false
             self.updateCardStatus()
           })
       },
@@ -94,15 +96,15 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.apiUrl + 'card/share/check', {openId:Const.openid, cardId: this.cardId}).then(function (response) {
+      this.$http.post(Const.apiUrl + 'card/share/check',
+        {openId:Const.openid, cardId: this.cardId, cardCode:this.cardCode}).then(function (response) {
         var res = response.data
         if(res.result != 0) return
-        if (res.data.status == 2) {
+        if (res.data.status > 2) {
           self.alertMsg('该卡已经转赠,无法再继续转赠')
         } else {
           self.card = res.data.card
-          self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign;
-//          self.updateCardStatus()
+          self.onShare()
         }
       })
     }

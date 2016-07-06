@@ -1,27 +1,29 @@
 <template>
   <div class="pay">
     <div class="background">
-      <a class="detail" @click="payDetail">交易明细</a>
+      <a class="detail" @click="onPayDetail">交易明细</a>
       <br>
       <div class="pay-card">
         <div>
           <div class="title">{{card.merchantName}}</div>
-          <div class="sub-title">余额：￥{{card.balance}}</div>
+          <div class="sub-title">余额：￥{{card.amount}}</div>
         </div>
         <div class="line-part">
           <div class="line left"></div>
           <div class="line right"></div>
         </div>
-        <div class="code-img">
-          <barcode :width=1.4 style="max-height:200px;" :display-value=true :code.sync="card.qrcode"></barcode>
-        </div>
-        <div class="code-img">
-          <qrcode :size="64" :value.sync="card.qrcode"></qrcode>
+        <div style="max-height:450px">
+          <div class="code-img">
+            <barcode :width=1.4 style="max-height:200px;" :display-value=true :code.sync="card.qrcode"></barcode>
+          </div>
+          <div class="code-img" style="padding: 20px 0 50px 0;">
+            <qrcode :size="64" :value.sync="card.qrcode"></qrcode>
+          </div>
         </div>
       </div>
       <br>
     </div>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" @on-hide="onPayCards" title="信息" button-text="知道了">{{alert.message}}</alert>
     <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
@@ -49,6 +51,7 @@
     route: {
       data (transition){
         this.cardId = transition.to.params.cardId
+        this.carCode = transition.to.params.cardCode
       }
     },
     methods: {
@@ -63,7 +66,7 @@
           self.loading = false
           var ret = response.data
           if (ret && ret.result == 0){
-            if (ret.data.status != 1) {
+            if (ret.data.status > 2) {
               self.alertMsg('该卡正在转赠中或已过期，不可使用');
             } else {
               self.card = ret.data
@@ -78,8 +81,11 @@
           self.refresh()
         }, 60000);
       },
-      payDetail(){
+      onPayDetail(){
         this.$route.router.go({name: 'pay_records', params: {cardId:this.cardId}})
+      },
+      onPayCards(){
+        this.$route.router.go({name: 'paycards'})
       }
     },
     ready(){
@@ -103,9 +109,8 @@
   }
 
   .pay .pay-card {
-    width: 95%;
+    width: 90%;
     margin: 20px auto;
-    height: 570px;
     background-color: #FFF;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -160,6 +165,6 @@
   }
 
   .pay .code-img {
-    margin: 20px;
+    padding: 20px;
   }
 </style>
