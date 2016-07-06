@@ -26,17 +26,18 @@
       </div>
     </div>
     <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <loading :show.sync="loading"></loading>
   </div>
 </template>
 
 <script>
-  import { Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
+  import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
 
   export default {
     components: {
-      Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
+      Loading, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
       Flexbox, FlexboxItem
     },
     data () {
@@ -52,13 +53,16 @@
         cards_online:[],
         showMenus: false,
         no_data: false,
-        alert:{ message:'', show: false}
+        alert:{ message:'', show: false},
+        loading: false
       }
     },
     route: {
       data (transition){
         var self = this
+        self.loading = true;
         this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+          self.loading = false;
           console.log(response)
           var data = response.data
           if (data && data.result==0)
@@ -68,24 +72,24 @@
       }
     },
     ready: function () {
-      var self = this
-      var url = location.href.split('#')[0]
-      this.$http.post(Const.apiUrl + 'weixin/card/choose/sign').then(function (response) {
-        if (response && response.data){
-          var data = response.data
-          console.log(response.data)
-          wx.chooseCard({
-            timestamp: data['timestamp'], // 卡券签名时间戳
-            nonceStr: data['nonceStr'], // 卡券签名随机串
-            signType: 'SHA1',         // 签名方式，默认'SHA1'
-            cardSign: data['cardSign'], // 卡券签名
-            success: function (res) {
-              self.cards_online = res.cardList; // 用户选中的卡券列表信息
-              alert(self.cards_online)
-            }
-          })
-        }
-      })
+//      var self = this
+//      var url = location.href.split('#')[0]
+//      this.$http.post(Const.apiUrl + 'weixin/card/choose/sign').then(function (response) {
+//        if (response && response.data){
+//          var data = response.data
+//          console.log(response.data)
+//          wx.chooseCard({
+//            timestamp: data['timestamp'], // 卡券签名时间戳
+//            nonceStr: data['nonceStr'], // 卡券签名随机串
+//            signType: 'SHA1',         // 签名方式，默认'SHA1'
+//            cardSign: data['cardSign'], // 卡券签名
+//            success: function (res) {
+//              self.cards_online = res.cardList; // 用户选中的卡券列表信息
+//              alert(self.cards_online)
+//            }
+//          })
+//        }
+//      })
     },
     methods:{
       alertMsg(msg){

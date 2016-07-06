@@ -40,17 +40,18 @@
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
     <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
+    <loading :show.sync="loading"></loading>
   </div>
 </template>
 
 
 <script>
 import Const from '../services/const'
-import { Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
+import { Loading, Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 
 export default {
   components: {
-    Checker, CheckerItem, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
+    Loading, Checker, CheckerItem, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
   },
   data () {
     return {
@@ -82,7 +83,8 @@ export default {
         content: '商品一批'
       },
       cardId: 'pDF3iY9tv9zCGCj4jTXFOo1DxHdo',
-      alert:{ message:'', show: false}
+      alert:{ message:'', show: false},
+      loading: false
     }
   },
   computed: {
@@ -109,7 +111,8 @@ export default {
       });
     },
     buyCard(){
-        var self = this
+        var self = this;
+        self.loading = true;
         if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
           self.alertMessage('输入的其他金额不符合要求')
         }
@@ -118,8 +121,9 @@ export default {
            count: self.count,
            openId: Const.openid,
            cardId:self.cardId
-        }
+        };
         this.$http.post(Const.apiUrl + 'card/buy', data, function (res) {
+          self.loading = false;
           if (res.result == 0) return self.wxPay(res);
           else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");
           else if (res.result == 255) return self.alertMessage("订单已完成支付");
@@ -127,7 +131,7 @@ export default {
         }, "json")
     },
     alertMessage(msg){
-      this.alert.message = msg
+      this.alert.message = msg;
       this.alert.show = true
     },
     invoice_valid(){
@@ -158,7 +162,8 @@ export default {
   border-color: #ff4a00;
 }
 .order .center{
-  margin-top:0
+  margin-top:0;
+  text-align: center;
 }
 .order .money-symbol{
   color:#ff4a00;font-size:20px

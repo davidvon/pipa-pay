@@ -29,18 +29,19 @@
         <p class="ncd_p3"><x-button type="primary" @click="buyCard">购买电子卡</x-button></p>
       </div>
     </div>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
-  import { Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
+  import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
 
   export default {
     components: {
-      Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
+      Loading, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
       Flexbox, FlexboxItem
     },
     data () {
@@ -56,7 +57,8 @@
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已赠送'],
         statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable'],
-        showMenus: false
+        showMenus: false,
+        loading: false
       }
     },
     methods:{
@@ -64,6 +66,7 @@
         this.$route.router.go({name: 'buy'})
       },
       openCard (e){
+        this.loading = true;
         var self = this
         console.log(e);
         var attrs = e.currentTarget.attributes;
@@ -75,22 +78,28 @@
         if (status == 2) {
           var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
           wxOpenCard(self, cardId, cardCode);
+          self.loading = false;
           return;
         }
         wxAddCard(self, cardGlobalId, Const.openid, Const.apiUrl, function (cardList) {
           self.$http.post(Const.apiUrl + 'card/add/status/update', {openid:Const.openid, cardGlobalId: cardGlobalId}, function (res) {
+            self.loading = false;
             if(res.result == 0){
               self.cards[Number(index)].cardCode = res.data
               self.cards[Number(index)].status = 2
             }
           }, "json")
+        }, function(){
+          self.loading = false;
         })
       }
     },
     route: {
       data (transition){
         var self = this
+        self.loading = true
         this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+          self.loading = false
           console.log(response)
           var data = response.data
           if (data && data.result==0)

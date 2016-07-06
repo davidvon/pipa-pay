@@ -12,7 +12,7 @@
           <div class="line left"></div>
           <div class="line right"></div>
         </div>
-        <div style="max-height:450px">
+        <div style="min-height:410px">
           <div class="code-img">
             <barcode :width=1.4 style="max-height:200px;" :display-value=true :code.sync="card.qrcode"></barcode>
           </div>
@@ -62,7 +62,7 @@
       reload(){
         this.loading = true
         var self = this
-        this.$http.post(Const.apiUrl + 'card/pay/code', {cardId: this.cardId}).then(function (response) {
+        this.$http.post(Const.apiUrl + 'card/pay/code', {cardId: this.cardId, cardCode: this.carCode}).then(function (response) {
           self.loading = false
           var ret = response.data
           if (ret && ret.result == 0){
