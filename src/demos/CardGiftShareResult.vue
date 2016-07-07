@@ -56,7 +56,7 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.apiUrl + 'card/share/info', {openId:Const.openid, cardId: this.cardId}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/share/info', {openId:Const.openid, cardId: this.cardId}).then(function (response) {
         var res = response.data
         if(res.result != 0) return
         self.share = res.data

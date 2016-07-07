@@ -27,3 +27,24 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback){
     }
   });
 }
+
+export function getOAuthRedirectUrl(appid, url){
+  url = encodeURIComponent(url)
+  var ret = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+ appid +'&redirect_uri='+ url+
+  '&response_type=code&scope=snsapi_base&state=1#wechat_redirect'
+  console.log('[getOAuthRedirectUrl] url:' + ret)
+  return ret
+}
+
+export function oAuthCheck(self, code, apibase, appid, redirectUrl, callback){
+  if(code){
+    self.$http.post(apibase + 'weixin/oauth/decode',{code:code}).then(function (response) {
+      console.log('[oAuthCheck] oauth callback...')
+      callback && callback(response.data)
+    })
+  } else {
+    var oauth_url = getOAuthRedirectUrl(appid, redirectUrl)
+    console.log('[oAuthCheck] oauth url:' + oauth_url)
+    return location.href = oauth_url
+  }
+}

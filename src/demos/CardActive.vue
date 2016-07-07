@@ -60,7 +60,7 @@
       var self = this
       self.loading = true
       var params = this.$route.query
-      this.$http.post(Const.apiUrl + 'card/active', params).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/active', params).then(function (response) {
         self.loading = false
         console.log(response)
         var ret = response.data

@@ -1,5 +1,5 @@
 import Home from './Home'
-import Buy from './demos/Buy'
+import CardBuy from './demos/CardBuy'
 import BuyResult from './demos/BuyResult'
 import CardGift from './demos/CardGift'
 import CardGiftShare from './demos/CardGiftShare'
@@ -37,7 +37,7 @@ router.map({
   },
   '/buy': {
     name: 'buy',
-    component: Buy
+    component: CardBuy
   },
   '/buy/result/:merchantId/:orderId': {
     name: 'buy_result',
@@ -139,5 +139,5 @@ router.afterEach(function (transition) {
     }, 1000)
   }
 })
-
 router.start(App, '#app')
+

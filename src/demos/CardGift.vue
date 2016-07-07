@@ -91,7 +91,7 @@
       data (transition){
         var self = this
         self.loading = true
-        this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
           self.loading = false
           console.log(response)
           var ret = response.data

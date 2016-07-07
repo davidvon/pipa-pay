@@ -38,7 +38,7 @@
       data (transition){
         this.cardId = transition.from.params.cardId
         var self = this
-        this.$http.post(Const.apiUrl + 'card/pay/records', {cardId: this.cardId}).then(function (response) {
+        this.$http.post(Const.API_URL + 'card/pay/records', {cardId: this.cardId}).then(function (response) {
           console.log(response)
           var ret = response.data
           if (ret && ret.result==0){

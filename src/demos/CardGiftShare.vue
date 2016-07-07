@@ -71,7 +71,7 @@
       },
       updateCardStatus(){
         var self = this
-        this.$http.post(Const.apiUrl + 'card/share',
+        this.$http.post(Const.API_URL + 'card/share',
           { openId:Const.openid,
             sign: self.card.sign,
             timestamp: self.card.timestamp,
@@ -96,7 +96,7 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.apiUrl + 'card/share/check',
+      this.$http.post(Const.API_URL + 'card/share/check',
         {openId:Const.openid, cardId: this.cardId, cardCode:this.cardCode}).then(function (response) {
         var res = response.data
         if(res.result != 0) return

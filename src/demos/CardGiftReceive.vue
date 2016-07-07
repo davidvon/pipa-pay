@@ -53,7 +53,7 @@
       },
       onReceiveCard(){
         var self = this
-        this.$http.post(Const.apiUrl + 'card/receive', {openId:Const.openid, sign: this.sign}).then(function (response) {
+        this.$http.post(Const.API_URL + 'card/receive', {openId:Const.openid, sign: this.sign}).then(function (response) {
           var res = response.data
           if (res.result == 255) {
             return
@@ -63,7 +63,7 @@
               self.$route.router.go({name: 'memcards'})
             })
           }else{
-            wxAddCard(self, Const.openid, Const.apiUrl, function (cardList) {
+            wxAddCard(self, Const.openid, Const.API_URL, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
           }
@@ -72,7 +72,7 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.apiUrl + 'card/receive/check', {openId:Const.openid, sign:this.sign}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/receive/check', {openId:Const.openid, sign:this.sign}).then(function (response) {
         var res = response.data
         if(res.result == 255){
           self.no_data = true

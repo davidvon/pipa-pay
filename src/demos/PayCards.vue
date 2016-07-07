@@ -61,7 +61,7 @@
       data (transition){
         var self = this
         self.loading = true;
-        this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
           self.loading = false;
           console.log(response)
           var data = response.data
@@ -74,7 +74,7 @@
     ready: function () {
 //      var self = this
 //      var url = location.href.split('#')[0]
-//      this.$http.post(Const.apiUrl + 'weixin/card/choose/sign').then(function (response) {
+//      this.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
 //        if (response && response.data){
 //          var data = response.data
 //          console.log(response.data)

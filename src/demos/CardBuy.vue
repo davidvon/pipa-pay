@@ -122,7 +122,7 @@ export default {
            openId: Const.openid,
            cardId:self.cardId
         };
-        this.$http.post(Const.apiUrl + 'card/buy', data, function (res) {
+        this.$http.post(Const.API_URL + 'card/buy', data, function (res) {
           self.loading = false;
           if (res.result == 0) return self.wxPay(res);
           else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");

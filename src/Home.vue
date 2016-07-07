@@ -66,15 +66,72 @@
         </flexbox-item>
       </flexbox>
     </div>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
-  import { Flexbox, FlexboxItem } from './components/'
+  import { Loading, Flexbox, FlexboxItem } from './components/'
+  import Const from './services/const'
+  import { onMenuShareTimeline, onMenuShareAppMessage, getOAuthRedirectUrl, oAuthCheck } from './services/wxlib'
+  import { getCookie, setCookie, addUrlParam } from './libs/util'
+
   export default {
-    components: {
-      Flexbox,
-      FlexboxItem
+    components: { Loading, Flexbox, FlexboxItem },
+    data () {
+      return {
+        loading: false
+      }
+    },
+    methods:{
+      wxRegister(){
+        console.log('[App]:readying')
+        if(!this.openid) return
+        var self = this
+        var url = location.href.split('#')[0]
+        console.log('[wxJsApi] url:' + url)
+        self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
+          self.loading = false
+          if (response && response.data){
+            wx.config({
+              debug: true,
+              appId: response.data['appId'],
+              timestamp: response.data['timestamp'],
+              nonceStr: response.data['nonceStr'],
+              signature: response.data['signature'],
+              jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
+            });
+            wx.ready(function(){
+              console.log("[App] wx.config ok...");
+              onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+              onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+            });
+            wx.error(function (res) {
+              console.error("[App] wx.err... "+res.errMsg);
+            });
+          }
+        })
+      }
+    },
+    ready: function () {
+      var self = this
+      self.loading = true
+      self.openid = getCookie('PIPA_OPENID')
+      console.log("[App] openid:" + self.openid)
+      if(!self.openid) {
+        var code = self.$route.query['code']
+        oAuthCheck(self, code, Const.API_URL, Const.WX_APPID, location.href, function (response) {
+          console.log("[App] openid:" + JSON.stringify(response))
+          if (response.errcode == 0) {
+            self.openid = response.openid
+            console.log("[App] openid:" + self.openid)
+            setCookie('PIPA_OPENID', self.openid)
+            self.wxRegister()
+          }
+        })
+      }else{
+        self.wxRegister()
+      }
     }
   }
 </script>

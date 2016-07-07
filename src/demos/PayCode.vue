@@ -62,7 +62,7 @@
       reload(){
         this.loading = true
         var self = this
-        this.$http.post(Const.apiUrl + 'card/pay/code', {cardId: this.cardId, cardCode: this.carCode}).then(function (response) {
+        this.$http.post(Const.API_URL + 'card/pay/code', {cardId: this.cardId, cardCode: this.carCode}).then(function (response) {
           self.loading = false
           var ret = response.data
           if (ret && ret.result == 0){

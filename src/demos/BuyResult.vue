@@ -61,7 +61,7 @@ export default {
     data (transition){
       var self = this
       this.order_no = transition.to.params.orderNo
-      this.$http.post(Const.apiUrl + 'card/buy/query', {order_no: this.order_no}, function (res) {
+      this.$http.post(Const.API_URL + 'card/buy/query', {order_no: this.order_no}, function (res) {
         if(res.result == 0){
           self.buy_status = res.data.buy_status
           self.cards = res.data.cards
@@ -79,7 +79,7 @@ export default {
         }
       }
       var self = this
-      wxAddCard(self, Const.openid, Const.apiUrl, function (cardList) {
+      wxAddCard(self, Const.openid, Const.API_URL, function (cardList) {
         console.log('wx.addCard:' + res.cardList)
         self.$route.router.go({name: 'memcards'})
       })

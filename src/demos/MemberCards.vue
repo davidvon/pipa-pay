@@ -81,8 +81,8 @@
           self.loading = false;
           return;
         }
-        wxAddCard(self, cardGlobalId, Const.openid, Const.apiUrl, function (cardList) {
-          self.$http.post(Const.apiUrl + 'card/add/status/update', {openid:Const.openid, cardGlobalId: cardGlobalId}, function (res) {
+        wxAddCard(self, cardGlobalId, Const.openid, Const.API_URL, function (cardList) {
+          self.$http.post(Const.API_URL + 'card/add/status/update', {openid:Const.openid, cardGlobalId: cardGlobalId}, function (res) {
             self.loading = false;
             if(res.result == 0){
               self.cards[Number(index)].cardCode = res.data
@@ -98,7 +98,7 @@
       data (transition){
         var self = this
         self.loading = true
-        this.$http.post(Const.apiUrl + 'cards', {openid: Const.openid}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
           self.loading = false
           console.log(response)
           var data = response.data
