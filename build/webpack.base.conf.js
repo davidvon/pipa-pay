@@ -1,3 +1,5 @@
+var product_cdn = 'http://7xvpyd.com1.z0.glb.clouddn.com/static'
+
 var path = require('path')
 var projectRoot = path.resolve(__dirname, '../')
 
@@ -7,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),
-    publicPath: 'http://7xvpyd.com1.z0.glb.clouddn.com/static',
+    publicPath: product_cdn,
     filename: '[name].js'
   },
   stats: {
