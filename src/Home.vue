@@ -9,13 +9,13 @@
     <div class="bg">
       <flexbox class="vux-1px-tb" :gutter="0">
         <flexbox-item class="vux-1px-r">
-          <a class="item" href="#buy">
+          <a class="item" v-link="{name:'buy'}">
             <div class="img icon-order"></div>
             <div class="text">购卡</div>
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item" href="#pay/cards">
+          <a class="item" v-link="{name:'paycards'}">
             <div class="img icon-pay"></div>
             <div class="text">支付</div>
           </a>
@@ -113,24 +113,29 @@
         })
       }
     },
-    ready: function () {
-      var self = this
-      self.loading = true
-      self.openid = getCookie('PIPA_OPENID')
-      console.log("[App] openid:" + self.openid)
-      if(!self.openid) {
-        var code = self.$route.query['code']
-        oAuthCheck(self, code, Const.API_URL, Const.WX_APPID, location.href, function (response) {
-          console.log("[App] openid:" + JSON.stringify(response))
-          if (response.errcode == 0) {
-            self.openid = response.openid
-            console.log("[App] openid:" + self.openid)
-            setCookie('PIPA_OPENID', self.openid)
-            self.wxRegister()
-          }
-        })
-      }else{
-        self.wxRegister()
+    ready(){
+      this.wxRegister()
+    },
+    route: {
+      activate: function (transition) {
+        var self = this
+        self.loading = true
+        self.openid = getCookie('PIPA_OPENID')
+        console.log("[App] openid:" + self.openid)
+        if (!self.openid) {
+          var code = self.$route.query['code']
+          oAuthCheck(self, code, Const.API_URL, Const.WX_APPID, location.href, function (response) {
+            console.log("[App] openid:" + JSON.stringify(response))
+            if (response.errcode == 0) {
+              self.openid = response.openid
+              console.log("[App] openid:" + self.openid)
+              setCookie('PIPA_OPENID', self.openid)
+              transition.next()
+            }
+          })
+        } else {
+          transition.next()
+        }
       }
     }
   }
