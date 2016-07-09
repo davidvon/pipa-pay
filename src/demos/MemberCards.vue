@@ -3,7 +3,10 @@
     <x-header :left-options='{showBack:true, backText:"返回"}'>我的卡包</x-header>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content">
-      <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
+      <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}"
+           data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}}
+           data-status={{item.status}} v-for="item in cards" @click="openCard">
+
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
           <div slot="content" class="content">
@@ -29,6 +32,7 @@
       </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
+    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -49,10 +53,15 @@
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已赠送'],
         statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable'],
-        loading: false
+        loading: false,
+        alert: {message: '', show: false}
       }
     },
     methods:{
+      alertMsg(msg){
+        this.alert.message = msg
+        this.alert.show = true
+      },
       buyCard (){
         this.$route.router.go({name: 'buy'})
       },
@@ -65,7 +74,11 @@
         var cardGlobalId = attrs['data-globalid'].value;
         var cardId = attrs['data-cardid'].value;
         var status = attrs['data-status'].value;
-        if (status >= 3) return
+        if (status >= 3){
+          self.loading = false;
+          self.alertMsg('该卡正在转赠中或已过期，不可使用');
+          return
+        }
         if (status == 2) {
           var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
           wxOpenCard(self, cardId, cardCode);

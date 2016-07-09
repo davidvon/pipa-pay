@@ -23,7 +23,7 @@
       </div>
       <br>
     </div>
-    <alert :show.sync="alert.show" @on-hide="onPayCards" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" @on-hide="onHome" title="信息" button-text="知道了">{{alert.message}}</alert>
     <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
@@ -84,8 +84,8 @@
       onPayDetail(){
         this.$route.router.go({name: 'pay_records', params: {cardId:this.cardId}})
       },
-      onPayCards(){
-        this.$route.router.go({name: 'paycards'})
+      onHome(){
+        this.$route.router.go({name: 'home'})
       }
     },
     ready(){

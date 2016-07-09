@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了" @on-hide="goGift">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="信息" button-text="知道了" @on-hide="goHome">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -90,8 +90,8 @@
             console.log('[CardGiftShare] menu share error')
           })
       },
-      goGift(){
-        this.$route.router.go({name: 'gift'})
+      goHome(){
+        this.$route.router.go({name: 'home'})
       }
     },
     ready(){
