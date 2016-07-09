@@ -1,4 +1,4 @@
-var product_cdn = 'http://7xvpyd.com1.z0.glb.clouddn.com/static'
+var product_cdn = 'http://wx.cdn.pipapay.com'
 
 var path = require('path')
 var projectRoot = path.resolve(__dirname, '../')
