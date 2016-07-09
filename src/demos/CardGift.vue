@@ -45,14 +45,15 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
-    XButton, Loading } from '../components'
+  import { Checker, CheckerItem, Masker, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
+    XButton, Loading, Actionsheet } from '../components'
+  import { getCookie } from '../libs/util'
   import Const from '../services/const'
 
   export default {
     components: {
-      Checker, CheckerItem, Masker, Actionsheet, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
-      XButton, Loading
+      Checker, CheckerItem, Masker, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem, XButton, Loading,
+      Actionsheet
     },
 
     //import Masker from '../components/masker'
@@ -91,7 +92,8 @@
       data (transition){
         var self = this
         self.loading = true
-        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
+        self.openid = getCookie('PIPA_OPENID')
+        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false
           console.log(response)
           var ret = response.data

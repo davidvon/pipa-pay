@@ -25,6 +25,7 @@ import Barcode from './barcode'
 import Qrcode from './qrcode'
 import Group from './group'
 import Box from './box'
+import { Tabbar, TabbarItem } from './tabbar'
 
 const vux = {
   Cell,
@@ -46,7 +47,9 @@ const vux = {
   Barcode,
   Qrcode,
   Group,
-  Box
+  Box,
+  Masker,
+  Tabbar
 }
 
 module.exports = vux

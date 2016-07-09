@@ -35,7 +35,7 @@ router.map({
     name: 'home',
     component: Home
   },
-  '/buy': {
+  '/buy/:cardId': {
     name: 'buy',
     component: CardBuy
   },
@@ -71,7 +71,7 @@ router.map({
     name: 'gift_share',
     component: CardGiftShare
   },
-  '/gift/share/result/:cardId': {
+  '/gift/share/result/:cardId/:cardCode': {
     name: 'gift_share_result',
     component: CardGiftShareResult
   },

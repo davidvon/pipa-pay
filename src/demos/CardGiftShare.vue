@@ -1,9 +1,7 @@
 <template>
   <div class='wx-cards card gift'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">赠送卡
+    <x-header :left-options='{showBack:true, backText:"返回"}'>赠送卡
     </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
     <div class="container" data-js="">
       <div class="content">
         <p class="donation_top">请输入转赠留言</p>
@@ -23,17 +21,19 @@
         </div>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了" @on-hide="goHome">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="信息" button-text="知道了" @on-hide="goGift">{{alert.message}}</alert>
   </div>
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, XButton, XTextarea, Alert} from '../components'
+  import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
   import { onMenuShareAppMessage } from '../services/wxlib'
+  import { getCookie } from '../libs/util'
+
   export default {
     components: {
-      Checker, CheckerItem, Masker, Actionsheet, XHeader, XButton, XTextarea, Alert
+      Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert
     },
     data () {
       return {
@@ -48,18 +48,12 @@
           cardName: '',
           timestamp: ''
         },
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
         alert: {message: '', show: false}
       }
     },
     route: {
       data (transition){
+        this.openid = getCookie('PIPA_OPENID')
         this.cardId = transition.to.params.cardId
         this.cardCode = transition.to.params.cardCode
       }
@@ -72,10 +66,8 @@
       updateCardStatus(){
         var self = this
         this.$http.post(Const.API_URL + 'card/share',
-          { openId:Const.openid,
-            sign: self.card.sign,
-            timestamp: self.card.timestamp,
-            content: self.content}).then(function (response) {
+          { openId:self.openid, sign: self.card.sign, cardId: self.cardId, cardCode: self.cardCode,
+            timestamp: self.card.timestamp, content: self.content}).then(function (response) {
           var res = response.data
           if(res.result != 0) return
           self.$route.router.go({name: 'gift_share_result', params:{cardId: self.cardId, cardCode: self.cardCode }})
@@ -83,26 +75,38 @@
       },
       onShare(){
         var self = this
-        self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign;
+        self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
+        console.log('[CardGiftShare::onShare] ---------------')
+        console.log('[CardGiftShare::onShare] url:'+ self.shareUrl +' card:'+ self.card.cardName + ' content:'+ self.content + ' logo:'+ self.card.logo)
+        console.log('[CardGiftShare::onShare] done')
+
         onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
           self.content, self.card.logo, function () {
+            console.log('[CardGiftShare] menu share ok')
             self.maskShow = false
             self.updateCardStatus()
+          }, function(){
+            self.maskShow = false
+            console.log('[CardGiftShare] menu share error')
           })
       },
-      goHome(){
-        this.$route.router.go({name: 'home'})
+      goGift(){
+        this.$route.router.go({name: 'gift'})
       }
     },
     ready(){
       var self = this
       this.$http.post(Const.API_URL + 'card/share/check',
-        {openId:Const.openid, cardId: this.cardId, cardCode:this.cardCode}).then(function (response) {
+        {openId:self.openid, cardId: self.cardId, cardCode:self.cardCode}).then(function (response) {
         var res = response.data
-        if(res.result != 0) return
+        if(res.result != 0){
+          console.log('[CardGiftShare] card sharing check error:' + res.result)
+          return
+        }
         if (res.data.status > 2) {
           self.alertMsg('该卡已经转赠,无法再继续转赠')
         } else {
+          console.log('[CardGiftShare] card sharing check ok')
           self.card = res.data.card
           self.onShare()
         }

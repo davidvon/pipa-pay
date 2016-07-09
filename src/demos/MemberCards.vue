@@ -1,7 +1,6 @@
 <template>
   <div class='wx-cards card'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>我的卡包</x-header>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content">
       <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}} data-status={{item.status}} v-for="item in cards" @click="openCard">
@@ -34,30 +33,22 @@
 </template>
 
 <script>
-  import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
+  import { Loading, Masker, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
+  import { getCookie } from '../libs/util'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
 
   export default {
     components: {
-      Loading, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
-      Flexbox, FlexboxItem
+      Loading, Masker, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert, Flexbox, FlexboxItem
     },
     data () {
       return {
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
         no_data: false,
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已赠送'],
         statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable'],
-        showMenus: false,
         loading: false
       }
     },
@@ -81,8 +72,8 @@
           self.loading = false;
           return;
         }
-        wxAddCard(self, cardGlobalId, Const.openid, Const.API_URL, function (cardList) {
-          self.$http.post(Const.API_URL + 'card/add/status/update', {openid:Const.openid, cardGlobalId: cardGlobalId}, function (res) {
+        wxAddCard(self, cardGlobalId, getOpenId(), Const.API_URL, function (cardList) {
+          self.$http.post(Const.API_URL + 'card/add/status/update', {openid:self.openid, cardGlobalId: cardGlobalId}, function (res) {
             self.loading = false;
             if(res.result == 0){
               self.cards[Number(index)].cardCode = res.data
@@ -97,8 +88,9 @@
     route: {
       data (transition){
         var self = this
+        self.openid = getCookie('PIPA_OPENID')
         self.loading = true
-        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false
           console.log(response)
           var data = response.data

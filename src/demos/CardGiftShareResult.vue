@@ -1,21 +1,18 @@
 <template>
-  <div class='wx-cards card gift flex' id="walmart_15_1">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">赠送卡
-    </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+  <div class='wx-cards card gift flex' style="text-align:center;">
+    <x-header :left-options='{showBack:true, backText:"返回"}'>赠送卡</x-header>
     <div class="lk_top">
       <div class="lk_toux"><span class="toux_img"><img :src="share.cardLogo" class="give-user"></span></div>
-      <p class="lk_tp1">你分享的{{share.cardName}}</p>
+      <p class="lk_tp1">{{share.cardName}}</p>
       <p class="lk_tp2 give-content">{{share.content}}</p>
     </div>
     <p class="lk_title">礼品卡信息</p>
     <div class="lk_dov border b_top_btm">
-      <p class="fp_pt"><span class="fp_sp1">礼品卡卡号</span> <span class="fp_sp2 card-no">{{cardId}}</span></p>
+      <p class="fp_pt"><span class="fp_sp1">礼品卡卡号</span> <span class="fp_sp2 card-no">{{share.cardCode}}</span></p>
       <p class="fp_pt"><span class="fp_sp1">分享时间</span> <span class="fp_sp2 card-gtime">{{share.datetime}}</span></p>
       <p class="fp_pt"><span class="fp_sp1">状态</span> <span class="fp_sp2 card-status">{{share.status}}</span></p>
 
-      <div class="lk_person border b_top2 ruser" v-show="share.acquireUserImg.length>0">
+      <div class="lk_person border b_top2 ruser" v-show="share.acquireUserImg">
         <div class="lk_person_d1"><img :src="share.acquireUserImg" class="give-ruser"></div>
         <div class="lk_person_d2">
           <p class="lk_name give-ruser-name">{{share.acquireUserName}}</p>
@@ -29,23 +26,15 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, XButton, XTextarea, Alert} from '../components'
+  import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
+  import { getCookie } from '../libs/util'
+
   export default {
-    components: {
-      Checker, CheckerItem, Masker, Actionsheet, XHeader, XButton, XTextarea, Alert
-    },
+    components: { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert },
     data () {
       return {
-        cardId: '',
         share: {},
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
         alert: {message: '', show: false}
       }
     },
@@ -56,7 +45,8 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.API_URL + 'card/share/info', {openId:Const.openid, cardId: this.cardId}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/share/info',
+        {openId:this.openid, cardId: this.cardId, cardCode:this.cardCode}).then(function (response) {
         var res = response.data
         if(res.result != 0) return
         self.share = res.data
@@ -64,7 +54,9 @@
     },
     route: {
       data (transition){
+        this.openid = getCookie('PIPA_OPENID')
         this.cardId = transition.to.params.cardId
+        this.cardCode = transition.to.params.cardCode
       }
     }
   }

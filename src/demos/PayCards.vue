@@ -34,6 +34,7 @@
   import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
+  import { getCookie } from '../libs/util'
 
   export default {
     components: {
@@ -61,7 +62,8 @@
       data (transition){
         var self = this
         self.loading = true;
-        this.$http.post(Const.API_URL + 'cards', {openid: Const.openid}).then(function (response) {
+        self.openid = getCookie('PIPA_OPENID')
+        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false;
           console.log(response)
           var data = response.data

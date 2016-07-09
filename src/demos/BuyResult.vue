@@ -60,6 +60,7 @@ export default {
   route:{
     data (transition){
       var self = this
+      self.openid = getCookie('PIPA_OPENID')
       this.order_no = transition.to.params.orderNo
       this.$http.post(Const.API_URL + 'card/buy/query', {order_no: this.order_no}, function (res) {
         if(res.result == 0){
@@ -79,7 +80,7 @@ export default {
         }
       }
       var self = this
-      wxAddCard(self, Const.openid, Const.API_URL, function (cardList) {
+      wxAddCard(this, this.openid, Const.API_URL, function (cardList) {
         console.log('wx.addCard:' + res.cardList)
         self.$route.router.go({name: 'memcards'})
       })

@@ -26,6 +26,8 @@
   import { wxAddCard, wxOpenCard } from '../services/wxcard'
   import {XButton} from '../components'
   import Const from '../services/const'
+  import { getCookie } from '../libs/util'
+
   export default {
     components: {XButton},
     data () {
@@ -53,7 +55,7 @@
       },
       onReceiveCard(){
         var self = this
-        this.$http.post(Const.API_URL + 'card/receive', {openId:Const.openid, sign: this.sign}).then(function (response) {
+        this.$http.post(Const.API_URL + 'card/receive', {openId:self.openid, sign: self.sign}).then(function (response) {
           var res = response.data
           if (res.result == 255) {
             return
@@ -63,7 +65,7 @@
               self.$route.router.go({name: 'memcards'})
             })
           }else{
-            wxAddCard(self, Const.openid, Const.API_URL, function (cardList) {
+            wxAddCard(self, self.openid, Const.API_URL, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
           }
@@ -72,7 +74,7 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.API_URL + 'card/receive/check', {openId:Const.openid, sign:this.sign}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/receive/check', {openId:self.openid, sign:self.sign}).then(function (response) {
         var res = response.data
         if(res.result == 255){
           self.no_data = true
@@ -81,7 +83,7 @@
         self.info = res.data
         if(self.info.giveStatus == 0){  //未认领
           self.statusStr = self.statusStrList[0]
-        }else if(self.info.acquireUserOpenId != Const.openid ){ //他人已认领
+        }else if(self.info.acquireUserOpenId != self.openid ){ //他人已认领
           self.statusStr = self.statusStrList[1]
         }else if(self.info.cardStatus == 0){      //他人已认领,未放入卡包
           self.statusStr = self.statusStrList[2]
@@ -94,6 +96,7 @@
     },
     route: {
       data (transition){
+        this.openid = getCookie('PIPA_OPENID')
         this.sign = transition.to.params.sign
       }
     }

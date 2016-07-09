@@ -1,7 +1,6 @@
 <template>
   <div class="order">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">购买</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>购买</x-header>
 
     <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
     <checker class="center" :value.sync="money" default-item-class="money-item" selected-item-class="money-item-selected">
@@ -47,25 +46,18 @@
 
 <script>
 import Const from '../services/const'
-import { Loading, Checker, CheckerItem, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
+import { getCookie } from '../libs/util'
+import { Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 
 export default {
   components: {
-    Loading, Checker, CheckerItem, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
+    Loading, Checker, CheckerItem, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
   },
   data () {
     return {
       money: 50,
       otherMoney: "",
       count:1,
-      menus: {
-        menu1: '付款',
-        menu2: '我的卡包',
-        menu3: '赠送卡',
-        menu4: '在线购物',
-        menu5: '用卡说明'
-      },
-      showMenus: false,
       invoice:{
         enable:false,
         select:false,
@@ -82,7 +74,7 @@ export default {
         },
         content: '商品一批'
       },
-      cardId: 'pDF3iY9tv9zCGCj4jTXFOo1DxHdo',
+      cardId: '',
       alert:{ message:'', show: false},
       loading: false
     }
@@ -116,10 +108,11 @@ export default {
         if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
           self.alertMessage('输入的其他金额不符合要求')
         }
+        self.openid = getCookie('PIPA_OPENID')
         var data = {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,
-           openId: Const.openid,
+           openId: self.openid,
            cardId:self.cardId
         };
         this.$http.post(Const.API_URL + 'card/buy', data, function (res) {

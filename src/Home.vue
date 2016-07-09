@@ -9,7 +9,7 @@
     <div class="bg">
       <flexbox class="vux-1px-tb" :gutter="0">
         <flexbox-item class="vux-1px-r">
-          <a class="item" v-link="{name:'buy'}">
+          <a class="item" href="#buy/{{cardId}}">
             <div class="img icon-order"></div>
             <div class="text">购卡</div>
           </a>
@@ -80,7 +80,8 @@
     components: { Loading, Flexbox, FlexboxItem },
     data () {
       return {
-        loading: false
+        loading: false,
+        cardId: 'pYtFst9hZmAy3VmyajWSQaB2sQgw'
       }
     },
     methods:{
@@ -105,9 +106,9 @@
               console.log("[App] wx.config ok...");
               onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
               onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-            });
-            wx.error(function (res) {
-              console.error("[App] wx.err... "+res.errMsg);
+              wx.error(function (res) {
+                console.error("[App] wx.error... "+res.errMsg);
+              });
             });
           }
         })
