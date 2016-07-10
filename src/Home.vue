@@ -84,59 +84,14 @@
         cardId: 'pYtFst9hZmAy3VmyajWSQaB2sQgw'
       }
     },
-    methods:{
-      wxRegister(){
-        console.log('[App]:readying')
-        if(!this.openid) return
-        var self = this
-        var url = location.href.split('#')[0]
-        console.log('[wxJsApi] url:' + url)
-        self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
-          self.loading = false
-          if (response && response.data){
-            wx.config({
-              debug: true,
-              appId: response.data['appId'],
-              timestamp: response.data['timestamp'],
-              nonceStr: response.data['nonceStr'],
-              signature: response.data['signature'],
-              jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
-            });
-            wx.ready(function(){
-              console.log("[App] wx.config ok...");
-              onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-              onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-              wx.error(function (res) {
-                console.error("[App] wx.error... "+res.errMsg);
-              });
-            });
-          }
-        })
-      }
-    },
-    ready(){
-      this.wxRegister()
-    },
+    methods:{},
+    ready(){},
     route: {
       activate: function (transition) {
-        var self = this
-        self.loading = true
+        console.log("[Home] activing ...")
         self.openid = getCookie('PIPA_OPENID')
-        console.log("[App] openid:" + self.openid)
-        if (!self.openid) {
-          var code = self.$route.query['code']
-          oAuthCheck(self, code, Const.API_URL, Const.WX_APPID, location.href, function (response) {
-            console.log("[App] openid:" + JSON.stringify(response))
-            if (response.errcode == 0) {
-              self.openid = response.openid
-              console.log("[App] openid:" + self.openid)
-              setCookie('PIPA_OPENID', self.openid)
-              transition.next()
-            }
-          })
-        } else {
-          transition.next()
-        }
+        console.log("[Home] openid:" + self.openid)
+        transition.next()
       }
     }
   }
