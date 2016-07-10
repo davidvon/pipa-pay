@@ -93,7 +93,7 @@
         var self = this
         self.loading = true
         self.openid = getCookie('PIPA_OPENID')
-        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share:1}).then(function (response) {
           self.loading = false
           console.log(response)
           var ret = response.data

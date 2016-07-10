@@ -19,31 +19,31 @@
         <p class="lk_tit2 none"><span class="lk_cbox text-status"></span></p>
       </div>
     </div>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
   import { wxAddCard, wxOpenCard } from '../services/wxcard'
-  import {XButton} from '../components'
+  import {XButton, Loading} from '../components'
   import Const from '../services/const'
   import { getCookie } from '../libs/util'
 
   export default {
-    components: {XButton},
+    components: {XButton, Loading},
     data () {
       return {
         no_data: false,
         info: {
-          giveUserHeadImg:'',
+          giveUserHeadImg:'/static/demo/ico-head.png',
           giveUsername:'',
           shareContent:'',
           cardStatus:0,
           giveStatus:0,
           acquireUserOpenId:''
         },
-        statusStr:'',
-        // 0:未放入微信卡包 1: 已放入微信卡包 2: 已赠送未接收 3:已赠送已接收 4:已过期
-        statusStrList:['领取电子卡', '已被领取', '已领取，未放入卡包', '已存入卡包，可直接消费', '已过期' ]
+        loading: false,
+        statusStr:''
       }
     },
     methods: {
@@ -61,11 +61,11 @@
             return
           }
           if(res.data.status == 1) {
-            wxOpenCard(self, res.data.xwxCardId, res.data.code, function (cardList) {
+            wxOpenCard(self, res.data.wxCardId, res.data.code, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
           }else{
-            wxAddCard(self, self.openid, Const.API_URL, function (cardList) {
+            wxAddCard(self, res.data.cardGlobalId, self.openid, Const.API_URL, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
           }
@@ -74,23 +74,32 @@
     },
     ready(){
       var self = this
+      this.loading = true
       this.$http.post(Const.API_URL + 'card/receive/check', {openId:self.openid, sign:self.sign}).then(function (response) {
+        self.loading = false
         var res = response.data
         if(res.result == 255){
           self.no_data = true
           return
         }
         self.info = res.data
-        if(self.info.giveStatus == 0){  //未认领
-          self.statusStr = self.statusStrList[0]
-        }else if(self.info.acquireUserOpenId != self.openid ){ //他人已认领
-          self.statusStr = self.statusStrList[1]
-        }else if(self.info.cardStatus == 0){      //他人已认领,未放入卡包
-          self.statusStr = self.statusStrList[2]
-        }else if(self.info.cardStatus == 1){      //他人已认领,已放入卡包
-          self.statusStr = self.statusStrList[3]
-        }else if(self.info.cardStatus == 2){      //已过期
-          self.statusStr = self.statusStrList[4]
+        console.log('[CardGiftReceive] giving status:'+ self.info.giveStatus +', card status:' + self.info.cardStatus)
+        if(self.info.giveStatus == 0){
+          self.statusStr = '领取电子卡'
+        }else if(self.info.acquireUserOpenId != self.openid ){
+          self.statusStr = '已被领取'
+        }else if(self.info.cardStatus == 0){
+          self.statusStr = '已领取，未放入卡包'
+        }else if(self.info.cardStatus == 1){
+          self.statusStr = '已放入微信卡包未激活'
+        }else if(self.info.cardStatus == 2){
+          self.statusStr = '已放入微信卡包已激活'
+        }else if(self.info.cardStatus == 3){
+          self.statusStr = '已过期'
+        }else if(self.info.cardStatus == 4){
+          self.statusStr = '转赠中'
+        }else{
+          self.statusStr = '已转赠'
         }
       })
     },

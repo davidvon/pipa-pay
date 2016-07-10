@@ -51,8 +51,8 @@
       return {
         no_data: false,
         cards: [],
-        statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已赠送'],
-        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable'],
+        statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
+        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable', 'wxcard-disable', 'wxcard-invalid'],
         loading: false,
         alert: {message: '', show: false}
       }

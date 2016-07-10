@@ -122,6 +122,12 @@
   font-size: 14px;
   text-align: right;
 }
+.wx-cards .wxcard-invalid{
+  margin-left: 0!important;
+  color:darkgrey;
+  font-size: 14px;
+  text-align: right;
+}
 .wx-cards .wxcard-disable{
   margin-left: 0!important;
   color:red;
