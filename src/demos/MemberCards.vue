@@ -52,7 +52,7 @@
         no_data: false,
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
-        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-disable', 'wxcard-disable', 'wxcard-invalid'],
+        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-invalid', 'wxcard-disable', 'wxcard-invalid'],
         loading: false,
         alert: {message: '', show: false}
       }
@@ -81,16 +81,19 @@
         }
         if (status == 2) {
           var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
-          wxOpenCard(self, cardId, cardCode);
-          self.loading = false;
+          wxOpenCard(self, cardId, cardCode, function(){
+            self.loading = false;
+          }, function(){
+            self.loading = false;
+          });
           return;
         }
-        wxAddCard(self, cardGlobalId, getOpenId(), Const.API_URL, function (cardList) {
+        wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
           self.$http.post(Const.API_URL + 'card/add/status/update', {openid:self.openid, cardGlobalId: cardGlobalId}, function (res) {
             self.loading = false;
             if(res.result == 0){
               self.cards[Number(index)].cardCode = res.data
-              self.cards[Number(index)].status = 2
+              self.cards[Number(index)].status = 1
             }
           }, "json")
         }, function(){

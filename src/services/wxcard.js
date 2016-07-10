@@ -1,4 +1,4 @@
-export function wxAddCard(self, cardGlobalId, openid, url_root, callback){
+export function wxAddCard(self, cardGlobalId, openid, url_root, callback, errback){
   self.$http.post(url_root + 'weixin/cards/add', {card_global_id:cardGlobalId, openid: openid}, function (res) {
     if (res.result == 0) {
       var items = res.data, wx_cards = [];
@@ -15,16 +15,22 @@ export function wxAddCard(self, cardGlobalId, openid, url_root, callback){
       wx.addCard({
         cardList: wx_cards,            // 需要添加的卡券列表
         success: function (res) {
-          console.log('add card success:' + JSON.stringify(res.cardList))
+          console.log('add card success:' + res + ', json:'+ JSON.stringify(res.cardList))
           callback && callback(res.cardList)
+        },
+        cancel: function (res) {
+          errback && errback()
+        },
+        fail:function(res){
+          errback && errback()
         }
       });
     }
   })
 }
 
-export function wxOpenCard(self, wxCardId, code, callback) {
-  alert("cardId:"+wxCardId+" code:"+code)
+export function wxOpenCard(self, wxCardId, code, callback, errback) {
+  console.log("[wxOpenCard] cardId:"+wxCardId+" code:"+code)
   wx.openCard({
     cardList: [{
       cardId: wxCardId,
@@ -32,7 +38,14 @@ export function wxOpenCard(self, wxCardId, code, callback) {
     }],
     success: function(res){
       var cardList = res.cardList;
+      console.log("[wxOpenCard] card list:" + cardList)
       callback && callback(cardList)
+    },
+    cancel: function (res) {
+      errback && errback()
+    },
+    fail:function(res){
+      errback && errback()
     }
   });
 
