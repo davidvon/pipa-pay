@@ -6,3 +6,4 @@ src/components/*/*.js
 src/*/*.js
 src/*/*.vue
 src/*.vue
+src/main.js

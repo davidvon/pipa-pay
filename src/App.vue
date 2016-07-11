@@ -7,15 +7,14 @@
 <script>
   import Const from './services/const'
   import { onMenuShareTimeline, onMenuShareAppMessage, getOAuthRedirectUrl, oAuthCheck } from './services/wxlib'
-  import { getCookie, setCookie, addUrlParam } from './libs/util'
 
   export default {
     methods:{
-      oAuthCheck(){
+      oauthCheck(){
         console.log("[App] oauth checking ...")
         var self = this
         self.loading = true
-        self.openid = getCookie('PIPA_OPENID')
+        self.openid = localStorage.getItem('PIPA_OPENID')
         console.log("[App] openid:" + self.openid)
         if (!self.openid) {
           var code = self.$route.query['code']
@@ -23,7 +22,7 @@
             console.log("[App] openid:" + JSON.stringify(response))
             if (response.errcode == 0) {
               self.openid = response.openid
-              setCookie('PIPA_OPENID', self.openid)
+              localStorage.setItem('PIPA_OPENID', self.openid)
               console.log("[App] cached openid:" + self.openid)
               self.wxRegister()
             }
@@ -51,16 +50,16 @@
               console.log("[App] wx.config ok...");
               onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
               onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-              wx.error(function (res) {
-                console.error("[App] wx.error... "+res.errMsg);
-              });
+            });
+            wx.error(function (res) {
+              console.error("[App] wx.error... "+res.errMsg);
             });
           }
         })
       }
     },
     ready(){
-      this.oAuthCheck()
+      this.oauthCheck()
     }
   }
 </script>
