@@ -1,4 +1,4 @@
-var product_cdn = 'http://wx.pipapay.com/'
+var product_cdn = 'http://wx.pipapay.com/static/'
 
 var path = require('path')
 var projectRoot = path.resolve(__dirname, '../')
@@ -56,7 +56,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: '[name].[ext]?[hash:7]'
+          name: 'images/[name].[ext]?[hash:7]'
         }
       }
     ]
