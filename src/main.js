@@ -104,11 +104,22 @@ function saveDemoScrollTop () {
 }
 
 router.beforeEach(function (transition) {
+  if (transition.to.fullPath !== '/demo') {
+    window.removeEventListener('scroll', saveDemoScrollTop, false)
+  }
   if (/\/http/.test(transition.to.path)) {
     let url = transition.to.path.split('http')[1]
     window.location.href = `http${url}`
   } else {
-    transition.next()
+    if (/\/demo\/component\/\w+/.test(transition.to.path)) {
+      router.go({
+        replace: true,
+        path: transition.to.path.replace('/demo', ''),
+        append: false
+      })
+    } else {
+      transition.next()
+    }
   }
 })
 

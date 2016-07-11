@@ -1,46 +1,37 @@
 <template>
   <div>
-    <router-view transition transition-mode="out-in"></router-view>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
+
 <script>
+  import { Loading, Flexbox, FlexboxItem } from './components/'
   import Const from './services/const'
   import { onMenuShareTimeline, onMenuShareAppMessage, getOAuthRedirectUrl, oAuthCheck } from './services/wxlib'
   import { getCookie, setCookie, addUrlParam } from './libs/util'
 
   export default {
+    components: { Loading, Flexbox, FlexboxItem },
+    data () {
+      return {
+        loading: false,
+        openid: '',
+        code:''
+      }
+    },
     methods:{
-      oAuthCheck(){
-        console.log("[App] oauth checking ...")
-        var self = this
-        self.loading = true
-        self.openid = getCookie('PIPA_OPENID')
-        console.log("[App] openid:" + self.openid)
-        if (!self.openid) {
-          var code = self.$route.query['code']
-          oAuthCheck(self, code, Const.API_URL, Const.WX_APPID, location.href, function (response) {
-            console.log("[App] openid:" + JSON.stringify(response))
-            if (response.errcode == 0) {
-              self.openid = response.openid
-              setCookie('PIPA_OPENID', self.openid)
-              console.log("[App] cached openid:" + self.openid)
-              self.wxRegister()
-            }
-          })
-        }
-      },
       wxRegister(){
-        console.log('[App] weixin register...')
+        console.log('[OAuth]:readying')
         if(!this.openid) return
         var self = this
         var url = location.href.split('#')[0]
-        console.log('[wxJsApi] url:' + url)
+        console.log('[OAuth] url:' + url)
         self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
           self.loading = false
           if (response && response.data){
             wx.config({
-              debug: false,
+              debug: true,
               appId: response.data['appId'],
               timestamp: response.data['timestamp'],
               nonceStr: response.data['nonceStr'],
@@ -48,22 +39,44 @@
               jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
             });
             wx.ready(function(){
-              console.log("[App] wx.config ok...");
+              console.log("[OAuth] wx.config ok...");
               onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
               onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-              wx.error(function (res) {
-                console.error("[App] wx.error... "+res.errMsg);
-              });
+            });
+            wx.error(function (res) {
+              console.error("[OAuth] wx.err... "+res.errMsg);
             });
           }
         })
       }
     },
     ready(){
-      this.oAuthCheck()
+      var self = this
+      self.openid = getCookie('PIPA_OPENID')
+      if (self.openid){
+        console.log("[OAuth] openid:" + self.openid)
+        return self.$route.router.go('/#home')
+      }
+      self.code = self.$route.query['code']
+      if(!self.code){
+        var oauth_url = getOAuthRedirectUrl(Const.WX_APPID, location.href)
+        console.log('[oAuthCheck] oauth url:' + oauth_url)
+        window.location.href = oauth_url
+        return
+      }
+      this.$http.post(Const.API_URL + 'weixin/oauth/decode',{code:self.code}).then(function (response) {
+        console.log("[OAuth] openid:" + JSON.stringify(response))
+        if (response.errcode == 0) {
+          self.openid = response.openid
+          console.log("[OAuth] decode openid:" + self.openid)
+          setCookie('PIPA_OPENID', self.openid)
+          self.$route.router.go('/#home')
+        }
+      })
     }
   }
 </script>
+
 
 <style lang="less">
 @import 'demos/style.css';
