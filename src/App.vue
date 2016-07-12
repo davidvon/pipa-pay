@@ -34,7 +34,7 @@
       wxRegister(){
         var self = this
         var url = location.href.split('#')[0]
-        logger.log('App", "weixin register, url:' + url)
+        logger.log("App", "weixin register, url:" + url)
         self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
           logger.log("App", "jsapi response ok")
           self.loading = false
