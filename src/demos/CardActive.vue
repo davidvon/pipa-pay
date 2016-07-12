@@ -63,7 +63,7 @@
       var params = this.$route.query
       this.$http.post(Const.API_URL + 'card/active', params).then(function (response) {
         self.loading = false
-        console.log(response)
+        logger.log("CardActive", "card active:"+response.data)
         var ret = response.data
         if (ret && ret.result==0){
           self.active_status = 0

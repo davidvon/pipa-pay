@@ -91,6 +91,7 @@ export default {
     },
     wxPay(res){
       var self = this
+      logger.log("CardBuy", "to weixin pay, sign:"+res.paySign)
       wx && wx.chooseWXPay({
         timestamp: res.timeStamp, //时间戳
         nonceStr: res.nonceStr, //随机串
@@ -99,6 +100,7 @@ export default {
         paySign: res.paySign,  //微信签名
         success: function (res) {
           // 支付成功后的回调函数
+          logger.log("CardBuy", "cardid:"+ self.cardId +" pay:"+res.orderId)
           self.$route.router.go({name: 'buy_result', params: {cardId: self.cardId, orderNo: res.orderId} });
         }
       });
@@ -116,6 +118,8 @@ export default {
            openId: self.openid,
            cardId:self.cardId
         };
+        logger.log("CardBuy", "openid:"+ data.openId +" cardId:"+ data.cardId +
+                   " price:"+data.price+" count:" +data.count)
         this.$http.post(Const.API_URL + 'card/buy', data, function (res) {
           self.loading = false;
           if (res.result == 0) return self.wxPay(res);

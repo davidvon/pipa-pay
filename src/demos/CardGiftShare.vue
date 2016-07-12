@@ -77,18 +77,16 @@
       onShare(){
         var self = this
         self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
-        console.log('[CardGiftShare::onShare] ---------------')
-        console.log('[CardGiftShare::onShare] url:'+ self.shareUrl +' card:'+ self.card.cardName + ' content:'+ self.content + ' logo:'+ self.card.logo)
-        console.log('[CardGiftShare::onShare] done')
+        logger.log('CardGiftShare', 'onShare url:'+ self.shareUrl +' card:'+ self.card.cardName + ' content:'+ self.content + ' logo:'+ self.card.logo)
 
         onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
           self.content, self.card.logo, function () {
-            console.log('[CardGiftShare] menu share ok')
+            logger.log('CardGiftShare', ' menu share ok')
             self.maskShow = false
             self.updateCardStatus()
           }, function(){
             self.maskShow = false
-            console.log('[CardGiftShare] menu share error')
+            logger.log('CardGiftShare', 'menu share error')
           })
       },
       goHome(){
@@ -100,14 +98,14 @@
       this.$http.post(Const.API_URL + 'card/share/check',
         {openId:self.openid, cardId: self.cardId, cardCode:self.cardCode}).then(function (response) {
         var res = response.data
+        logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
         if(res.result != 0){
-          console.log('[CardGiftShare] card sharing check error:' + res.result)
           return
         }
         if (res.data.status > 2) {
           self.alertMsg('该卡已经转赠,无法再继续转赠')
         } else {
-          console.log('[CardGiftShare] card sharing check ok')
+          logger.log('CardGiftShare', 'card sharing check ok')
           self.card = res.data.card
           self.onShare()
         }

@@ -41,7 +41,7 @@
         this.cardId = transition.from.params.cardId
         var self = this
         this.$http.post(Const.API_URL + 'card/pay/records', {cardId: this.cardId}).then(function (response) {
-          console.log(response)
+          logger.log("PayRecords", "response: "+ JSON.stringify(response.data))
           var ret = response.data
           if (ret && ret.result==0){
             self.records = ret.data.records

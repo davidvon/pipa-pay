@@ -6,7 +6,7 @@
       <div class="weui_cells_title" v-show="!no_data">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
+          <div class="img" :style="{backgroundImage: 'url(http://wx.pipapay.com/static/images/card_blue.png)'}"></div>
           <div slot="content" class="content">
             <flexbox class="card-title">
               <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
@@ -66,7 +66,7 @@
         self.openid = getCookie('PIPA_OPENID')
         this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false;
-          console.log(response)
+          logger.log('PayCards', 'response:' + JSON.stringify(response))
           var data = response.data
           if (data && data.result==0)
             self.cards = data.data
@@ -110,6 +110,7 @@
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
+        logger.log('PayCards', 'cardConsume, cardid:'+ cardId +', code:' + cardCode)
         this.$route.router.go({name: 'pay', params: {cardId:cardId, cardCode:cardCode}})
       }
     }

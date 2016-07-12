@@ -96,7 +96,7 @@
         self.openid = getCookie('PIPA_OPENID')
         this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share:1}).then(function (response) {
           self.loading = false
-          console.log(response)
+          logger.log("CardGift", " data:"+JSON.stringify(response.data))
           var ret = response.data
           if (ret && ret.result==0){
             self.cards = ret.data

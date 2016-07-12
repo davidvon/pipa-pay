@@ -56,8 +56,11 @@
       },
       onReceiveCard(){
         var self = this
+        logger.log("CardGiftReceive", "openid:"+self.openid+" sign:"+self.sign)
         this.$http.post(Const.API_URL + 'card/receive', {openId:self.openid, sign: self.sign}).then(function (response) {
           var res = response.data
+          logger.log("CardGiftReceive", "ack status:"+res.result)
+
           if (res.result == 255) {
             return
           }
@@ -84,7 +87,7 @@
           return
         }
         self.info = res.data
-        console.log('[CardGiftReceive] giving status:'+ self.info.giveStatus +', card status:' + self.info.cardStatus)
+        logger.log('CardGiftReceive', 'myself:'+self.openid+' giving status:'+ self.info.giveStatus +', card status:' + self.info.cardStatus)
         if(self.info.giveStatus == 0){
           self.statusStr = '领取电子卡'
         }else if(self.info.acquireUserOpenId != self.openid ){
