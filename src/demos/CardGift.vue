@@ -49,6 +49,7 @@
     XButton, Loading, Actionsheet } from '../components'
   import { getCookie } from '../libs/util'
   import Const from '../services/const'
+  import logger from '../services/log'
 
   export default {
     components: {

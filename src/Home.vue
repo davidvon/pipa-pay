@@ -75,6 +75,7 @@
   import Const from './services/const'
   import { onMenuShareTimeline, onMenuShareAppMessage, getOAuthRedirectUrl, oAuthCheck } from './services/wxlib'
   import { getCookie, setCookie, addUrlParam } from './libs/util'
+  import logger from './services/log'
 
   export default {
     components: { Loading, Flexbox, FlexboxItem },
@@ -88,9 +89,9 @@
     ready(){},
     route: {
       activate: function (transition) {
-        console.log("[Home] activing ...")
+        logger.log("[Home]", "activing ...")
         self.openid = getCookie('PIPA_OPENID')
-        console.log("[Home] openid:" + self.openid)
+        logger.log("[Home]", "openid:" + self.openid)
         transition.next()
       }
     }

@@ -48,6 +48,7 @@
 import Const from '../services/const'
 import { getCookie } from '../libs/util'
 import { Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
+import logger from '../services/log'
 
 export default {
   components: {

@@ -22,6 +22,7 @@
 <script>
   import Const from '../services/const'
   import { Actionsheet, Loading, XHeader, XButton} from '../components'
+  import logger from '../services/log'
 
   export default {
     components: {

@@ -29,6 +29,7 @@
   import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
   import { getCookie } from '../libs/util'
+  import logger from '../services/log'
 
   export default {
     components: { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert },

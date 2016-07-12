@@ -30,6 +30,7 @@
   import Const from '../services/const'
   import { onMenuShareAppMessage } from '../services/wxlib'
   import { getCookie } from '../libs/util'
+  import logger from '../services/log'
 
   export default {
     components: {

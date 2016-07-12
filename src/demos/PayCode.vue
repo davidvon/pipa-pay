@@ -31,6 +31,8 @@
 <script>
   import Const from '../services/const'
   import {Barcode, Qrcode, Alert, Loading} from '../components'
+  import logger from '../services/log'
+
   export default {
     components: {Barcode, Qrcode, Alert, Loading},
     data () {

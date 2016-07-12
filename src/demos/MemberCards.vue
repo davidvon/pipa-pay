@@ -42,6 +42,7 @@
   import Const from '../services/const'
   import { getCookie } from '../libs/util'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
+  import logger from '../services/log'
 
   export default {
     components: {
@@ -65,6 +66,28 @@
       buyCard (){
         this.$route.router.go({name: 'buy'})
       },
+      chooseCard(){
+        var self = this
+        var url = location.href.split('#')[0]
+        this.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
+          if (response && response.data){
+            var data = response.data
+            console.log(response.data)
+            wx.chooseCard({
+              timestamp: data['timestamp'], // 卡券签名时间戳
+              nonceStr: data['nonceStr'], // 卡券签名随机串
+              signType: 'SHA1',         // 签名方式，默认'SHA1'
+              cardSign: data['cardSign'], // 卡券签名
+              success: function (res) {
+                self.cards_online = res.cardList; // 用户选中的卡券列表信息
+                if(!self.cards_online){
+                  self.cards_online = res.available_cards
+                }
+              }
+            })
+          }
+        })
+      },
       openCard (e){
         this.loading = true;
         var self = this
@@ -79,43 +102,40 @@
           self.alertMsg('该卡正在转赠中或已过期，不可使用');
           return
         }
-        if (status == 2) {
-          var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
-          wxOpenCard(self, cardId, cardCode, function(){
-            self.loading = false;
-          }, function(){
-            self.loading = false;
-          });
-          return;
-        }
-        wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
-          self.$http.post(Const.API_URL + 'card/add/status/update', {openid:self.openid, cardGlobalId: cardGlobalId}, function (res) {
-            self.loading = false;
-            if(res.result == 0){
-              self.cards[Number(index)].cardCode = res.data
-              self.cards[Number(index)].status = 1
-            }
-          }, "json")
-        }, function(){
+        if (status == 0) {
           self.loading = false;
-        })
+          wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
+            self.$http.post(Const.API_URL + 'card/add/status/update', {
+              openid: self.openid,
+              cardGlobalId: cardGlobalId
+            }, function (res) {
+              self.loading = false;
+              if (res.result == 0) {
+                self.cards[Number(index)].cardCode = res.data
+                self.cards[Number(index)].status = 1
+              }
+            }, "json")
+          })
+        } else {
+          self.loading = false;
+          var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
+          wxOpenCard(self, cardId, cardCode);
+        }
       }
     },
-    route: {
-      data (transition){
-        var self = this
-        self.openid = getCookie('PIPA_OPENID')
-        self.loading = true
-        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-          self.loading = false
-          console.log(response)
-          var data = response.data
-          if (data && data.result==0)
-            self.cards = data.data
-            if(self.cards.length == 0)
-              self.no_data = true
-        })
-      }
+    ready(){
+      var self = this
+      self.openid = getCookie('PIPA_OPENID')
+      self.loading = true
+      this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+        self.loading = false
+        console.log(response)
+        var data = response.data
+        if (data && data.result==0){
+          self.cards = data.data
+        }
+        if(self.cards.length == 0) self.no_data = true
+      })
     }
 }
 </script>

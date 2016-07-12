@@ -28,6 +28,7 @@
   import {XButton, Loading} from '../components'
   import Const from '../services/const'
   import { getCookie } from '../libs/util'
+  import logger from '../services/log'
 
   export default {
     components: {XButton, Loading},
