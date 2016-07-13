@@ -7,9 +7,12 @@ module.exports = {
     this.wxConfig = true
   },
   set wxOpenId(wxOpenId) {
-    setCookie('PIPA_OPENID', wxOpenId);
+    localStorage.setItem('PIPA_OPENID', wxOpenId);
   },
   get wxOpenId() {
-    return getCookie('PIPA_OPENID');
+    return localStorage.getItem('PIPA_OPENID');
+  },
+  clear() {
+    localStorage.clear()
   }
 }

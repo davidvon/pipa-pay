@@ -19,11 +19,17 @@ const router = new Router({
 })
 
 router.beforeEach(({to, next}) => {
-  logger.log('main:beforeEach', 'wxOpenId:' + Storage.wxOpenId)
+  logger.log('main:beforeEach', 'wxOpenId:' + Storage.wxOpenId + ' to.path:' + to.path + ' to.query:' + to.query)
+
+  if (to.path === '/clear') {
+    alert('本地数据已清除')
+    Storage.clear()
+  }
+
   if (!Storage.wxOpenId) {
     if (!to.query.code && !to.query.state) {
       const wxUrl = encodeURIComponent(Const.WX_HOST)
-      const currentUrl = encodeURIComponent(location.origin + to.path)
+      const currentUrl = Const.WX_HOST
       var totalUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + wxUrl + '&response_type=code&scope=snsapi_base&state=' + currentUrl + '#wechat_redirect'
       logger.log('main:beforeEach', 'redirect url:' + totalUrl)
       location.href = totalUrl
