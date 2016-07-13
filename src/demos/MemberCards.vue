@@ -40,7 +40,7 @@
   import { Loading, Masker, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
-  import { getCookie } from '../libs/util'
+  import Storage from '../services/storage'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
   import logger from '../services/log'
 
@@ -125,7 +125,7 @@
     },
     ready(){
       var self = this
-      self.openid = getCookie('PIPA_OPENID')
+      self.openid = Storage.wxOpenId
       self.loading = true
       this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
         self.loading = false

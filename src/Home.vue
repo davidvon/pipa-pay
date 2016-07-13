@@ -73,8 +73,7 @@
 <script>
   import { Loading, Flexbox, FlexboxItem } from './components/'
   import Const from './services/const'
-  import { onMenuShareTimeline, onMenuShareAppMessage, getOAuthRedirectUrl, oAuthCheck } from './services/wxlib'
-  import { getCookie, setCookie, addUrlParam } from './libs/util'
+  import Storage from './services/storage'
   import logger from './services/log'
 
   export default {
@@ -82,16 +81,14 @@
     data () {
       return {
         loading: false,
-        cardId: 'pYtFst9hZmAy3VmyajWSQaB2sQgw'
+        cardId: Const.cardId
       }
     },
     methods:{},
     ready(){},
     route: {
       activate: function (transition) {
-        logger.log("[Home]", "activing ...")
-        self.openid = getCookie('PIPA_OPENID')
-        logger.log("[Home]", "openid:" + self.openid)
+        logger.log("Home", "openid:" + Storage.wxOpenId)
         transition.next()
       }
     }

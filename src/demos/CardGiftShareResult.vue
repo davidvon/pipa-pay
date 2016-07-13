@@ -28,7 +28,7 @@
 <script>
   import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
-  import { getCookie } from '../libs/util'
+  import Storage from '../services/storage'
   import logger from '../services/log'
 
   export default {
@@ -55,7 +55,7 @@
     },
     route: {
       data (transition){
-        this.openid = getCookie('PIPA_OPENID')
+        this.openid = Storage.wxOpenId
         this.cardId = transition.to.params.cardId
         this.cardCode = transition.to.params.cardCode
       }

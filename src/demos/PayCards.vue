@@ -34,7 +34,7 @@
   import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
-  import { getCookie } from '../libs/util'
+  import Storage from '../services/storage'
   import logger from '../services/log'
 
   export default {
@@ -63,7 +63,7 @@
       data (transition){
         var self = this
         self.loading = true;
-        self.openid = getCookie('PIPA_OPENID')
+        self.openid = Storage.wxOpenId
         this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false;
           logger.log('PayCards', 'response:' + JSON.stringify(response))

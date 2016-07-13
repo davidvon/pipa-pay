@@ -27,6 +27,7 @@
 
 <script>
 import Const from '../services/const'
+import Storage from '../services/storage'
 import { Actionsheet, XHeader} from '../components'
 import { wxAddCard } from '../services/wxcard'
 
@@ -60,7 +61,7 @@ export default {
   route:{
     data (transition){
       var self = this
-      self.openid = getCookie('PIPA_OPENID')
+      self.openid = Storage.wxOpenId
       this.order_no = transition.to.params.orderNo
       this.$http.post(Const.API_URL + 'card/buy/query', {order_no: this.order_no}, function (res) {
         if(res.result == 0){

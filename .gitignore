@@ -9,3 +9,4 @@ examples/webpack/
 dist/components-commonjs/
 /site
 .idea
+*.rdb

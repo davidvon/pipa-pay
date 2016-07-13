@@ -46,9 +46,9 @@
 
 <script>
 import Const from '../services/const'
-import { getCookie } from '../libs/util'
 import { Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 import logger from '../services/log'
+import Storage from '../services/storage'
 
 export default {
   components: {
@@ -111,7 +111,7 @@ export default {
         if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
           self.alertMessage('输入的其他金额不符合要求')
         }
-        self.openid = getCookie('PIPA_OPENID')
+        self.openid = Storage.wxOpenId
         var data = {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,

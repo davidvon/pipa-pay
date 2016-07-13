@@ -1,22 +1,11 @@
-import Home from './Home'
-import CardBuy from './demos/CardBuy'
-import BuyResult from './demos/BuyResult'
-import CardGift from './demos/CardGift'
-import CardGiftShare from './demos/CardGiftShare'
-import CardGiftShareResult from './demos/CardGiftShareResult'
-import CardActive from './demos/CardActive'
-import CardGiftReceive from './demos/CardGiftReceive'
-import PayCards from './demos/PayCards'
-import PayCode from './demos/PayCode'
-import PayRecords from './demos/PayRecords'
-import CardHelp from './demos/CardHelp'
-import CardGuide from './demos/CardGuide.vue'
-import CardNotice from './demos/CardNotice.vue'
-import MemberCards from './demos/MemberCards'
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import App from './App'
+import Storage from './services/storage'
+import Const from './services/const'
+import logger from './services/log'
+import { default as routes } from './route'
 
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
@@ -26,118 +15,46 @@ Vue.use(Router)
 Vue.config.devtools = true
 
 const router = new Router({
-  history: false            // html5模式 去掉锚点
-  // saveScrollPosition: true  // 记住页面的滚动位置 html5模式适用
+  history: false
 })
 
-router.map({
-  '/': {
-    name: 'home',
-    component: Home
-  },
-  '/buy/:cardId': {
-    name: 'buy',
-    component: CardBuy
-  },
-  '/buy/result/:merchantId/:orderId': {
-    name: 'buy_result',
-    component: BuyResult
-  },
-  '/member-cards': {
-    name: 'memcards',
-    component: MemberCards
-  },
-  '/card/active': {
-    name: 'active',
-    component: CardActive
-  },
-  '/pay/cards': {
-    name: 'paycards',
-    component: PayCards
-  },
-  '/pay/:cardId/:cardCode': {
-    name: 'pay',
-    component: PayCode
-  },
-  '/pay/records': {
-    name: 'pay_records',
-    component: PayRecords
-  },
-  '/gift': {
-    name: 'gift',
-    component: CardGift
-  },
-  '/gift/share/:cardId/:cardCode': {
-    name: 'gift_share',
-    component: CardGiftShare
-  },
-  '/gift/share/result/:cardId/:cardCode': {
-    name: 'gift_share_result',
-    component: CardGiftShareResult
-  },
-  '/gift/receive/:sign': {
-    name: 'gift_receive',
-    component: CardGiftReceive
-  },
-  '/help': {
-    name: 'help',
-    component: CardHelp
-  },
-  '/guide': {
-    name: 'guide',
-    component: CardGuide
-  },
-  '/notice': {
-    name: 'notice',
-    component: CardNotice
-  }
-})
+router.beforeEach(({to, next}) => {
+  logger.log('main:beforeEach', 'wxOpenId:' + Storage.wxOpenId)
+  if (!Storage.wxOpenId) {
+    if (!to.query.code && !to.query.state) {
+      const wxUrl = encodeURIComponent(Const.WX_HOST)
+      const currentUrl = encodeURIComponent(location.origin + to.path)
+      var totalUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + wxUrl + '&response_type=code&scope=snsapi_base&state=' + currentUrl + '#wechat_redirect'
+      logger.log('main:beforeEach', 'redirect url:' + totalUrl)
+      location.href = totalUrl
+      return
+    }
 
-router.on('/component/center', {
-  component: require('./demos/Center')
-})
+    if (to.query.state) {
+      var tmpUrl = to.query.state + '?code=' + to.query.code
+      logger.log('main:beforeEach', 'url:' + tmpUrl)
+      location.href = tmpUrl
+      return
+    }
 
-// save position for demo page
-let demoScrollTop = 0
-function saveDemoScrollTop () {
-  demoScrollTop = window.scrollY
-}
-
-router.beforeEach(function (transition) {
-  if (transition.to.fullPath !== '/demo') {
-    window.removeEventListener('scroll', saveDemoScrollTop, false)
-  }
-  if (/\/http/.test(transition.to.path)) {
-    let url = transition.to.path.split('http')[1]
-    window.location.href = `http${url}`
-  } else {
-    if (/\/demo\/component\/\w+/.test(transition.to.path)) {
-      router.go({
-        replace: true,
-        path: transition.to.path.replace('/demo', ''),
-        append: false
+    if (to.query.code) {
+      Vue.http.post(Const.API_URL + 'weixin/oauth/decode', {code: to.query.code}).then(res => {
+        if (res.data.errcode === '0-000') {
+          logger.log('main:beforeEach', 'openid:' + res.data.openid)
+          Storage.wxOpenId = res.data.openid
+          Storage.wxConfigEnable()
+        } else {
+          Storage.wxOpenId = ''
+        }
+      }, e => {
+        logger.log('main:beforeEach', 'get openid error')
+        alert('出错啦')
       })
-    } else {
-      transition.next()
     }
   }
+  next()
 })
 
-router.afterEach(function (transition) {
-  if (transition.to.path !== '/demo') {
-    window.scrollTo(0, 0)
-  } else {
-    window.removeEventListener('scroll', saveDemoScrollTop, false)
-    // if from component page
-    if (demoScrollTop && /component/.test(transition.from.path)) {
-      setTimeout(function () {
-        window.scrollTo(0, demoScrollTop)
-      }, 100)
-    }
-    setTimeout(function () {
-      window.addEventListener('scroll', saveDemoScrollTop, false)
-    }, 1000)
-  }
-})
+router.map(routes)
 router.start(App, '#app')
 

@@ -27,7 +27,7 @@
   import { wxAddCard, wxOpenCard } from '../services/wxcard'
   import {XButton, Loading} from '../components'
   import Const from '../services/const'
-  import { getCookie } from '../libs/util'
+  import Storage from '../services/storage'
   import logger from '../services/log'
 
   export default {
@@ -56,7 +56,7 @@
       },
       onReceiveCard(){
         var self = this
-        logger.log("CardGiftReceive", "openid:"+self.openid+" sign:"+self.sign)
+        logger.log("CardGiftReceive", " openid:"+self.openid+" sign:"+self.sign)
         this.$http.post(Const.API_URL + 'card/receive', {openId:self.openid, sign: self.sign}).then(function (response) {
           var res = response.data
           logger.log("CardGiftReceive", "ack status:"+res.result)
@@ -109,7 +109,7 @@
     },
     route: {
       data (transition){
-        this.openid = getCookie('PIPA_OPENID')
+        this.openid = Storage.wxOpenId
         this.sign = transition.to.params.sign
       }
     }

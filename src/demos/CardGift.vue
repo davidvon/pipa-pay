@@ -47,7 +47,7 @@
 <script>
   import { Checker, CheckerItem, Masker, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
     XButton, Loading, Actionsheet } from '../components'
-  import { getCookie } from '../libs/util'
+  import Storage from '../services/storage'
   import Const from '../services/const'
   import logger from '../services/log'
 
@@ -93,7 +93,7 @@
       data (transition){
         var self = this
         self.loading = true
-        self.openid = getCookie('PIPA_OPENID')
+        self.openid = Storage.wxOpenId
         this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share:1}).then(function (response) {
           self.loading = false
           logger.log("CardGift", " data:"+JSON.stringify(response.data))
