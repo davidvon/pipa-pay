@@ -156,7 +156,7 @@ export default {
   margin: 5px;
 }
 .order .money-item-selected {
-  background: #ffffff url(../assets/demo/active.png) no-repeat right bottom;
+  background: #ffffff url(../assets/images/active.png) no-repeat right bottom;
   border-color: #ff4a00;
 }
 .order .center{

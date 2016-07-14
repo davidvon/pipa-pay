@@ -72,9 +72,11 @@
 
 <script>
   import { Loading, Flexbox, FlexboxItem } from './components/'
+  import {wxRegister} from './services/wxlib'
   import Const from './services/const'
   import Storage from './services/storage'
   import logger from './services/log'
+
 
   export default {
     components: { Loading, Flexbox, FlexboxItem },
@@ -84,13 +86,11 @@
         cardId: Const.cardId
       }
     },
-    methods:{},
-    ready(){},
-    route: {
-      activate: function (transition) {
-        logger.log("Home", "openid:" + Storage.wxOpenId)
-        transition.next()
-      }
+    methods:{
+
+    },
+    ready: function() {
+        wxRegister(this)
     }
   }
 </script>

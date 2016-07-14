@@ -1,10 +1,10 @@
 import {getCookie, setCookie} from '../libs/util'
 
 module.exports = {
-  wxConfig: false,
+  wxConfigStatus: false,
 
   wxConfigEnable:function(){
-    this.wxConfig = true
+    this.wxConfigStatus = true
   },
   set wxOpenId(wxOpenId) {
     localStorage.setItem('PIPA_OPENID', wxOpenId);

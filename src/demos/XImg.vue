@@ -28,14 +28,14 @@ export default {
   data () {
     return {
       list: [
-        'https://o5omsejde.qnssl.com/demo/test1.jpg',
-        'https://o5omsejde.qnssl.com/demo/test2.jpg',
-        'https://o5omsejde.qnssl.com/demo/test0.jpg',
-        'https://o5omsejde.qnssl.com/demo/test4.jpg',
-        'https://o5omsejde.qnssl.com/demo/test5.jpg',
-        'https://o5omsejde.qnssl.com/demo/test6.jpg',
-        'https://o5omsejde.qnssl.com/demo/test7.jpg',
-        'https://o5omsejde.qnssl.com/demo/test8.jpg'
+        'https://o5omsejde.qnssl.com/images/test1.jpg',
+        'https://o5omsejde.qnssl.com/images/test2.jpg',
+        'https://o5omsejde.qnssl.com/images/test0.jpg',
+        'https://o5omsejde.qnssl.com/images/test4.jpg',
+        'https://o5omsejde.qnssl.com/images/test5.jpg',
+        'https://o5omsejde.qnssl.com/images/test6.jpg',
+        'https://o5omsejde.qnssl.com/images/test7.jpg',
+        'https://o5omsejde.qnssl.com/images/test8.jpg'
       ]
     }
   }

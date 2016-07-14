@@ -36,7 +36,7 @@
       return {
         no_data: false,
         info: {
-          giveUserHeadImg:'/static/demo/ico-head.png',
+          giveUserHeadImg:'/static/images/ico-head.png',
           giveUsername:'',
           shareContent:'',
           cardStatus:0,
