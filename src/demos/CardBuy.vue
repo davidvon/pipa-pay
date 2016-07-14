@@ -46,13 +46,13 @@
 
 <script>
 import Const from '../services/const'
-import { Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
+import { Actionsheet, Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
 import logger from '../services/log'
 import Storage from '../services/storage'
 
 export default {
   components: {
-    Loading, Checker, CheckerItem, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
+    Actionsheet, Loading, Checker, CheckerItem, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
   },
   data () {
     return {
@@ -120,13 +120,16 @@ export default {
         };
         logger.log("CardBuy", "openid:"+ data.openId +" cardId:"+ data.cardId +
                    " price:"+data.price+" count:" +data.count)
-        this.$http.post(Const.API_URL + 'card/buy', data, function (res) {
+        this.$http.post(Const.API_URL + 'card/buy', data).then(function (res) {
           self.loading = false;
           if (res.result == 0) return self.wxPay(res);
           else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");
           else if (res.result == 255) return self.alertMessage("订单已完成支付");
           else return self.alertMessage("支付异常，请稍后再试");
-        }, "json")
+        }, function(){
+          self.loading = false;
+          self.alertMessage("系统错误，请稍后再试");
+        })
     },
     alertMessage(msg){
       this.alert.message = msg;

@@ -1,7 +1,7 @@
 var wx_host, api_host, appId, cardId
 
 if (location.origin === 'http://wx.pipapay.com') {
-  appId = 'wxb3ec764893b99722'  //'wx6965cc85ec3e801c'
+  appId = 'wx6965cc85ec3e801c'  //'wx6965cc85ec3e801c'
   wx_host = 'http://wx.pipapay.com'
   api_host = 'http://live.pipapay.com'
   cardId = 'pYtFst9hZmAy3VmyajWSQaB2sQgw'
