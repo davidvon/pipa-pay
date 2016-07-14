@@ -74,9 +74,6 @@
   import { Loading, Flexbox, FlexboxItem } from './components/'
   import {wxRegister} from './services/wxlib'
   import Const from './services/const'
-  import Storage from './services/storage'
-  import logger from './services/log'
-
 
   export default {
     components: { Loading, Flexbox, FlexboxItem },
@@ -86,11 +83,12 @@
         cardId: Const.cardId
       }
     },
-    methods:{
-
-    },
     ready: function() {
-        wxRegister(this)
+      var self = this
+      this.loading = true
+      wxRegister(this, function(){
+        self.loading = false
+      })
     }
   }
 </script>

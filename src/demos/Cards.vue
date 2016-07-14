@@ -43,6 +43,7 @@
   import Storage from '../services/storage'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
   import logger from '../services/log'
+  import {wxRegister} from '../services/wxlib'
 
   export default {
     components: {
@@ -69,10 +70,11 @@
       chooseCard(){
         var self = this
         var url = location.href.split('#')[0]
-        this.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
+        self.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
           if (response && response.data){
             var data = response.data
-            console.log(response.data)
+            logger.log('cards', 'chooseCard:' + JSON.stringify(data))
+
             wx.chooseCard({
               timestamp: data['timestamp'], // 卡券签名时间戳
               nonceStr: data['nonceStr'], // 卡券签名随机串
@@ -91,17 +93,19 @@
       openCard (e){
         this.loading = true;
         var self = this
-        console.log(e);
         var attrs = e.currentTarget.attributes;
         var index = attrs['data-index'].value
         var cardGlobalId = attrs['data-globalid'].value;
         var cardId = attrs['data-cardid'].value;
         var status = attrs['data-status'].value;
+        logger.log('cards', 'open card:'+ cardGlobalId);
+
         if (status >= 3){
           self.loading = false;
           self.alertMsg('该卡正在转赠中或已过期，不可使用');
           return
         }
+
         if (status == 0) {
           self.loading = false;
           wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
@@ -127,14 +131,15 @@
       var self = this
       self.openid = Storage.wxOpenId
       self.loading = true
-      this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-        self.loading = false
-        console.log(response)
-        var data = response.data
-        if (data && data.result==0){
-          self.cards = data.data
-        }
-        if(self.cards.length == 0) self.no_data = true
+      wxRegister(self, function(){
+        self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+          self.loading = false
+          var res = response.data
+          if (res && res.result==0) self.cards = res.data
+          if (self.cards.length == 0) self.no_data = true
+        }, function(){
+          self.loading = false
+        })
       })
     }
 }

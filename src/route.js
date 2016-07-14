@@ -1,6 +1,6 @@
 import Home from './Home'
 import CardBuy from './demos/CardBuy'
-import BuyResult from './demos/BuyResult'
+import BuyResult from './demos/CardBuyResult'
 import CardGift from './demos/CardGift'
 import CardGiftShare from './demos/CardGiftShare'
 import CardGiftShareResult from './demos/CardGiftShareResult'
@@ -12,7 +12,7 @@ import PayRecords from './demos/PayRecords'
 import CardHelp from './demos/CardHelp'
 import CardGuide from './demos/CardGuide.vue'
 import CardNotice from './demos/CardNotice.vue'
-import MemberCards from './demos/MemberCards'
+import MemberCards from './demos/Cards'
 
 export default {
   '/': {

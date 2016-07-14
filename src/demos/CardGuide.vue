@@ -18,12 +18,12 @@
         <p>2.企业客户购买电子卡与购买实体卡一样，均需要提供相关资料，以满足国家商务部《单用途商业预付费卡管理办法(试行)》的规定。</p>
         <p>3.企业购买电子礼品卡的操作流程简单方便：</p>
 
-        <p class="wal_txt_img"><img src="../assets/demo/tips_01.png" alt=""></p>
+        <p class="wal_txt_img"><img src="../assets/images/tips_01.png" alt=""></p>
 
         <p class="wal_txt_p2">1.申请购卡</p>
         <p>将如下信息以Excel的形式，发送到<span class="wal_cblue">CNFS@wal-mart.com。</span></p>
 
-        <p class="wal_txt_img"><img src="../assets/demo/tips_02.png" alt=""></p>
+        <p class="wal_txt_img"><img src="../assets/images/tips_02.png" alt=""></p>
 
         <p>同时，需要提供如下资料：</p>
         <p>单位有效证件（包括营业执照、事业单位法人证书、税务登记证、组织机构代码证）、单位联系电话、代理人有效身份证件（包括身份证、护照、军官证等）、代理人联系电话。</p>
@@ -35,12 +35,12 @@
 
         <p>沃尔玛收到款项审核无误后，将会于客户核对资料，将电子卡领取方式发给企业。</p>
 
-        <p class="wal_txt_img"><img src="../assets/demo/tips_03.png" alt=""></p>
+        <p class="wal_txt_img"><img src="../assets/images/tips_03.png" alt=""></p>
 
         <p class="wal_txt_p2">4.查询与追踪</p>
         <p>指定用户可以查询电子卡领取情况。 </p>
 
-        <p class="wal_txt_img"><img src="../assets/demo/tips_04.png" alt=""></p>
+        <p class="wal_txt_img"><img src="../assets/images/tips_04.png" alt=""></p>
       </div>
 
       <p class="wal_txt_p1">三.可选的个性化服务</p>
@@ -52,7 +52,7 @@
       <p class="wal_txt_p1">四.其他资料</p>
       <div class="wal_gouka_box">
         <p>1.与沃尔玛实体门店购卡相同，沃尔玛对单位客户购卡达到指定金额提供折扣。折扣比率如下：</p>
-        <p class="wal_txt_img"><img src="../assets/demo/tips_05.png" alt=""></p>
+        <p class="wal_txt_img"><img src="../assets/images/tips_05.png" alt=""></p>
         <p>2.单卡面值：5-1,000元，任意金额。</p>
         <p>3.发票：提供增值税普通发票，发票由“深圳沃尔玛百货零售有限公司”开具，发票内容可以为“商品一批”、“食品一批”或者“日用品一批”，购卡折扣金额将会明示在发票上。</p>
         <p>4.如果顾客需要购卡协议，沃尔玛可以提供标准版本的协议。</p>

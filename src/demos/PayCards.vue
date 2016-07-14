@@ -36,6 +36,7 @@
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
+  import { wxRegister } from '../services/wxlib'
 
   export default {
     components: {
@@ -64,17 +65,26 @@
         var self = this
         self.loading = true;
         self.openid = Storage.wxOpenId
+
         this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false;
-          logger.log('PayCards', 'response:' + JSON.stringify(response))
+          logger.log('PayCards', 'cards:' + JSON.stringify(response))
           var data = response.data
           if (data && data.result==0)
             self.cards = data.data
             if(self.cards.length==0) self.no_data=true
+        }, function(){
+          self.loading = false;
         })
       }
     },
     ready: function () {
+      var self = this
+      this.loading = true
+      wxRegister(this, function(){
+        self.loading = false
+      })
+
 //      var self = this
 //      var url = location.href.split('#')[0]
 //      this.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
@@ -93,6 +103,8 @@
 //          })
 //        }
 //      })
+
+
     },
     methods:{
       alertMsg(msg){

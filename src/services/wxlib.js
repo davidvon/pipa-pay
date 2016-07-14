@@ -34,17 +34,22 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback){
   });
 }
 
-
-export function wxRegister(self){
-  if (!Storage.wxOpenId || Storage.wxConfigStatus){
-    logger.log("wxRegister", "ready msg discarding..., opeid:"+ Storage.wxOpenId + ", status:"+ Storage.wxConfigStatus);
+export function wxRegister(self, callback){
+  const openid = Storage.wxOpenId
+  const status = Storage.wxConfigStatus
+  if (!openid || status){
+    logger.log("wxRegister", "discarded, openid:" + openid + ', wxConfig status:' + status)
+    callback && callback()
     return
   }
+
   var url = location.href.split('#')[0]
-  logger.log("wxRegister", "weixin register, url:" + url)
+  logger.log("wxRegister", "register url:" + url)
+
   self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
-    logger.log("App", "jsapi response ok")
+    logger.log("wxRegister", "jsapi response ok")
     self.loading = false
+
     if (response && response.data){
       wx.config({
         debug: true,
@@ -54,15 +59,22 @@ export function wxRegister(self){
         signature: response.data['signature'],
         jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
       });
+
       wx.ready(function(){
         logger.log("wxRegister", "wx.config ok...");
         Storage.wxConfigEnable()
         onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
         onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       });
+
       wx.error(function (res) {
         logger.log("wxRegister", "wx config error:" + res.errMsg);
       });
     }
+    callback && callback()
+
+  }, function(err){
+    logger.err('wxRegister', err)
+    callback && callback()
   })
 }

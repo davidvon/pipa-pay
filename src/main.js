@@ -37,7 +37,7 @@ router.beforeEach(({to, next}) => {
     }
 
     if (to.query.state) {
-      var tmpUrl = Const.WX_HOST + to.query.state + '?code=' + to.query.code
+      var tmpUrl = Const.WX_HOST + '/#!' + to.query.state + '?code=' + to.query.code
       logger.log('main:beforeEach', 'url:' + tmpUrl)
       location.href = tmpUrl
       return
@@ -50,7 +50,6 @@ router.beforeEach(({to, next}) => {
           logger.log('beforeEach', 'openid:' + res.data.openid)
           Storage.wxOpenId = res.data.openid
           logger.log('beforeEach', 'saving openid:' + Storage.wxOpenId)
-          location.href = Const.WX_HOST + to.path.split('?')[0]
         } else {
           Storage.wxOpenId = ''
         }
