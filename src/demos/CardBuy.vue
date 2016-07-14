@@ -116,7 +116,7 @@ export default {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,
            openId: self.openid,
-           cardId:self.cardId
+           cardId:Const.cardId
         };
         logger.log("CardBuy", "openid:"+ data.openId +" cardId:"+ data.cardId +
                    " price:"+data.price+" count:" +data.count)
