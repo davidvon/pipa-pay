@@ -89,6 +89,20 @@ export default {
     invoiceContentSelect (item){
        this.invoice.content = this.invoice.menus[item]
     },
+    orderCommit(self, orderId, callback){
+      self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
+        if(response.result === '0-0-0') {
+          self.alertMessage("订单提交完成");
+          logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
+        }else{
+          logger.log("wxPay", "orderId:"+orderId + " ,buy card fail:" + response.result)
+        }
+        callback && callback()
+      }, function(response){
+        logger.log("wxPay", "orderId:"+orderId + " ,buy card exception")
+        callback && callback()
+      })
+    },
     wxPay(res){
       var self = this
       logger.log("CardBuy", "to weixin pay, sign:"+res.paySign)
@@ -99,9 +113,16 @@ export default {
         signType: res.signType, //MD5
         paySign: res.paySign,  //微信签名
         success: function (res) {
-          // 支付成功后的回调函数
-          logger.log("CardBuy", "cardid:"+ self.cardId +" pay:"+res.orderId)
-          self.$route.router.go({name: 'buy_result', params: {cardId: self.cardId, orderNo: res.orderId} });
+          self.alertMessage("订单支付成功");
+          logger.log("wxPay", "orderId:"+res.orderId + " ,pay succeed")
+          orderCommit(self, res.orderId, function(){
+            setTimeout(function () {
+              self.$route.router.go({name: 'buy_result', params: {cardId: self.cardId, orderId: res.orderId}});
+            }, 500);
+          })
+        },
+        fail:function(res){
+          self.alertMessage("订单支付失败");
         }
       });
     },
@@ -115,17 +136,29 @@ export default {
         var data = {
            price : (self.money|| Number(self.otherMoney))*self.count,
            count: self.count,
-           openId: self.openid,
+           openId: self.openid, // TODO 'o80wpvwh6C59IZ7W7EMv9_hu5BW8',
            cardId:Const.cardId
         };
         logger.log("CardBuy", "openid:"+ data.openId +" cardId:"+ data.cardId +
                    " price:"+data.price+" count:" +data.count)
-        this.$http.post(Const.API_URL + 'card/buy', data).then(function (res) {
+        this.$http.post(Const.API_URL + 'card/buy', data).then(function (response) {
+          var res = response.data
           self.loading = false;
-          if (res.result == 0) return self.wxPay(res);
-          else if (res.result == 1) return self.alertMessage("订单已完成现金支付，请等待商家确认");
-          else if (res.result == 255) return self.alertMessage("订单已完成支付");
-          else return self.alertMessage("支付异常，请稍后再试");
+          if (res.result == 0){
+            self.wxPay(res.content);
+            // TODO TEST
+//            self.orderCommit(self, res.content.orderId, function(){
+//              setTimeout(function () {
+//                self.$route.router.go({name: 'buy_result', params: {cardId: data.cardId, orderId: res.content.orderId}});
+//              }, 500);
+//            })
+          } else if (res.result == 1){
+            self.alertMessage("订单已完成现金支付，请等待商家确认");
+          } else if (res.result == 255){
+            self.alertMessage("订单已完成支付");
+          } else {
+            self.alertMessage("支付异常，请稍后再试");
+          }
         }, function(){
           self.loading = false;
           self.alertMessage("系统错误，请稍后再试");

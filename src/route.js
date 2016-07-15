@@ -15,6 +15,10 @@ import CardNotice from './demos/CardNotice.vue'
 import MemberCards from './demos/Cards'
 
 export default {
+  '*': {
+    name: 'home',
+    component: Home
+  },
   '/': {
     name: 'home',
     component: Home
@@ -23,7 +27,7 @@ export default {
     name: 'buy',
     component: CardBuy
   },
-  '/buy/result/:merchantId/:orderId': {
+  '/buy/result/:orderId': {
     name: 'buy_result',
     component: BuyResult
   },

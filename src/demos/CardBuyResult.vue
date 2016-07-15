@@ -12,7 +12,7 @@
       <div class="content trade_success" v-show="buy_status==0">
         <p class="top_icop"><span class="ico_tip ico_success"></span></p>
         <p class="tips_p1">购卡成功</p>
-        <p class="tips_p2">你获得 <span class="col0 number"></span> 面值 <span class="col0 amount"></span> 的礼品卡</p>
+        <p class="tips_p2">你获得 <span class="col0 number">{{cards.number}}张</span> 面值 <span class="col0 amount">{{cards.amount}}元</span> 的礼品卡</p>
         <p class="card_pbtn"><button class="blue_btn btn-memcard" type="button" @click="clickMemCard">放入微信卡包</button></p>
       </div><!-- content end -->
 
@@ -22,27 +22,27 @@
         <p class="tips_p2">请致电4000-888-400联系客服人员进行处理</p>
       </div><!-- content end -->
     </div>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
 import Const from '../services/const'
 import Storage from '../services/storage'
-import { Actionsheet, XHeader} from '../components'
-import { wxAddCard } from '../services/wxcard'
+import { Actionsheet, XHeader, Loading} from '../components'
+import { wxAddCard, wxAddCards } from '../services/wxcard'
 
 export default {
   components: {
-    XHeader, Actionsheet
+    XHeader, Actionsheet, Loading
   },
   data () {
     return {
-      order_no: '',
+      order_id: '',
       buy_status: 1, //1:等待;0:成功;255:失败
       cards:{
         number: 0,
-        money:0,
-        list:[]
+        amount:0
       },
       menus: {
         menu1: '付款',
@@ -51,6 +51,7 @@ export default {
         menu4: '在线购物',
         menu5: '用卡说明'
       },
+      loading: false,
       showMenus: false,
       alert:{
         message:'',
@@ -58,32 +59,39 @@ export default {
       }
     }
   },
+  ready: function(){
+    var self = this
+    self.loading = true
+    self.$http.post(Const.API_URL + 'card/dispatch', {order_id: self.order_id}).then(function (response) {
+      self.loading = false
+      var res = response.data
+      if(res.result == 0){
+        self.cards.number = res.data.count
+        self.cards.amount = res.data.amount
+        self.buy_status = 0
+      }
+    }, function(){
+      self.buy_status = 255
+      self.loading = false
+    })
+  },
   route:{
     data (transition){
-      var self = this
-      self.openid = Storage.wxOpenId
-      this.order_no = transition.to.params.orderNo
-      this.$http.post(Const.API_URL + 'card/buy/query', {order_no: this.order_no}, function (res) {
-        if(res.result == 0){
-          self.buy_status = res.data.buy_status
-          self.cards = res.data.cards
-        }
-      }, "json")
+      this.openid = Storage.wxOpenId
+      this.order_id = transition.to.params.orderId
     }
   },
   methods: {
     clickMemCard(){
-      if( this.cards.length == 0 ) return
-      for (var i = 0; i < this.cardList.length; i++) {
-        if (this.cardList[i].receive_status != 0) {
-          this.$route.router.go({name: 'memcards'});
-          return
-        }
-      }
+      if (this.cards.number == 0) return
       var self = this
-      wxAddCard(this, this.openid, Const.API_URL, function (cardList) {
-        console.log('wx.addCard:' + res.cardList)
-        self.$route.router.go({name: 'memcards'})
+      self.Loading = true
+      wxAddCards(self, self.order_id, self.openid, Const.API_URL, function (cardList) {
+        self.Loading = false
+        console.log('wx.addCard:' + cardList)
+        self.$route.router.replace({name: 'memcards'})
+      }, function(){
+        self.Loading = false
       })
     }
   }

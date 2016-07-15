@@ -27,12 +27,11 @@
         </checker-item>
       </checker>
     </div>
-    <tabbar>
+    <tabbar style="position:fixed;">
     <flexbox v-show="!no_data">
       <flexbox-item>
         <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
       </flexbox-item>
-      <flexbox-item></flexbox-item>
       <flexbox-item>
         <div style="padding:5px">
           <x-button :disabled="cardIndex==-1" type="primary" @click="onShare">赠送</x-button>

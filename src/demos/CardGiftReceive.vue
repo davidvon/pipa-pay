@@ -55,15 +55,16 @@
         this.$route.router.go({name: 'buy'})
       },
       onReceiveCard(){
+        this.loading = true
         var self = this
         logger.log("CardGiftReceive", " openid:"+self.openid+" sign:"+self.sign)
         this.$http.post(Const.API_URL + 'card/receive', {openId:self.openid, sign: self.sign}).then(function (response) {
+
+          this.loading = false
           var res = response.data
           logger.log("CardGiftReceive", "ack status:"+res.result)
 
-          if (res.result == 255) {
-            return
-          }
+          if (res.result == 255) return
           if(res.data.status == 1) {
             wxOpenCard(self, res.data.wxCardId, res.data.code, function (cardList) {
               self.$route.router.go({name: 'memcards'})
@@ -73,6 +74,8 @@
               self.$route.router.go({name: 'memcards'})
             })
           }
+        },function(){
+          this.loading = false
         })
       }
     },
