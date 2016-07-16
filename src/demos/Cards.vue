@@ -8,7 +8,7 @@
            data-status={{item.status}} v-for="item in cards" @click="openCard">
 
         <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img" :style="{backgroundImage: 'url(http://wx.pipapay.com/static/images/card_blue.png)'}"></div>
+          <div class="img" :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
           <div slot="content" class="content">
             <flexbox>
               <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
