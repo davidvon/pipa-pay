@@ -128,13 +128,20 @@
             self.$http.post(Const.API_URL + 'card/add/status/update', {
               openid: self.openid,
               cardGlobalId: cardGlobalId
-            }, function (res) {
+            }).then(function (res) {
               self.loading = false;
               if (res.result == 0) {
                 self.cards[Number(index)].cardCode = res.data
                 self.cards[Number(index)].status = 1
+                self.alertMsg('该卡已成功添加到微信卡包');
               }
-            }, "json")
+            }, function(){
+              self.loading = false;
+              self.alertMsg('已成功添加到微信卡包, 服务器更新卡状态异常');
+            })
+          }, function(){
+            self.loading = false;
+            self.alertMsg('添加到微信卡包异常');
           })
         } else {
           self.loading = false;
