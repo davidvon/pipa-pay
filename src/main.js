@@ -42,9 +42,10 @@ router.beforeEach(({to, next}) => {
 
   if (to.query.state) {
     logger.log('main:beforeEach', 'code:' + to.query.code)
-    Vue.http.post(Const.API_URL + 'weixin/oauth/decode', {code: to.query.code}).then(res => {
-      if (res.data.errcode === '0-000') {
-        Storage.wxOpenId = res.data.openid
+    Vue.http.post(Const.API_URL + 'weixin/oauth/decode', {code: to.query.code}).then(response => {
+      var res = response.data
+      if (res.result === 0) {
+        Storage.wxOpenId = res.openid
         var currentUrl = Const.WX_HOST + '/#!' + to.query.state
         logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
         location.href = currentUrl

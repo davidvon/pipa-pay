@@ -100,15 +100,18 @@
         var res = response.data
         logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
         if(res.result != 0){
+          self.alertMsg('该卡已不存在')
           return
         }
-        if (res.data.status > 2) {
+        if (res.status > 2) {
           self.alertMsg('该卡已经转赠,无法再继续转赠')
         } else {
           logger.log('CardGiftShare', 'card sharing check ok')
-          self.card = res.data.card
+          self.card = res.card
           self.onShare()
         }
+      }, function(){
+        logger.log('CardGiftShare', 'card sharing check exception')
       })
     }
   }

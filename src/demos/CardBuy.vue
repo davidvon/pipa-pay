@@ -100,7 +100,7 @@ export default {
     },
     orderCommit(self, orderId, callback){
       self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
-        if(response.result === '0-0-0') {
+        if(response.result == 0) {
           self.alertMessage("订单提交完成");
           logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
         }else{
