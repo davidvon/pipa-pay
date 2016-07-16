@@ -26,40 +26,36 @@ router.beforeEach(({to, next}) => {
     Storage.clear()
   }
 
-  if (!Storage.wxOpenId) {
-    if (!to.query.code && !to.query.state) {
-      const wxUrl = encodeURIComponent(Const.WX_HOST)
-      const currentUrl = to.path.split('?')[0]
-      var totalUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + wxUrl + '&response_type=code&scope=snsapi_base&state=' + currentUrl + '#wechat_redirect'
-      logger.log('beforeEach', 'redirect url:' + totalUrl)
-      location.href = totalUrl
-      return
-    }
-
-    if (to.query.state) {
-      var tmpUrl = Const.WX_HOST + '/#!' + to.query.state + '?code=' + to.query.code
-      logger.log('main:beforeEach', 'url:' + tmpUrl)
-      location.href = tmpUrl
-      return
-    }
-
-    if (to.query.code) {
-      logger.log('beforeEach', 'to.path:' + to.path)
-      Vue.http.post(Const.API_URL + 'weixin/oauth/decode', {code: to.query.code}).then(res => {
-        if (res.data.errcode === '0-000') {
-          logger.log('beforeEach', 'openid:' + res.data.openid)
-          Storage.wxOpenId = res.data.openid
-          logger.log('beforeEach', 'saving openid:' + Storage.wxOpenId)
-        } else {
-          Storage.wxOpenId = ''
-        }
-      }, e => {
-        logger.log('beforeEach', 'get openid error')
-        alert('出错啦')
-      })
-    }
+  if (Storage.wxOpenId) {
+    next()
+    return
   }
-  next()
+
+  if (!to.query.code && !to.query.state) {
+    const homeUrl = encodeURIComponent(Const.WX_HOST)
+    const currentPath = to.path.split('?')[0]
+    var oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + homeUrl + '&response_type=code&scope=snsapi_base&state=' + currentPath + '#wechat_redirect'
+    logger.log('beforeEach', 'redirect url:' + oauthUrl)
+    location.href = oauthUrl
+    return
+  }
+
+  if (to.query.state) {
+    logger.log('main:beforeEach', 'code:' + to.query.code)
+    Vue.http.post(Const.API_URL + 'weixin/oauth/decode', {code: to.query.code}).then(res => {
+      if (res.data.errcode === '0-000') {
+        Storage.wxOpenId = res.data.openid
+        var currentUrl = Const.WX_HOST + '/#!' + to.query.state
+        logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
+        location.href = currentUrl
+      } else {
+        Storage.wxOpenId = ''
+      }
+    }, e => {
+      logger.log('beforeEach', 'get openid error')
+      alert('校验错误')
+    })
+  }
 })
 
 router.map(routes)
