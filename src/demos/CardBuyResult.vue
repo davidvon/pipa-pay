@@ -18,7 +18,7 @@
 
       <div class="content trade_fail" v-show="buy_status==255">
         <p class="top_icop"><span class="ico_tip ico_fail"></span></p>
-        <p class="tips_p1">购卡失败</p>
+        <p class="tips_p1">购卡失败, 订单号:{{order_id}}</p>
         <p class="tips_p2">请致电4000-888-400联系客服人员进行处理</p>
       </div><!-- content end -->
     </div>
@@ -69,6 +69,9 @@ export default {
         self.cards.number = res.data.count
         self.cards.amount = res.data.amount
         self.buy_status = 0
+      } else {
+        self.buy_status = 255
+        self.loading = false
       }
     }, function(){
       self.buy_status = 255

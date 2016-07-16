@@ -25,7 +25,7 @@
         <p class="ncd_p3"><x-button type="primary" @click="onBuyCard">购买电子卡</x-button></p>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
   </div>
 </template>

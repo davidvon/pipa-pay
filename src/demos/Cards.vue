@@ -32,7 +32,7 @@
       </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</alert>
   </div>
 </template>
 

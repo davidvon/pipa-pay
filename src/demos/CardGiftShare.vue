@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="信息" button-text="知道了" @on-hide="goHome">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="消息" button-text="知道了" @on-hide="goHome">{{alert.message}}</alert>
   </div>
 </template>
 

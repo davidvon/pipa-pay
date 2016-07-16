@@ -38,7 +38,7 @@
     <box gap="20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
-    <alert :show.sync="alert.show" title="警告" button-text="知道了">{{alert.message}}</alert>
+    <alert :show.sync="alert.show" title="消息" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
   </div>
 </template>
@@ -76,7 +76,8 @@ export default {
         content: '商品一批'
       },
       cardId: '',
-      alert:{ message:'', show: false},
+      orderId: '',
+      alert:{ message:'', show: false, callback: ''},
       loading: false
     }
   },
@@ -103,9 +104,13 @@ export default {
         callback && callback()
       })
     },
+    onCardResultShow(){
+      this.$route.router.go({name: 'buy_result', params: {orderId: this.orderId}});
+    },
     wxPay(res){
       var self = this
-      logger.log("CardBuy", "to weixin pay, sign:"+res.paySign)
+      var orderId = res.orderId
+      logger.log("CardBuy", "to weixin pay, sign:"+res.paySign + 'orderId:' + orderId)
       wx && wx.chooseWXPay({
         timestamp: res.timeStamp, //时间戳
         nonceStr: res.nonceStr, //随机串
@@ -113,12 +118,10 @@ export default {
         signType: res.signType, //MD5
         paySign: res.paySign,  //微信签名
         success: function (res) {
-          self.alertMessage("订单支付成功");
-          logger.log("wxPay", "orderId:"+res.orderId + " ,pay succeed")
-          orderCommit(self, res.orderId, function(){
-            setTimeout(function () {
-              self.$route.router.go({name: 'buy_result', params: {cardId: self.cardId, orderId: res.orderId}});
-            }, 500);
+          logger.log("wxPay", "orderId:"+orderId + " ,pay succeed")
+          self.orderCommit(self, orderId, function(){
+            self.orderId = orderId
+            self.alertMessage("订单支付成功", self.onCardResultShow);
           })
         },
         fail:function(res){
@@ -129,7 +132,7 @@ export default {
     buyCard(){
         var self = this;
         self.loading = true;
-        if(this.money==0 && (Number(this.otherMoney)<1 || Number(this.otherMoney)> 1000)){
+        if(this.money==0 && (Number(this.otherMoney)> 1000)){  //Number(this.otherMoney)<0.01 || TODO
           self.alertMessage('输入的其他金额不符合要求')
         }
         self.openid = Storage.wxOpenId
@@ -146,12 +149,6 @@ export default {
           self.loading = false;
           if (res.result == 0){
             self.wxPay(res.content);
-            // TODO TEST
-//            self.orderCommit(self, res.content.orderId, function(){
-//              setTimeout(function () {
-//                self.$route.router.go({name: 'buy_result', params: {cardId: data.cardId, orderId: res.content.orderId}});
-//              }, 500);
-//            })
           } else if (res.result == 1){
             self.alertMessage("订单已完成现金支付，请等待商家确认");
           } else if (res.result == 255){
@@ -164,9 +161,10 @@ export default {
           self.alertMessage("系统错误，请稍后再试");
         })
     },
-    alertMessage(msg){
+    alertMessage(msg, callback){
       this.alert.message = msg;
       this.alert.show = true
+      this.alert.callback = callback || null
     },
     invoice_valid(){
       return (!this.invoice.enable ||
