@@ -36,7 +36,7 @@
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item" href="#member-cards">
+          <a class="item" href="#memcards">
             <div class="img icon-mycard"></div>
             <div class="text">我的卡包</div>
           </a>

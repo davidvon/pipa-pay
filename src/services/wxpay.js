@@ -35,11 +35,12 @@ export function wechatPay(http, orderid, pay, success, error) {
     error.call(self, "支付订单参数异常");
     return;
   }
-  http.post('/api/order/payable?orderid=' + orderid,
-    function (data) {
-      if (data.result == '0') return pay(data);
-      else if (data.result == '1') return success.call(self, "订单已完成现金支付，请等待商家确认");
-      else if (data.result == '255') return error.call(self, "订单已完成支付");
-      else return error.call(self, "支付异常，请稍后再试");
-    }, "json")
+  http.post('/api/order/payable?orderid=' + orderid).then( function (data) {
+    if (data.result == '0') return pay(data);
+    else if (data.result == '1') return success.call(self, "订单已完成现金支付，请等待商家确认");
+    else if (data.result == '255') return error.call(self, "订单已完成支付");
+    else return error.call(self, "支付异常，请稍后再试");
+  }, function(){
+    error.call(self, "系统异常，请稍后再试");
+  })
 }

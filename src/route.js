@@ -31,7 +31,7 @@ export default {
     name: 'buy_result',
     component: BuyResult
   },
-  '/member-cards': {
+  '/memcards': {
     name: 'memcards',
     component: MemberCards
   },
