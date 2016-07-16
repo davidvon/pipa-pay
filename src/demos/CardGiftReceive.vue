@@ -15,7 +15,11 @@
           <p class="lk_tp1"><em class="give-user-name">{{info.giveUsername}}</em>赠送的礼品卡</p>
           <p class="lk_tp2 give-content">{{info.shareContent}}</p>
         </div>
-        <p class="lk_btn_p can-receive"><x-button :type="info.giveStatus==0?'primary':''" :disabled="info.giveStatus!=0" @click="onReceiveCard">{{statusStr}}</x-button></p>
+        <p class="lk_btn_p can-receive">
+          <x-button :type="info.giveStatus==0?'primary':''" :disabled="info.giveStatus!=0" @click="onReceiveCard">
+            {{statusStr}}
+          </x-button>
+        </p>
         <p class="lk_tit2 none"><span class="lk_cbox text-status"></span></p>
       </div>
     </div>
@@ -36,15 +40,15 @@
       return {
         no_data: false,
         info: {
-          giveUserHeadImg:'/static/images/ico-head.png',
-          giveUsername:'',
-          shareContent:'',
-          cardStatus:0,
-          giveStatus:0,
-          acquireUserOpenId:''
+          giveUserHeadImg: '/static/images/ico-head.png',
+          giveUsername: '',
+          shareContent: '',
+          cardStatus: 0,
+          giveStatus: 0,
+          acquireUserOpenId: ''
         },
         loading: false,
-        statusStr:''
+        statusStr: ''
       }
     },
     methods: {
@@ -57,24 +61,27 @@
       onReceiveCard(){
         this.loading = true
         var self = this
-        logger.log("CardGiftReceive", " openid:"+self.openid+" sign:"+self.sign)
-        this.$http.post(Const.API_URL + 'card/receive', {openId:self.openid, sign: self.sign}).then(function (response) {
+        logger.log("CardGiftReceive", " openid:" + self.openid + " sign:" + self.sign)
+        this.$http.post(Const.API_URL + 'card/receive', {
+          openId: self.openid,
+          sign: self.sign
+        }).then(function (response) {
 
           this.loading = false
           var res = response.data
-          logger.log("CardGiftReceive", "ack status:"+res.result)
+          logger.log("CardGiftReceive", "ack status:" + res.result)
 
           if (res.result == 255) return
-          if(res.data.status == 1) {
+          if (res.data.status == 1) {
             wxOpenCard(self, res.data.wxCardId, res.data.code, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
-          }else{
+          } else {
             wxAddCard(self, res.data.cardGlobalId, self.openid, Const.API_URL, function (cardList) {
               self.$route.router.go({name: 'memcards'})
             })
           }
-        },function(){
+        }, function () {
           this.loading = false
         })
       }
@@ -82,30 +89,33 @@
     ready(){
       var self = this
       this.loading = true
-      this.$http.post(Const.API_URL + 'card/receive/check', {openId:self.openid, sign:self.sign}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/receive/check', {
+        openId: self.openid,
+        sign: self.sign
+      }).then(function (response) {
         self.loading = false
         var res = response.data
-        if(res.result == 255){
+        if (res.result == 255) {
           self.no_data = true
           return
         }
         self.info = res.data
-        logger.log('CardGiftReceive', 'myself:'+self.openid+' giving status:'+ self.info.giveStatus +', card status:' + self.info.cardStatus)
-        if(self.info.giveStatus == 0){
+        logger.log('CardGiftReceive', 'myself:' + self.openid + ' giving status:' + self.info.giveStatus + ', card status:' + self.info.cardStatus)
+        if (self.info.giveStatus == 0) {
           self.statusStr = '领取电子卡'
-        }else if(self.info.acquireUserOpenId != self.openid ){
+        } else if (self.info.acquireUserOpenId != self.openid) {
           self.statusStr = '已被领取'
-        }else if(self.info.cardStatus == 0){
+        } else if (self.info.cardStatus == 0) {
           self.statusStr = '已领取，未放入卡包'
-        }else if(self.info.cardStatus == 1){
+        } else if (self.info.cardStatus == 1) {
           self.statusStr = '已放入微信卡包未激活'
-        }else if(self.info.cardStatus == 2){
+        } else if (self.info.cardStatus == 2) {
           self.statusStr = '已放入微信卡包已激活'
-        }else if(self.info.cardStatus == 3){
+        } else if (self.info.cardStatus == 3) {
           self.statusStr = '已过期'
-        }else if(self.info.cardStatus == 4){
+        } else if (self.info.cardStatus == 4) {
           self.statusStr = '转赠中'
-        }else{
+        } else {
           self.statusStr = '已转赠'
         }
       })

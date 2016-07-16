@@ -3,7 +3,7 @@ import {getCookie, setCookie} from '../libs/util'
 module.exports = {
   wxConfigStatus: false,
 
-  wxConfigEnable:function(){
+  wxConfigEnable: function () {
     this.wxConfigStatus = true
   },
   set wxOpenId(wxOpenId) {

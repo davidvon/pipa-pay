@@ -1,21 +1,27 @@
 <template>
   <div class='card'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">支付</x-header>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
+              @on-click-more="showMenus=true">支付
+    </x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="onPage('home')"
                  @on-click-menu-cards="onPage('memcards')"></actionsheet>
     <div class="content">
-      <div class="weui_cells_title" v-show="cards.length>0">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
-      <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards" @click="cardConsume">
+      <div class="weui_cells_title" v-show="cards.length>0">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+      </div>
+      <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards"
+           @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img" :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
+          <div class="img"
+               :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
           <div slot="content" class="content">
             <flexbox class="card-title">
               <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
               <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
             </flexbox>
             <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span></flexbox-item>
+              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span>
+              </flexbox-item>
               <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
             </flexbox>
           </div>
@@ -24,7 +30,9 @@
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
-        <p class="ncd_p3"><x-button type="primary" @click="onBuyCard">购买电子卡</x-button></p>
+        <p class="ncd_p3">
+          <x-button type="primary" @click="onBuyCard">购买电子卡</x-button>
+        </p>
       </div>
     </div>
     <alert :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</alert>
@@ -53,9 +61,9 @@
         },
         showMenus: false,
         cards: [],
-        cards_online:[],
+        cards_online: [],
         no_data: false,
-        alert:{ message:'', show: false},
+        alert: {message: '', show: false},
         loading: false
       }
     },
@@ -69,10 +77,10 @@
           self.loading = false;
           logger.log('PayCards', 'cards:' + JSON.stringify(response))
           var data = response.data
-          if (data && data.result==0)
+          if (data && data.result == 0)
             self.cards = data.data
-            if(self.cards.length==0) self.no_data=true
-        }, function(){
+          if (self.cards.length == 0) self.no_data = true
+        }, function () {
           self.loading = false;
         })
       }
@@ -80,7 +88,7 @@
     ready: function () {
       var self = this
       this.loading = true
-      wxRegister(this, function(){
+      wxRegister(this, function () {
         self.loading = false
       })
 
@@ -105,7 +113,7 @@
 
 
     },
-    methods:{
+    methods: {
       alertMsg(msg){
         this.alert.message = msg
         this.alert.show = true
@@ -117,12 +125,12 @@
         var attrs = e.currentTarget.attributes;
         var cardId = attrs['data-cardid'].value;
         var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
-        if(!cardId){
+        if (!cardId) {
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
-        logger.log('PayCards', 'cardConsume, cardid:'+ cardId +', code:' + cardCode)
-        this.$route.router.go({name: 'pay', params: {cardId:cardId, cardCode:cardCode}})
+        logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)
+        this.$route.router.go({name: 'pay', params: {cardId: cardId, cardCode: cardCode}})
       },
       onPage(name){
         this.$route.router.replace({name: name})
@@ -132,36 +140,38 @@
 </script>
 
 <style lang="less">
-.wx-cards .wxcard-enable{
-  margin-left: 0!important;
-  color:grey;
-  font-size: 14px;
-  text-align: right;
-}
-.wx-cards .wxcard-invalid{
-  margin-left: 0!important;
-  color:darkgrey;
-  font-size: 14px;
-  text-align: right;
-}
-.wx-cards .wxcard-disable{
-  margin-left: 0!important;
-  color:red;
-  font-size: 14px;
-  text-align: right;
-}
+  .wx-cards .wxcard-enable {
+    margin-left: 0 !important;
+    color: grey;
+    font-size: 14px;
+    text-align: right;
+  }
 
-.wx-cards .title {
-  margin-top: 6px;
-  color: #fff;
-  font-size: 18px;
-  width: 100%;
-}
+  .wx-cards .wxcard-invalid {
+    margin-left: 0 !important;
+    color: darkgrey;
+    font-size: 14px;
+    text-align: right;
+  }
 
-.wx-cards .sub-title{
-  color: #fff;
-  font-size: 12px;
-  width: 100%;
-}
+  .wx-cards .wxcard-disable {
+    margin-left: 0 !important;
+    color: red;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  .wx-cards .title {
+    margin-top: 6px;
+    color: #fff;
+    font-size: 18px;
+    width: 100%;
+  }
+
+  .wx-cards .sub-title {
+    color: #fff;
+    font-size: 12px;
+    width: 100%;
+  }
 
 </style>

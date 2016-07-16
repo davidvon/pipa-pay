@@ -1,7 +1,8 @@
 <template>
   <div class="pay-records">
     <div class="content">
-      <div class="sale_top">合计: 近3月收入<span class="col1">￥<em class="income-money">{{rechargeTotal}}</em></span>，支出<span class="col3">￥<em class="outcome-money">{{expendTotal}}</em></span></div>
+      <div class="sale_top">合计: 近3月收入<span class="col1">￥<em class="income-money">{{rechargeTotal}}</em></span>，支出<span
+        class="col3">￥<em class="outcome-money">{{expendTotal}}</em></span></div>
       <div class="record-container">
         <div class="sr_item {{item.className}}" v-for="item in records">
           <div class="sr_it1">
@@ -25,14 +26,13 @@
   import logger from '../services/log'
 
   export default {
-    components: {
-    },
+    components: {},
     data () {
       return {
         no_data: false,
-        rechargeTotal:0,
-        expendTotal:0,
-        records:[]
+        rechargeTotal: 0,
+        expendTotal: 0,
+        records: []
       }
     },
     methods: {},
@@ -41,11 +41,11 @@
         this.cardId = transition.from.params.cardId
         var self = this
         this.$http.post(Const.API_URL + 'card/pay/records', {cardId: this.cardId}).then(function (response) {
-          logger.log("PayRecords", "response: "+ JSON.stringify(response.data))
+          logger.log("PayRecords", "response: " + JSON.stringify(response.data))
           var ret = response.data
-          if (ret && ret.result==0){
+          if (ret && ret.result == 0) {
             self.records = ret.data.records
-            if(self.records.length==0) self.no_data=true
+            if (self.records.length == 0) self.no_data = true
           }
         })
       }

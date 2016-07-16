@@ -2,7 +2,7 @@ import logger from '../services/log'
 import Const from '../services/const'
 import Storage from '../services/storage'
 
-export function onMenuShareAppMessage(link, title, desc, logo, callback, errback){
+export function onMenuShareAppMessage(link, title, desc, logo, callback, errback) {
   logger.log('onMenuShareAppMessage', 'title:' + title)
   wx && wx.onMenuShareAppMessage({
     title: title, // 分享标题
@@ -19,7 +19,7 @@ export function onMenuShareAppMessage(link, title, desc, logo, callback, errback
   });
 }
 
-export function onMenuShareTimeline(link, title, desc, logo, callback, errback){
+export function onMenuShareTimeline(link, title, desc, logo, callback, errback) {
   wx && wx.onMenuShareTimeline({
     title: title, // 分享标题
     link: link, // 分享链接
@@ -34,10 +34,10 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback){
   });
 }
 
-export function wxRegister(self, callback){
+export function wxRegister(self, callback) {
   const openid = Storage.wxOpenId
   const status = Storage.wxConfigStatus
-  if (!openid || status){
+  if (!openid || status) {
     logger.log("wxRegister", "discarded, openid:" + openid + ', wxConfig status:' + status)
     callback && callback()
     return
@@ -50,21 +50,21 @@ export function wxRegister(self, callback){
     logger.log("wxRegister", "jsapi response ok")
     self.loading = false
 
-    if (response && response.data){
+    if (response && response.data) {
       wx.config({
         debug: true,
         appId: response.data['appId'],
         timestamp: response.data['timestamp'],
         nonceStr: response.data['nonceStr'],
         signature: response.data['signature'],
-        jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','chooseImage','uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseImage', 'uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
       });
 
-      wx.ready(function(){
+      wx.ready(function () {
         logger.log("wxRegister", "wx.config ok...");
         Storage.wxConfigEnable()
-        onMenuShareTimeline(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-        onMenuShareAppMessage(location.origin+location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+        onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+        onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       });
 
       wx.error(function (res) {
@@ -73,7 +73,7 @@ export function wxRegister(self, callback){
     }
     callback && callback()
 
-  }, function(err){
+  }, function (err) {
     logger.err('wxRegister', err)
     callback && callback()
   })

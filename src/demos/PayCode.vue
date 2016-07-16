@@ -64,10 +64,13 @@
       reload(){
         this.loading = true
         var self = this
-        this.$http.post(Const.API_URL + 'card/pay/code', {cardId: this.cardId, cardCode: this.carCode}).then(function (response) {
+        this.$http.post(Const.API_URL + 'card/pay/code', {
+          cardId: this.cardId,
+          cardCode: this.carCode
+        }).then(function (response) {
           self.loading = false
           var ret = response.data
-          if (ret && ret.result == 0){
+          if (ret && ret.result == 0) {
             if (ret.data.status > 2) {
               self.alertMsg('该卡正在转赠中或已过期，不可使用');
             } else {
@@ -78,13 +81,13 @@
       },
       refresh(){
         var self = this
-        this.timer = setTimeout(function(){
+        this.timer = setTimeout(function () {
           self.reload()
           self.refresh()
         }, 60000);
       },
       onPayDetail(){
-        this.$route.router.go({name: 'pay_records', params: {cardId:this.cardId}})
+        this.$route.router.go({name: 'pay_records', params: {cardId: this.cardId}})
       },
       onHome(){
         this.$route.router.go({name: 'home'})
@@ -95,7 +98,7 @@
       this.refresh()
     },
     beforeDestroy(){
-      if(this.timer){
+      if (this.timer) {
         clearTimeout(this.timer)
         this.timer = null
       }

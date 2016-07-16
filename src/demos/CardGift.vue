@@ -1,6 +1,8 @@
 <template>
   <div class='wx-cards card gift flex' id="walmart_15_1">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">赠送卡</x-header>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
+              @on-click-more="showMenus=true">赠送卡
+    </x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="onPage('home')"
                  @on-click-menu-cards="onPage('memcards')"></actionsheet>
@@ -10,9 +12,12 @@
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可赠送的电子卡~~</p>
-        <p class="ncd_p3"><x-button type="primary" @click="onBuyCard">购买电子卡</x-button></p>
+        <p class="ncd_p3">
+          <x-button type="primary" @click="onBuyCard">购买电子卡</x-button>
+        </p>
       </div>
-      <checker :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected" @on-change="onCardSelect">
+      <checker :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected"
+               @on-change="onCardSelect">
         <checker-item :value="$index" v-for="item in cards">
           <div class="donation_dov">
             <div class="card_item" data-id="{{$index}}" :class="$index==cardIndex ? 'on':''">
@@ -30,16 +35,16 @@
       </checker>
     </div>
     <tabbar style="position:fixed;">
-    <flexbox v-show="!no_data">
-      <flexbox-item>
-        <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
-      </flexbox-item>
-      <flexbox-item>
-        <div style="padding:5px">
-          <x-button :disabled="cardIndex==-1" type="primary" @click="onShare">赠送</x-button>
-        </div>
-      </flexbox-item>
-    </flexbox>
+      <flexbox v-show="!no_data">
+        <flexbox-item>
+          <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
+        </flexbox-item>
+        <flexbox-item>
+          <div style="padding:5px">
+            <x-button :disabled="cardIndex==-1" type="primary" @click="onShare">赠送</x-button>
+          </div>
+        </flexbox-item>
+      </flexbox>
     </tabbar>
     <loading :show.sync="loading" :text=""></loading>
   </div>
@@ -61,9 +66,9 @@
     //import Masker from '../components/masker'
     data () {
       return {
-        cardIndex:-1,
-        cardIdSelect:'',
-        cardCodeSelect:'',
+        cardIndex: -1,
+        cardIdSelect: '',
+        cardCodeSelect: '',
         menus: {
           home: '首页',
           cards: '我的卡包'
@@ -81,7 +86,7 @@
         this.cardIndex = index
       },
       onShare(){
-        this.$route.router.go({name:'gift_share', params:{cardId:this.cardIdSelect, cardCode:this.cardCodeSelect}});
+        this.$route.router.go({name: 'gift_share', params: {cardId: this.cardIdSelect, cardCode: this.cardCodeSelect}});
       },
       onBuyCard(){
         this.$route.router.go({name: 'buy'})
@@ -95,19 +100,19 @@
         var self = this
         self.loading = true
         self.openid = Storage.wxOpenId
-        this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share:1}).then(function (response) {
+        this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
           self.loading = false
-          logger.log("CardGift", " data:"+JSON.stringify(response.data))
+          logger.log("CardGift", " data:" + JSON.stringify(response.data))
           var ret = response.data
-          if (ret && ret.result==0){
+          if (ret && ret.result == 0) {
             self.cards = ret.data
-            if(self.cards.length==0)
+            if (self.cards.length == 0)
               self.no_data = true
           }
         })
       }
     }
-}
+  }
 </script>
 
 <style lang="less">

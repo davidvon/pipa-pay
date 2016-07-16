@@ -16,12 +16,12 @@ if (location.origin === 'http://127.0.0.1:8080') {
 
 
 export default {
-    WX_HOST: wx_host,
-    API_HOST: api_host,
-    API_URL:  api_host + '/api/',
-    WX_APPID: appId,
-    cardId: cardId,
-    shareTitle: '噼啪支付',
-    shareLogo: 'http://mmbiz.qpic.cn/mmbiz/MjbyiaBuoxn7nZMD6NBJBKYdUrQrlInPARVSicx5G3fT8OpPhzwiczFAfDEeFavGVzbickZRTkOy7lQYV38OKKJmNA/0',
-    shareDesc: '沃尔玛GIFT卡'
+  WX_HOST: wx_host,
+  API_HOST: api_host,
+  API_URL: api_host + '/api/',
+  WX_APPID: appId,
+  cardId: cardId,
+  shareTitle: '噼啪支付',
+  shareLogo: 'http://mmbiz.qpic.cn/mmbiz/MjbyiaBuoxn7nZMD6NBJBKYdUrQrlInPARVSicx5G3fT8OpPhzwiczFAfDEeFavGVzbickZRTkOy7lQYV38OKKJmNA/0',
+  shareDesc: '沃尔玛GIFT卡'
 }

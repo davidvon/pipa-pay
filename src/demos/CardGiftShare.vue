@@ -39,10 +39,10 @@
     data () {
       return {
         cardId: '',
-        cardCode:'',
+        cardCode: '',
         maskShow: false,
         content: '小小卡片，浓浓情义',
-        shareUrl:'',
+        shareUrl: '',
         card: {
           sign: '',
           cardId: '',
@@ -67,24 +67,26 @@
       updateCardStatus(){
         var self = this
         this.$http.post(Const.API_URL + 'card/share',
-          { openId:self.openid, sign: self.card.sign, cardId: self.cardId, cardCode: self.cardCode,
-            timestamp: self.card.timestamp, content: self.content}).then(function (response) {
+          {
+            openId: self.openid, sign: self.card.sign, cardId: self.cardId, cardCode: self.cardCode,
+            timestamp: self.card.timestamp, content: self.content
+          }).then(function (response) {
           var res = response.data
-          if(res.result != 0) return
-          self.$route.router.go({name: 'gift_share_result', params:{cardId: self.cardId, cardCode: self.cardCode }})
+          if (res.result != 0) return
+          self.$route.router.go({name: 'gift_share_result', params: {cardId: self.cardId, cardCode: self.cardCode}})
         })
       },
       onShare(){
         var self = this
         self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
-        logger.log('CardGiftShare', 'onShare url:'+ self.shareUrl +' card:'+ self.card.cardName + ' content:'+ self.content + ' logo:'+ self.card.logo)
+        logger.log('CardGiftShare', 'onShare url:' + self.shareUrl + ' card:' + self.card.cardName + ' content:' + self.content + ' logo:' + self.card.logo)
 
         onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
           self.content, self.card.logo, function () {
             logger.log('CardGiftShare', ' menu share ok')
             self.maskShow = false
             self.updateCardStatus()
-          }, function(){
+          }, function () {
             self.maskShow = false
             logger.log('CardGiftShare', 'menu share error')
           })
@@ -96,10 +98,10 @@
     ready(){
       var self = this
       this.$http.post(Const.API_URL + 'card/share/check',
-        {openId:self.openid, cardId: self.cardId, cardCode:self.cardCode}).then(function (response) {
+        {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
         var res = response.data
         logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
-        if(res.result != 0){
+        if (res.result != 0) {
           self.alertMsg('该卡已不存在')
           return
         }
@@ -110,7 +112,7 @@
           self.card = res.card
           self.onShare()
         }
-      }, function(){
+      }, function () {
         logger.log('CardGiftShare', 'card sharing check exception')
       })
     }

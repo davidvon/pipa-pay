@@ -10,3 +10,5 @@ dist/components-commonjs/
 /site
 .idea
 *.rdb
+
+*.zip

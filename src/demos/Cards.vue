@@ -1,15 +1,19 @@
 <template>
   <div class='wx-cards card'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome" ></actionsheet>
-    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
+              @on-click-more="showMenus=true">我的卡包
+    </x-header>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome"></actionsheet>
+    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+    </div>
     <div class="content">
       <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}"
            data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}}
            data-status={{item.status}} v-for="item in cards" @click="openCard">
 
         <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img" :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
+          <div class="img"
+               :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
           <div slot="content" class="content">
             <flexbox>
               <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
@@ -20,7 +24,8 @@
             </flexbox>
 
             <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span></flexbox-item>
+              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span>
+              </flexbox-item>
               <flexbox-item class="{{statusClass[item.status]}}" :span="1/2">{{statusStr[item.status]}}</flexbox-item>
             </flexbox>
           </div>
@@ -29,7 +34,9 @@
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
-        <p class="ncd_p3"><x-button type="primary" @click="buyCard">购买电子卡</x-button></p>
+        <p class="ncd_p3">
+          <x-button type="primary" @click="buyCard">购买电子卡</x-button>
+        </p>
       </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
@@ -65,7 +72,7 @@
         alert: {message: '', show: false}
       }
     },
-    methods:{
+    methods: {
       onHome(){
         this.$route.router.replace({name: 'home'})
       },
@@ -80,7 +87,7 @@
         var self = this
         var url = location.href.split('#')[0]
         self.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
-          if (response && response.data){
+          if (response && response.data) {
             var data = response.data
             logger.log('cards', 'chooseCard:' + JSON.stringify(data))
 
@@ -91,7 +98,7 @@
               cardSign: data['cardSign'], // 卡券签名
               success: function (res) {
                 self.cards_online = res.cardList; // 用户选中的卡券列表信息
-                if(!self.cards_online){
+                if (!self.cards_online) {
                   self.cards_online = res.available_cards
                 }
               }
@@ -107,9 +114,9 @@
         var cardGlobalId = attrs['data-globalid'].value;
         var cardId = attrs['data-cardid'].value;
         var status = attrs['data-status'].value;
-        logger.log('cards', 'open card:'+ cardGlobalId);
+        logger.log('cards', 'open card:' + cardGlobalId);
 
-        if (status >= 3){
+        if (status >= 3) {
           self.loading = false;
           self.alertMsg('该卡正在转赠中或已过期，不可使用');
           return
@@ -140,18 +147,18 @@
       var self = this
       self.openid = Storage.wxOpenId
       self.loading = true
-      wxRegister(self, function(){
+      wxRegister(self, function () {
         self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
           self.loading = false
           var res = response.data
-          if (res && res.result==0) self.cards = res.data
+          if (res && res.result == 0) self.cards = res.data
           if (self.cards.length == 0) self.no_data = true
-        }, function(){
+        }, function () {
           self.loading = false
         })
       })
     }
-}
+  }
 </script>
 
 <style lang="less">

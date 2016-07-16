@@ -8,7 +8,8 @@
       <div class="wal_gouka_box">
         <p>顾客可以通过微信，将实体礼品卡绑定到微信上，或者在微信上直接购买电子礼品卡。</p>
         <p>1.绑定实体礼品卡 －如果手中的实体礼品卡为23开头，并且带有网上支付密码，就可以通过如下链接，将其绑定到微信卡券中。 <span class="wal_cblue btn-bind">点击绑卡</span></p>
-        <p>2.购买电子礼品卡 －可以通过访问如下链接，直接购买电子礼品卡。 <a class="wal_cblue btn-buy" v-link="{name: 'buy', params: { cardId: cardId }}">点击购卡</a></p>
+        <p>2.购买电子礼品卡 －可以通过访问如下链接，直接购买电子礼品卡。 <a class="wal_cblue btn-buy"
+                                               v-link="{name: 'buy', params: { cardId: cardId }}">点击购卡</a></p>
       </div>
 
       <p class="wal_txt_p1">二.企业购卡</p>
@@ -28,7 +29,8 @@
         <p>单位有效证件（包括营业执照、事业单位法人证书、税务登记证、组织机构代码证）、单位联系电话、代理人有效身份证件（包括身份证、护照、军官证等）、代理人联系电话。</p>
 
         <p class="wal_txt_p2">2.付款</p>
-        <p>沃尔玛确认订单后，单位按照付款通知列明的账户信息付款，仅接受与申请单位同名的银行账户转账。付款后将付款凭证发送给 <span class="wal_cblue">CNFS@wal-mart.com。</span></p>
+        <p>沃尔玛确认订单后，单位按照付款通知列明的账户信息付款，仅接受与申请单位同名的银行账户转账。付款后将付款凭证发送给 <span class="wal_cblue">CNFS@wal-mart.com。</span>
+        </p>
 
         <p class="wal_txt_p2">3.交付与分发</p>
 
@@ -60,7 +62,7 @@
         <p>7.未尽事宜，请参考《电子卡指引》和《沃尔玛GIFT卡章程》。</p>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -68,12 +70,12 @@
   import Const from '../services/const'
 
   export default {
-    components: { XHeader},
+    components: {XHeader},
     data () {
       return {
         cardId: Const.cardId
       }
     },
     methods: {}
-}
+  }
 </script>

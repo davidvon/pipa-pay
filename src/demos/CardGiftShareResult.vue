@@ -32,7 +32,7 @@
   import logger from '../services/log'
 
   export default {
-    components: { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert },
+    components: {Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert},
     data () {
       return {
         share: {},
@@ -47,9 +47,9 @@
     ready(){
       var self = this
       this.$http.post(Const.API_URL + 'card/share/info',
-        {openId:this.openid, cardId: this.cardId, cardCode:this.cardCode}).then(function (response) {
+        {openId: this.openid, cardId: this.cardId, cardCode: this.cardCode}).then(function (response) {
         var res = response.data
-        if(res.result != 0) return
+        if (res.result != 0) return
         self.share = res.data
       })
     },
