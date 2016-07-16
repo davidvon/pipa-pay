@@ -1,9 +1,11 @@
+import logger from '../services/log'
+
 function addCard(wx_cards, callback, errback) {
-  console.log('invoking wx:' + JSON.stringify(wx_cards))
+  logger.log('addCard', 'invoking wx:' + JSON.stringify(wx_cards))
   wx.addCard({
     cardList: wx_cards,
     success: function (res) {
-      console.log('add card success:' + res + ', json:' + JSON.stringify(res.cardList))
+      logger.log('addCard', 'add card success:' + res + ', json:' + JSON.stringify(res.cardList))
       callback && callback(res.cardList)
     },
     cancel: function (res) {
@@ -54,7 +56,7 @@ export function wxAddCards(self, orderId, openid, url_root, callback, errback) {
 
 
 export function wxOpenCard(self, wxCardId, code, callback, errback) {
-  console.log("[wxOpenCard] cardId:" + wxCardId + " code:" + code)
+  logger.log('wxOpenCard', 'cardId:' + wxCardId + ' code:' + code)
   wx.openCard({
     cardList: [{
       cardId: wxCardId,
@@ -62,7 +64,7 @@ export function wxOpenCard(self, wxCardId, code, callback, errback) {
     }],
     success: function (res) {
       var cardList = res.cardList;
-      console.log("[wxOpenCard] card list:" + cardList)
+      logger.log('wxOpenCard', 'card list:' + cardList)
       callback && callback(cardList)
     },
     cancel: function (res) {

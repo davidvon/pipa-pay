@@ -129,6 +129,10 @@
           alertMsg('请选择需要赠送的会员卡！');
           return;
         }
+        if (cardCode==0){
+          alertMsg('请先绑定微信会员卡后再消费！');
+          return;
+        }
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)
         this.$route.router.go({name: 'pay', params: {cardId: cardId, cardCode: cardCode}})
       },
