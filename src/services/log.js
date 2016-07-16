@@ -10,15 +10,17 @@ function trapError(name, err){
   var _url =[];
   _url.push('version='+ version);
   _url.push('name'+'='+encodeURIComponent(name));
-  _url.push('message'+'='+encodeURIComponent(err.message));
-  _url.push('location'+'='+encodeURIComponent(err.location));
+  if(err.message)
+    _url.push('message'+'='+encodeURIComponent(err.message));
+  if(err.location)
+    _url.push('location'+'='+encodeURIComponent(err.location));
   if(err.line)
     _url.push('line'+'='+encodeURIComponent(err.line));
   if(err.func)
     _url.push('func'+'='+encodeURIComponent(err.func));
   var url = _url.join('&');
   img.src = log_url+url;
-  console.log('['+ name + '] '+ err.message);
+  console.log(''+ name + ', '+ err.message);
 }
 
 function trapLog(name, msg){

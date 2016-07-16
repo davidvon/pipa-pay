@@ -1,7 +1,8 @@
 <template>
   <div class='wx-cards card'>
-    <x-header :left-options='{showBack:true, backText:"返回"}'>我的卡包</x-header>
-    <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">我的卡包</x-header>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome" ></actionsheet>
+    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content">
       <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}"
            data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}}
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-  import { Loading, Masker, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
+  import { Actionsheet, Loading, Masker, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
     Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
   import Storage from '../services/storage'
@@ -47,10 +48,15 @@
 
   export default {
     components: {
-      Loading, Masker, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert, Flexbox, FlexboxItem
+      Actionsheet, Loading, Masker, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
+      Flexbox, FlexboxItem
     },
     data () {
       return {
+        menus: {
+          home: '首页'
+        },
+        showMenus: false,
         no_data: false,
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
@@ -60,6 +66,9 @@
       }
     },
     methods:{
+      onHome(){
+        this.$route.router.replace({name: 'home'})
+      },
       alertMsg(msg){
         this.alert.message = msg
         this.alert.show = true

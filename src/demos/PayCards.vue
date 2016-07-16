@@ -1,9 +1,11 @@
 <template>
   <div class='card'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">支付</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
+                 @on-click-menu-home="onPage('home')"
+                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
     <div class="content">
-      <div class="weui_cells_title" v-show="!no_data">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+      <div class="weui_cells_title" v-show="cards.length>0">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards" @click="cardConsume">
         <masker style="border-radius:10px;" color="000" :opacity="0">
           <div class="img" :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
@@ -46,15 +48,12 @@
     data () {
       return {
         menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
+          home: '首页',
+          cards: '我的卡包'
         },
+        showMenus: false,
         cards: [],
         cards_online:[],
-        showMenus: false,
         no_data: false,
         alert:{ message:'', show: false},
         loading: false
@@ -124,6 +123,9 @@
         }
         logger.log('PayCards', 'cardConsume, cardid:'+ cardId +', code:' + cardCode)
         this.$route.router.go({name: 'pay', params: {cardId:cardId, cardCode:cardCode}})
+      },
+      onPage(name){
+        this.$route.router.replace({name: name})
       }
     }
   }

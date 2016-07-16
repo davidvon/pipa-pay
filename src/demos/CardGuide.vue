@@ -1,7 +1,6 @@
 <template>
   <div class='guide'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">购卡向导</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>购卡向导</x-header>
     <div class="wal_gouka_tip">
       <p class="wal_gktop">购卡指引</p>
       <p class="wal_txt_p1">一.个人购卡/绑卡</p>
@@ -9,7 +8,7 @@
       <div class="wal_gouka_box">
         <p>顾客可以通过微信，将实体礼品卡绑定到微信上，或者在微信上直接购买电子礼品卡。</p>
         <p>1.绑定实体礼品卡 －如果手中的实体礼品卡为23开头，并且带有网上支付密码，就可以通过如下链接，将其绑定到微信卡券中。 <span class="wal_cblue btn-bind">点击绑卡</span></p>
-        <p>2.购买电子礼品卡 －可以通过访问如下链接，直接购买电子礼品卡。 <span class="wal_cblue btn-buy">点击购卡</span></p>
+        <p>2.购买电子礼品卡 －可以通过访问如下链接，直接购买电子礼品卡。 <a class="wal_cblue btn-buy" v-link="{name: 'buy', params: { cardId: cardId }}">点击购卡</a></p>
       </div>
 
       <p class="wal_txt_p1">二.企业购卡</p>
@@ -65,22 +64,14 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group} from '../components'
+  import { XHeader} from '../components'
   import Const from '../services/const'
 
   export default {
-    components: { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group },
+    components: { XHeader},
     data () {
       return {
-        cardIndex:1,
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
-        showMenus: false
+        cardId: Const.cardId
       }
     },
     methods: {}

@@ -1,7 +1,6 @@
 <template>
   <div class='notice'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">电子卡章程</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>电子卡章程</x-header>
     <p class="wal_rtop">沃尔玛礼品卡微信平台操作指引</p>
     <p class="wal_top_tit">顾客在微信平台（包括微信卡包、微信公众号）进行沃尔玛礼品卡购买、充值、余额查询、转赠、关联实体卡、消费等操作时，应当严格遵守本指引，并自行承担违反本指引可能带来的风险。</p>
     <div class="walcard_rule">
@@ -23,23 +22,12 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group} from '../components'
-  import Const from '../services/const'
+  import { XHeader} from '../components'
 
   export default {
-    components: { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group },
+    components: { XHeader},
     data () {
-      return {
-        cardIndex:1,
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
-        showMenus: false
-      }
+      return {}
     },
     methods: {}
 }

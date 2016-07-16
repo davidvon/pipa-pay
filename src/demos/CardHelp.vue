@@ -1,7 +1,6 @@
 <template>
   <div class='help'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">帮助中心</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>帮助中心</x-header>
     <div class="help_page">
       <div class="help_h2"><span class="help_sh1">1. </span> <span class="help_sh2">电子卡购买后，如何使用？</span></div>
       <div class="help_answer">电子卡购买后，会存放在微信卡券里。线下使用时，从微信里找到电子卡，点击“付款”出示电子卡的付款二维码/一维码，收银员输入金额扫码后即可完成付款。</div>
@@ -18,23 +17,12 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group} from '../components'
-  import Const from '../services/const'
+  import { XHeader} from '../components'
 
   export default {
-    components: { Checker, CheckerItem, Masker, Actionsheet, XHeader, Group },
+    components: { XHeader},
     data () {
-      return {
-        cardIndex:1,
-        menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
-        },
-        showMenus: false
-      }
+      return {}
     },
     methods: {}
 }

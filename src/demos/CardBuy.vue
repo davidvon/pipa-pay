@@ -1,6 +1,9 @@
 <template>
   <div class="order">
-    <x-header :left-options='{showBack:true, backText:"返回"}'>购买</x-header>
+    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">购买</x-header>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
+                 @on-click-menu-home="onPage('home')"
+                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
 
     <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
     <checker class="center" :value.sync="money" default-item-class="money-item" selected-item-class="money-item-selected">
@@ -75,6 +78,11 @@ export default {
         },
         content: '商品一批'
       },
+      menus: {
+        home: '首页',
+        cards: '我的卡包'
+      },
+      showMenus: false,
       cardId: '',
       orderId: '',
       alert:{ message:'', show: false, callback: ''},
@@ -170,6 +178,9 @@ export default {
       return (!this.invoice.enable ||
       (this.invoice.title.length>0 && this.invoice.name.length>0 && this.invoice.phone.length>0 &&
        this.invoice.zip.length>0 && this.invoice.address.length>0 && this.invoice.content.length>0))
+    },
+    onPage(name){
+      this.$route.router.replace({name: name})
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="order-result">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">购买</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome" ></actionsheet>
     <div id="result-page" class="flex">
       <div class="content pay_success" v-show="buy_status==1">
         <p class="top_icop"><span class="ico_tip ico_success"></span></p>
@@ -45,11 +45,7 @@ export default {
         amount:0
       },
       menus: {
-        menu1: '付款',
-        menu2: '我的卡包',
-        menu3: '赠送卡',
-        menu4: '在线购物',
-        menu5: '用卡说明'
+        home: '首页'
       },
       loading: false,
       showMenus: false,
@@ -96,6 +92,9 @@ export default {
       }, function(){
         self.Loading = false
       })
+    },
+    onHome(){
+      this.$route.router.replace({name: 'home'})
     }
   }
 }

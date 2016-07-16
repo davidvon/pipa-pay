@@ -1,7 +1,9 @@
 <template>
   <div class='wx-cards card gift flex' id="walmart_15_1">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}" @on-click-more="showMenus=true">赠送卡</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel></actionsheet>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
+                 @on-click-menu-home="onPage('home')"
+                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content card-list ">
       <!--没有数据-->
@@ -63,11 +65,8 @@
         cardIdSelect:'',
         cardCodeSelect:'',
         menus: {
-          menu1: '购卡',
-          menu2: '付款',
-          menu3: '赠送卡',
-          menu4: '在线购物',
-          menu5: '用卡说明'
+          home: '首页',
+          cards: '我的卡包'
         },
         cards: [],
         showMenus: false,
@@ -86,6 +85,9 @@
       },
       onBuyCard(){
         this.$route.router.go({name: 'buy'})
+      },
+      onPage(name){
+        this.$route.router.replace({name: name})
       }
     },
     route: {

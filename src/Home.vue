@@ -42,7 +42,7 @@
           </a>
         </flexbox-item>
         <flexbox-item>
-          <a class="item" href="/#guide">
+          <a class="item" href="#guide">
             <div class="img icon-desc"></div>
             <div class="text">购卡指引</div>
           </a>
@@ -56,7 +56,7 @@
           </a>
         </flexbox-item>
         <flexbox-item class="vux-1px-r">
-          <a class="item" href="/#notice">
+          <a class="item" href="#notice">
             <div class="img icon-guide"></div>
             <div class="text">电子卡章程</div>
           </a>
