@@ -116,7 +116,7 @@
         }
 
         if (status == 0) {
-          self.loading = false;
+          self.loading = true;
           wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
             self.$http.post(Const.API_URL + 'card/add/status/update', {
               openid: self.openid,

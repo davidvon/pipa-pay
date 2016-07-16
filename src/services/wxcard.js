@@ -18,7 +18,7 @@ function addCard(wx_cards, callback, errback){
 export function wxAddCard(self, cardGlobalId, openid, url_root, callback, errback){
   self.$http.post(url_root + 'weixin/card/add', {card_global_id:cardGlobalId, openid: openid}, function (res) {
     if (res.result == 0) {
-      var items = res.data, wx_cards = [];
+      var item = res.data, wx_cards = [];
       wx_cards.push({
         cardId: item.id,
         cardExt: '{"timestamp":"' + item.timestamp + '","signature":"' + item.signature + '"}'
@@ -32,16 +32,14 @@ export function wxAddCards(self, orderId, openid, url_root, callback, errback){
   self.$http.post(url_root + 'weixin/cards/add', {orderId:orderId, openid: openid}, function (res) {
     if (res.result == 0) {
       var items = res.data, wx_cards = [];
-      if (items && items.length > 0) {
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i];
-          wx_cards.push({
-            cardId: item.id,
-            cardExt: '{"timestamp":"' + item.timestamp + '","signature":"' + item.signature + '"}'
-          });
-        }
-        addCard(wx_cards, callback, errback)
+      for (var i = 0; i < items && items.length; i++) {
+        var item = items[i];
+        wx_cards.push({
+          cardId: item.id,
+          cardExt: '{"timestamp":"' + item.timestamp + '","signature":"' + item.signature + '"}'
+        });
       }
+      addCard(wx_cards, callback, errback)
     }
   })
 }
