@@ -1,6 +1,6 @@
-export function setCookie(name,value){
+export function setCookie(name,value,days){
   var exp = new Date();
-  exp.setTime(exp.getTime() + 1*60*60*1000*24*30*12);
+  exp.setTime(exp.getTime() + days*60*60*1000*24);
   document.cookie = name + "="+ escape (value) + ";path=/;expires=" + exp.toGMTString();
 }
 
@@ -10,10 +10,8 @@ export function setCookieEx(name,value,days,domain){
   document.cookie = name + "="+ escape (value) + ";path=/;expires=" + exp.toGMTString() + ";domain=" + domain;
 }
 
-export function getQueryString(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-  var r = window.location.search.substr(1).match(reg);
-  if (r != null) return unescape(r[2]); return null;
+export function clearCookie(name){
+  setCookie(name, "", -1)
 }
 
 export function getCookie(name) {
@@ -22,6 +20,12 @@ export function getCookie(name) {
     return unescape(arr[2]);
   else
     return null;
+}
+
+export function getQueryString(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]); return null;
 }
 
 export function addUrlParam(href, name, value) {

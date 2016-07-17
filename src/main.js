@@ -6,6 +6,7 @@ import Storage from './services/storage'
 import Const from './services/const'
 import logger from './services/log'
 import { default as routes } from './route'
+import { clearCookie } from './libs/util'
 
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
@@ -22,8 +23,10 @@ router.beforeEach(({to, next}) => {
   logger.log('beforeEach', 'wxOpenId:' + Storage.wxOpenId + ' to.path:' + to.path)
 
   if (to.path === '/clear') {
-    alert('本地数据已清除')
     Storage.clear()
+    clearCookie('PIPA_OPENID', '')
+    alert('本地数据已清除')
+    return
   }
 
   if (Storage.wxOpenId) {
