@@ -126,11 +126,11 @@
         var cardId = attrs['data-cardid'].value;
         var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
         if (!cardId) {
-          alertMsg('请选择需要赠送的会员卡！');
+          this.alertMsg('请选择需要赠送的会员卡！');
           return;
         }
         if (cardCode==0){
-          alertMsg('请先绑定微信会员卡后再消费！');
+          this.alertMsg('请先绑定微信会员卡后再消费！');
           return;
         }
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)
