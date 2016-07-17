@@ -52,7 +52,7 @@ export function wxRegister(self, callback) {
 
     if (response && response.data) {
       wx.config({
-        debug: true,
+        debug: false,
         appId: response.data['appId'],
         timestamp: response.data['timestamp'],
         nonceStr: response.data['nonceStr'],
