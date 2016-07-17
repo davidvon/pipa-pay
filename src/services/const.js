@@ -23,5 +23,5 @@ export default {
   cardId: cardId,
   shareTitle: '噼啪支付',
   shareLogo: 'http://mmbiz.qpic.cn/mmbiz/MjbyiaBuoxn7nZMD6NBJBKYdUrQrlInPARVSicx5G3fT8OpPhzwiczFAfDEeFavGVzbickZRTkOy7lQYV38OKKJmNA/0',
-  shareDesc: '沃尔玛GIFT卡'
+  shareDesc: '噼啪GIFT卡'
 }

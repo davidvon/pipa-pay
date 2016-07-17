@@ -4,7 +4,7 @@
       <h1 class="vux-title">
         <span class="demo-icon" slot="icon" style="font-size:60px;color:#fff;display: block;">&#xe637;</span>
       </h1>
-      <p class="vux-notice" style="color:#fff">沃尔玛礼品卡</p>
+      <p class="vux-notice" style="color:#fff">噼啪礼品卡</p>
     </div>
     <div class="bg">
       <flexbox class="vux-1px-tb" :gutter="0">
