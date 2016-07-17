@@ -22,6 +22,6 @@ export default {
   WX_APPID: appId,
   cardId: cardId,
   shareTitle: '噼啪支付',
-  shareLogo: 'http://mmbiz.qpic.cn/mmbiz/MjbyiaBuoxn7nZMD6NBJBKYdUrQrlInPARVSicx5G3fT8OpPhzwiczFAfDEeFavGVzbickZRTkOy7lQYV38OKKJmNA/0',
+  shareLogo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue.png',
   shareDesc: '噼啪GIFT卡'
 }
