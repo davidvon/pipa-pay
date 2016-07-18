@@ -5,7 +5,8 @@ var projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    vendor: [ 'vue', 'vue-router', 'vue-resource', 'fastclick']
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),

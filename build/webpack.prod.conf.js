@@ -2,11 +2,13 @@ var webpack = require('webpack')
 var config = require('./webpack.base.conf')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
+
 
 // naming output files with hashes for better caching.
 // dist/index.html will be auto-generated with correct URLs.
-config.output.filename = '[name].[chunkhash].js'
-config.output.chunkFilename = '[id].[chunkhash].js'
+config.output.filename = '[name].[chunkhash:12].js'
+config.output.chunkFilename = '[id].[chunkhash:12].js'
 
 // whether to generate source map for production files.
 // disabling this can speed up the build.
@@ -40,11 +42,14 @@ config.plugins = (config.plugins || []).concat([
   new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false
-    }
+    },
+    sourceMap: false
   }),
+  new CommonsChunkPlugin('vendor', '[name].[hash:12].js'),
+
   new webpack.optimize.OccurenceOrderPlugin(),
   // extract css into its own file
-  new ExtractTextPlugin('[name].[contenthash].css'),
+  new ExtractTextPlugin('[name].[contenthash:12].css'),
   // generate dist index.html with correct asset hash for caching.
   // you can customize output by editing /build/index.template.html
   // see https://github.com/ampedandwired/html-webpack-plugin

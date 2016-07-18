@@ -22,7 +22,6 @@
 
 <script>
   import Const from '../services/const'
-  import { } from '../components'
   import logger from '../services/log'
 
   export default {
