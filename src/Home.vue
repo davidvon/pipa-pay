@@ -1,10 +1,10 @@
 <template>
   <div class="home">
     <div class="vue-home center">
-      <h1 class="vux-title">
-        <span class="demo-icon" slot="icon" style="font-size:60px;color:#fff;display: block;">&#xe637;</span>
+      <h1 class="vux-title" style="padding:15px 0 0px;">
+        <img style="width:80px;" src="./assets/images/pipalogo-white2.png">
       </h1>
-      <p class="vux-notice" style="color:#fff">噼啪礼品卡</p>
+      <p class="vux-notice" style="padding:0 0 15px;color:#fff">噼啪礼品卡</p>
     </div>
     <div class="bg">
       <flexbox class="vux-1px-tb" :gutter="0">
@@ -115,7 +115,7 @@
     /*margin-bottom: 15px;*/
     text-align: center;
     padding: 20px 0;
-    background-color: #5c69c7;
+    background-color: #09bb07;
   }
 
   .home .item {
