@@ -6,7 +6,9 @@ var projectRoot = path.resolve(__dirname, '../')
 module.exports = {
   entry: {
     app: './src/main.js',
-    vendor: [ 'vue', 'vue-router', 'vue-resource', 'fastclick']
+    vendor: [ 'vue', 'vue-router', 'vue-resource', 'fastclick',
+              './src/components/barcode/JsBarcode.code128.min',
+              './src/components/qrcode/index']
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),
@@ -54,7 +56,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg|woff2?|eot|ttf)(\?.*)?$/,
-        loader: 'url',
+        loader: 'file-loader',
         query: {
           limit: 10000,
           name: 'images/[name].[ext]?[hash:7]'

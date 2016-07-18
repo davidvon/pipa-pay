@@ -30,8 +30,9 @@
 
 <script>
   import Const from '../services/const'
-  import {Barcode, Qrcode, Alert, Loading} from '../components'
+  import {Barcode, Alert, Loading} from '../components'
   import logger from '../services/log'
+  import Qrcode from '../components/qrcode'
 
   export default {
     components: {Barcode, Qrcode, Alert, Loading},
