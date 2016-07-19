@@ -46,7 +46,7 @@
       <actionsheet :show.sync="invoice.select" :menus="invoice.menus"
                    @on-click-menu="invoiceContentSelect"></actionsheet>
     </group>
-    <box gap="20px">
+    <box style="padding:20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
     <alert :show.sync="alert.show" title="消息" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
