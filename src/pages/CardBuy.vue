@@ -101,7 +101,6 @@
         cardId: '',
         orderId: '',
         alert: {message: '', show: false, callback: ''},
-        loading: false
       }
     },
     computed: {
@@ -111,7 +110,9 @@
     },
     methods: {
       invoiceContentSelect (item){
+        alert(this.invoice.select)
         this.invoice.content = this.invoice.menus[item]
+        this.invoice.select = false
       },
       orderCommit(self, orderId, callback){
         self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
