@@ -1,7 +1,6 @@
 <template>
   <div class="pay">
     <div class="background">
-      <a class="detail" @click="onPayDetail">交易明细</a>
       <br>
       <div class="pay-card">
         <div>
@@ -12,15 +11,16 @@
           <div class="line left"></div>
           <div class="line right"></div>
         </div>
-        <div style="min-height:410px">
+        <div>
           <div class="code-img">
-            <barcode :width=1.4 style="max-height:200px;" :display-value=true :code.sync="card.qrcode"></barcode>
+            <barcode :width=1.4 style="max-height:120px;" :display-value=true :code.sync="card.qrcode"></barcode>
           </div>
-          <div class="code-img" style="padding: 20px 0 50px 0;">
+          <div class="code-img">
             <qrcode :size="64" :value.sync="card.qrcode"></qrcode>
           </div>
         </div>
       </div>
+      <a class="detail" @click="onPayDetail">交易明细</a>
       <br>
     </div>
     <alert :show.sync="alert.show" @on-hide="onHome" title="信息" button-text="知道了">{{alert.message}}</alert>
@@ -30,12 +30,15 @@
 
 <script>
   import Const from '../services/const'
-  import {Barcode, Alert, Loading} from '../components'
   import logger from '../services/log'
-  import Qrcode from '../components/qrcode'
 
   export default {
-    components: {Barcode, Qrcode, Alert, Loading},
+    components: {
+      "Loading": require('../components/loading/index.vue'),
+      "Alert": require('../components/alert/index.vue'),
+      "Barcode": require('../components/barcode/index.vue'),
+      "Qrcode": require('../components/qrcode/index.js')
+      },
     data () {
       return {
         timer: null,
@@ -55,6 +58,7 @@
       data (transition){
         this.cardId = transition.to.params.cardId
         this.carCode = transition.to.params.cardCode
+        this.height = window.innerHeight
       }
     },
     methods: {
@@ -108,15 +112,19 @@
 </script>
 
 <style lang="less">
+  .pay{
+    height: 100%;
+  }
   .pay .background {
+    height: 100%;
     background-color: #275F98 !important;
     font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, STHeiTi, sans-serif, tahoma, arial;
     text-align: center;
   }
 
   .pay .pay-card {
-    width: 90%;
-    margin: 20px auto;
+    width: 75%;
+    margin: 0 13%;
     background-color: #FFF;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -125,7 +133,7 @@
 
   .pay .pay-card .title {
     margin: 0px;
-    padding-top: 30px;
+    padding-top: 20px;
     line-height: 20px;
     font-size: 17px;
     color: #868484;
@@ -133,10 +141,10 @@
 
   .pay .pay-card .sub-title {
     margin: 0px;
-    line-height: 50px;
-    font-size: 25px;
+    line-height: 40px;
+    font-size: 20px;
     color: #5F5E5E;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
 
   .pay .pay-card .line-part {
@@ -165,12 +173,12 @@
   }
 
   .pay .detail {
-    float: right;
-    margin: 10px 15px;
+    margin: 15px;
     color: white;
+    display: block;
   }
 
   .pay .code-img {
-    padding: 20px;
+    padding: 10px 0 20px;
   }
 </style>

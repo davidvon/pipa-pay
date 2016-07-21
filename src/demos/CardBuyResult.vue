@@ -34,12 +34,13 @@
 <script>
   import Const from '../services/const'
   import Storage from '../services/storage'
-  import { Actionsheet, XHeader, Loading} from '../components'
   import { wxAddCard, wxAddCards } from '../services/wxcard'
 
   export default {
     components: {
-      XHeader, Actionsheet, Loading
+      "XHeader": require('../components/x-header/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "Loading": require('../components/loading/index.vue')
     },
     data () {
       return {
@@ -105,7 +106,3 @@
   }
 </script>
 
-<style scoped>
-  @import '../styles/other.less';
-
-</style>

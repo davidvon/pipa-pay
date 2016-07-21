@@ -26,13 +26,15 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
 
   export default {
-    components: {Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert},
+    components: {
+      "XHeader": require('../components/x-header/index.vue'),
+      "Alert": require('../components/alert/index.vue')
+    },
     data () {
       return {
         share: {},

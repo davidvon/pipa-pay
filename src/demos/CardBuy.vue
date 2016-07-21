@@ -1,12 +1,10 @@
 <template>
   <div class="order">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">购买
-    </x-header>
+              @on-click-more="showMenus=true">购买</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="onPage('home')"
                  @on-click-menu-cards="onPage('memcards')"></actionsheet>
-
     <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
     <checker class="center" :value.sync="money" default-item-class="money-item"
              selected-item-class="money-item-selected">
@@ -54,16 +52,25 @@
   </div>
 </template>
 
-
 <script>
   import Const from '../services/const'
-  import { Actionsheet, Loading, Checker, CheckerItem, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert } from '../components'
   import logger from '../services/log'
   import Storage from '../services/storage'
-
   export default {
     components: {
-      Actionsheet, Loading, Checker, CheckerItem, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert
+      "XHeader": require('../components/x-header/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
+      "Checker": require('../components/checker/index.vue'),
+      "CheckerItem": require('../components/checker-item/index.vue'),
+      "XNumber": require('../components/x-number/index.vue'),
+      "Group": require('../components/group/index.vue'),
+      "Cell": require('../components/cell/index.vue'),
+      "Switch": require('../components/switch/index.vue'),
+      "XInput": require('../components/x-input/index.vue'),
+      "Box": require('../components/box/index.vue'),
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -155,7 +162,7 @@
         var data = {
           price: (self.money || Number(self.otherMoney)) * self.count,
           count: self.count,
-          openId: self.openid, // TODO 'o80wpvwh6C59IZ7W7EMv9_hu5BW8',
+          openId: self.openid,
           cardId: Const.cardId
         };
         logger.log("CardBuy", "openid:" + data.openId + " cardId:" + data.cardId +

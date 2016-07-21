@@ -1,86 +1,48 @@
 <template>
   <div class="home">
     <div class="vue-home center">
-      <h1 class="vux-title" style="padding:15px 0 0px;">
+      <h1 class="vux-title" style="padding:10px 0 0px;">
         <img style="width:80px;" src="./assets/images/pipalogo-white2.png">
       </h1>
-      <p class="vux-notice" style="padding:0 0 15px;color:#fff">噼啪礼品卡</p>
+      <p class="vux-notice" style="padding:0 0 10px;color:#fff">噼啪礼品卡</p>
     </div>
-    <div class="bg">
-      <flexbox class="vux-1px-tb" :gutter="0">
-        <flexbox-item class="vux-1px-r">
-          <a class="item" href="#buy/{{cardId}}">
-            <div class="img icon-buy"></div>
-            <div class="text">购卡</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item" v-link="{name:'paycards'}">
-            <div class="img icon-pay"></div>
-            <div class="text">支付</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item" href="#gift">
-            <div class="img icon-share"></div>
-            <div class="text">赠送卡</div>
-          </a>
-        </flexbox-item>
-      </flexbox>
-
-      <flexbox class="vux-1px-b" :gutter="0">
-        <flexbox-item class="vux-1px-r">
-          <a class="item">
-            <div class="img icon-buy-online"></div>
-            <div class="text">在线购物</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item" href="#memcards">
-            <div class="img icon-mycard"></div>
-            <div class="text">我的卡包</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item>
-          <a class="item" href="#guide">
-            <div class="img icon-desc"></div>
-            <div class="text">购卡指引</div>
-          </a>
-        </flexbox-item>
-      </flexbox>
-      <flexbox class="vux-1px-b" :gutter="0">
-        <flexbox-item class="vux-1px-r">
-          <a class="item" href="#help">
-            <div class="img icon-help"></div>
-            <div class="text">帮助中心</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item class="vux-1px-r">
-          <a class="item" href="#notice">
-            <div class="img icon-guide"></div>
-            <div class="text">电子卡章程</div>
-          </a>
-        </flexbox-item>
-        <flexbox-item>
-          <a class="item" href=""></a>
-        </flexbox-item>
-      </flexbox>
+    <div class="container" data-js="">
+      <div id="walmart_0" class="flex">
+        <div class="content min_height">
+          <div class="wal_ibox border b_btm">
+            <div class="navs border b_rgt btn-buy" @click="go(buy_url)"><p class="nav_p ico_nav1">购卡</p></div>
+            <div class="navs border b_rgt btn-consume" @click="goByName('paycards')"><p class="nav_p ico_nav3">支付</p></div>
+            <div class="navs btn-give" @click="goByName('gift')"><p class="nav_p ico_nav8">赠送卡</p></div>
+          </div>
+          <div class="wal_ibox border b_btm">
+            <div class="navs border b_rgt"><p class="nav_p ico_nav4">在线购物</p></div>
+            <div class="navs border b_rgt btn-card" @click="goByName('memcards')"><p class="nav_p ico_nav7">我的卡包</p></div>
+            <div class="navs btn-help" @click="goByName('guide')"><p class="nav_p ico_nav6">购卡指引</p></div>
+          </div>
+          <div class="wal_ibox border b_btm">
+            <div class="navs border b_rgt btn-gift" @click="goByName('help')"><p class="nav_p ico_nav9">帮助中心</p></div>
+            <div class="navs border b_rgt btn-notice" @click="goByName('notice')"><p class="nav_p ico_nav10">电子卡章程</p></div>
+            <div class="navs"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
 <script>
-  import { Loading, Flexbox, FlexboxItem } from './components/'
   import {wxRegister} from './services/wxlib'
   import Const from './services/const'
 
   export default {
-    components: { Loading, Flexbox, FlexboxItem },
+    components: {
+      "Loading": require('./components/loading/index.vue')
+    },
     data () {
       return {
         loading: false,
-        cardId: Const.cardId
+        buy_url: '/buy/'+Const.cardId
       }
     },
     ready: function() {
@@ -89,13 +51,19 @@
       wxRegister(this, function(){
         self.loading = false
       })
+    },
+    methods:{
+      go(url){
+        this.$route.router.go(url)
+      },
+      goByName(name){
+        this.$route.router.go({'name': name})
+      }
     }
   }
 </script>
 
 <style scoped>
-  @import './styles/1px.less';
-
   .demo-icon {
     font-family: 'vux-demo';
     font-size: 20px;

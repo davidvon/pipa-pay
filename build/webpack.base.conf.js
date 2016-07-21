@@ -4,11 +4,10 @@ var path = require('path')
 var projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
+  devtool: 'cheap-module-source-map',
   entry: {
     app: './src/main.js',
-    vendor: [ 'vue', 'vue-router', 'vue-resource', 'fastclick',
-              './src/components/barcode/JsBarcode.code128.min',
-              './src/components/qrcode/index']
+    vendor: [ 'vue', 'vue-router', 'vue-resource']
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),

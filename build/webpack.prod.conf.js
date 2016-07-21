@@ -45,8 +45,12 @@ config.plugins = (config.plugins || []).concat([
     },
     sourceMap: false
   }),
-  new CommonsChunkPlugin('vendor', '[name].[hash:12].js'),
-
+  new CommonsChunkPlugin(
+    { name: 'vendor',
+      filename:'[name].[hash:12].js',
+      minChunks: 2
+    }
+  ),
   new webpack.optimize.OccurenceOrderPlugin(),
   // extract css into its own file
   new ExtractTextPlugin('[name].[contenthash:12].css'),

@@ -25,12 +25,14 @@
 
 <script>
   import Const from '../services/const'
-  import { Actionsheet, Loading, XHeader, XButton} from '../components'
   import logger from '../services/log'
 
   export default {
     components: {
-      XHeader, Actionsheet, Loading, XButton
+      "XHeader": require('../components/x-header/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
+      "XButton": require('../components/x-button/index.vue')
     },
     data () {
       return {
@@ -78,8 +80,3 @@
     }
   }
 </script>
-
-<style scoped>
-  @import '../styles/other.less';
-
-</style>

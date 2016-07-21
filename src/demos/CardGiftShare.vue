@@ -26,7 +26,6 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert} from '../components'
   import Const from '../services/const'
   import { onMenuShareAppMessage } from '../services/wxlib'
   import Storage from '../services/storage'
@@ -34,7 +33,10 @@
 
   export default {
     components: {
-      Checker, CheckerItem, Masker, XHeader, XButton, XTextarea, Alert
+      "XHeader": require('../components/x-header/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
+      "XTextarea": require('../components/x-textarea/index.vue'),
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {

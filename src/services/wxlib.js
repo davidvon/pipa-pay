@@ -34,7 +34,7 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback) 
   });
 }
 
-export function wxRegister(self, callback) {
+export function wxRegister(self, callback, errback) {
   const openid = Storage.wxOpenId
   const status = Storage.wxConfigStatus
   if (!openid || status) {
@@ -65,16 +65,18 @@ export function wxRegister(self, callback) {
         Storage.wxConfigEnable()
         onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
         onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+        callback && callback()
       });
 
       wx.error(function (res) {
         logger.log("wxRegister", "wx config error:" + res.errMsg);
+        errback && errback()
       });
+    } else{
+      errback && errback()
     }
-    callback && callback()
-
   }, function (err) {
     logger.err('wxRegister', err)
-    callback && callback()
+    errback && errback()
   })
 }

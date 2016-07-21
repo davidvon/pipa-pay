@@ -7,29 +7,20 @@
     <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
     </div>
     <div class="content">
-      <div style="margin:15px;" data-index={{$index}} data-globalid="{{item.globalId}}"
+      <div class="card_item" data-index={{$index}} data-globalid="{{item.globalId}}"
            data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" data-merchantid={{item.merchantId}}
            data-status={{item.status}} v-for="item in cards" @click="openCard">
-
-        <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img"
-               :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
-          <div slot="content" class="content">
-            <flexbox>
-              <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
-              <flexbox-item :span="2/3">
-                <div class="title">{{item.title}}</div>
-                <div class="sub-title">有效期至{{item.expireDate}}</div>
-              </flexbox-item>
-            </flexbox>
-
-            <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span>
-              </flexbox-item>
-              <flexbox-item class="{{statusClass[item.status]}}" :span="1/2">{{statusStr[item.status]}}</flexbox-item>
-            </flexbox>
+        <div class="card_itop">
+          <div class="card_it1"><span class="card_img"><img :src="item.logo" alt=""></span></div>
+          <div class="card_it3">
+            <p class="gc_name">{{item.title}}</p>
+            <p class="last_time">有效期至：{{item.expireDate}}</p>
           </div>
-        </masker>
+        </div>
+        <div class="card_ibtm">
+          <div class="card_ib1">余额: <span class="col4">￥<em>{{item.amount}}</em></span></div>
+          <div class="card_ib2"><span class="{{statusClass[item.status]}}">{{statusStr[item.status]}}</span></div>
+        </div>
       </div>
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
@@ -45,8 +36,6 @@
 </template>
 
 <script>
-  import { Actionsheet, Loading, Masker, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
-    Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
   import Storage from '../services/storage'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
@@ -55,8 +44,11 @@
 
   export default {
     components: {
-      Actionsheet, Loading, Masker, XHeader, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
-      Flexbox, FlexboxItem
+      "XHeader": require('../components/x-header/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -141,7 +133,6 @@
             })
           }, function(){
             self.loading = false;
-            self.alertMsg('添加到微信卡包异常');
           })
         } else {
           self.loading = false;
@@ -163,10 +154,16 @@
         }, function () {
           self.loading = false
         })
+      }, function () {
+        self.loading = false
       })
     }
   }
 </script>
 
-<style lang="less">
+<style scoped>
+  @import '../styles/other.less';
+  .content{
+    padding:5px 10px
+  }
 </style>

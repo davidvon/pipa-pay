@@ -29,13 +29,15 @@
 
 <script>
   import { wxAddCard, wxOpenCard } from '../services/wxcard'
-  import {XButton, Loading} from '../components'
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
 
   export default {
-    components: {XButton, Loading},
+    components: {
+      "Loading": require('../components/loading/index.vue'),
+      "XButton": require('../components/x-button/index.vue')
+    },
     data () {
       return {
         no_data: false,

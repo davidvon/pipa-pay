@@ -7,10 +7,10 @@
 </template>
 
 <script>
-  import { XHeader} from '../components'
-
   export default {
-    components: {XHeader},
+    components: {
+      "XHeader": require('../components/x-header/index.vue')
+    },
     data () {
       return {
         width: 0,
@@ -21,7 +21,7 @@
     route:{
       data (transition){
         this.width = window.innerWidth
-        this.height = window.innerHeight
+        this.height = window.innerHeight-52
       }
     }
   }

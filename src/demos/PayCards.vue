@@ -6,26 +6,20 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="onPage('home')"
                  @on-click-menu-cards="onPage('memcards')"></actionsheet>
+
+    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+    </div>
     <div class="content">
-      <div class="weui_cells_title" v-show="cards.length>0">你共有 <span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
-      </div>
-      <div style="margin:15px;" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards"
+      <div class="card_item" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards"
            @click="cardConsume">
-        <masker style="border-radius:10px;" color="000" :opacity="0">
-          <div class="img"
-               :style="{backgroundImage: 'url(http://wx.cdn.pipapay.com/static/images/card_blue.png)'}"></div>
-          <div slot="content" class="content">
-            <flexbox class="card-title">
-              <flexbox-item :span="1/3"><img class="card-logo" :src="item.logo"/></flexbox-item>
-              <flexbox-item :span="2/3" class="title">{{item.title}}</flexbox-item>
-            </flexbox>
-            <flexbox class="card-property">
-              <flexbox-item class="card-money" :span="1/2">余额: <span class="money">￥{{item.amount}}</span>
-              </flexbox-item>
-              <flexbox-item class="card-valid" :span="1/2">有效期至{{item.expireDate}}</flexbox-item>
-            </flexbox>
-          </div>
-        </masker>
+        <div class="card_itop">
+          <div class="card_it1"><span class="card_img"><img :src="item.logo" alt=""></span></div>
+          <div class="card_it2">{{item.title}}</div>
+        </div>
+        <div class="card_ibtm">
+          <div class="card_ib1">余额: <span class="col4">￥<em>{{item.amount}}</em></span></div>
+          <div class="card_ib2">有效期至{{item.expireDate}}</div>
+        </div>
       </div>
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
@@ -41,8 +35,6 @@
 </template>
 
 <script>
-  import { Loading, Masker, Actionsheet, XHeader, Group, XNumber, Cell, Switch, XInput, XButton, Box, Alert,
-    Flexbox, FlexboxItem } from '../components'
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
@@ -50,8 +42,11 @@
 
   export default {
     components: {
-      Loading, Masker, XHeader, Actionsheet, XNumber, Group, Cell, Switch, XInput, XButton, Box, Alert,
-      Flexbox, FlexboxItem
+      "XHeader": require('../components/x-header/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -69,26 +64,24 @@
     },
     route: {
       data (transition){
-        var self = this
-        self.loading = true;
-        self.openid = Storage.wxOpenId
-
-        this.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-          self.loading = false;
-          logger.log('PayCards', 'cards:' + JSON.stringify(response))
-          var data = response.data
-          if (data && data.result == 0)
-            self.cards = data.data
-          if (self.cards.length == 0) self.no_data = true
-        }, function () {
-          self.loading = false;
-        })
+        this.openid = Storage.wxOpenId
       }
     },
     ready: function () {
       var self = this
       this.loading = true
       wxRegister(this, function () {
+        self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+          self.loading = false
+          logger.log('PayCards', 'cards:' + JSON.stringify(response))
+          var data = response.data
+          if (data && data.result == 0)
+            self.cards = data.data
+          if (self.cards.length == 0) self.no_data = true
+        }, function () {
+          self.loading = false
+        })
+      }, function () {
         self.loading = false
       })
 
@@ -177,5 +170,7 @@
     font-size: 12px;
     width: 100%;
   }
-
+  .card .content{
+    padding:5px 10px
+  }
 </style>

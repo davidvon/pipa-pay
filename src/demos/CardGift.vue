@@ -22,7 +22,7 @@
           <div class="donation_dov">
             <div class="card_item" data-id="{{$index}}" :class="$index==cardIndex ? 'on':''">
               <div class="card_itop">
-                <div class="card_it1"><span class="card_img"><img :src="item.img" alt=""></span></div>
+                <div class="card_it1"><span class="card_img"><img :src="item.logo" alt=""></span></div>
                 <div class="card_it2">{{item.title}}</div>
               </div>
               <div class="card_ibtm">
@@ -51,19 +51,23 @@
 </template>
 
 <script>
-  import { Checker, CheckerItem, Masker, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem,
-    XButton, Loading, Actionsheet } from '../components'
   import Storage from '../services/storage'
   import Const from '../services/const'
   import logger from '../services/log'
 
   export default {
     components: {
-      Checker, CheckerItem, Masker, XHeader, Group, Alert, Tabbar, Flexbox, FlexboxItem, XButton, Loading,
-      Actionsheet
+      "XHeader": require('../components/x-header/index.vue'),
+      "Actionsheet": require('../components/actionsheet/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
+      "Checker": require('../components/checker/index.vue'),
+      "CheckerItem": require('../components/checker-item/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
+      "Tabbar": require('../components/tabbar/tabbar.vue'),
+      "Flexbox": require('../components/flexbox/index.vue'),
+      "FlexboxItem": require('../components/flexbox-item/index.vue')
     },
 
-    //import Masker from '../components/masker'
     data () {
       return {
         cardIndex: -1,

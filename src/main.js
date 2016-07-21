@@ -1,15 +1,17 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import VueResource from 'vue-resource'
-import App from './App'
+var Vue = require('vue')
+var Router = require('vue-router')
+var VueResource = require('vue-resource')
+var App = require('./App')
 import Storage from './services/storage'
 import Const from './services/const'
 import logger from './services/log'
 import { default as routes } from './route'
 import { clearCookie } from './libs/util'
 
-const FastClick = require('fastclick')
-FastClick.attach(document.body)
+require.ensure([], function (require) {
+  const FastClick = require('fastclick')
+  FastClick.attach(document.body)
+}, 'fastclick')
 
 Vue.use(VueResource)
 Vue.use(Router)

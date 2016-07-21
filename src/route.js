@@ -1,82 +1,98 @@
-import Home from './Home'
-import CardBuy from './demos/CardBuy'
-import BuyResult from './demos/CardBuyResult'
-import CardGift from './demos/CardGift'
-import CardGiftShare from './demos/CardGiftShare'
-import CardGiftShareResult from './demos/CardGiftShareResult'
-import CardActive from './demos/CardActive'
-import CardGiftReceive from './demos/CardGiftReceive'
-import PayCards from './demos/PayCards'
-import PayCode from './demos/PayCode'
-import PayRecords from './demos/PayRecords'
-import CardHelp from './demos/CardHelp'
-import CardGuide from './demos/CardGuide.vue'
-import CardNotice from './demos/CardNotice.vue'
-import MemberCards from './demos/Cards'
-
 export default {
   '*': {
     name: 'home',
-    component: Home
+    component: function (resolve) {
+      require(['./Home.vue'], resolve)
+    }
   },
   '/': {
     name: 'home',
-    component: Home
+    component: function (resolve) {
+      require(['./Home.vue'], resolve)
+    }
   },
   '/buy/:cardId': {
     name: 'buy',
-    component: CardBuy
+    component: function (resolve) {
+      require(['./demos/CardBuy.vue'], resolve)
+    }
   },
   '/buy/result/:orderId': {
     name: 'buy_result',
-    component: BuyResult
+    component: function (resolve) {
+      require(['./demos/CardBuyResult.vue'], resolve)
+    }
   },
   '/memcards': {
     name: 'memcards',
-    component: MemberCards
+    component: function (resolve) {
+      require(['./demos/Cards.vue'], resolve)
+    }
   },
   '/card/active': {
     name: 'active',
-    component: CardActive
+    component: function (resolve) {
+      require(['./demos/CardActive.vue'], resolve)
+    }
   },
   '/pay/cards': {
     name: 'paycards',
-    component: PayCards
+    component: function (resolve) {
+      require(['./demos/PayCards.vue'], resolve)
+    }
   },
   '/pay/:cardId/:cardCode': {
     name: 'pay',
-    component: PayCode
+    component: function (resolve) {
+      require(['./demos/PayCode.vue'], resolve)
+    }
   },
   '/pay/records': {
     name: 'pay_records',
-    component: PayRecords
+    component: function (resolve) {
+      require(['./demos/PayRecords.vue'], resolve)
+    }
   },
   '/gift': {
     name: 'gift',
-    component: CardGift
+    component: function (resolve) {
+      require(['./demos/CardGift.vue'], resolve)
+    }
   },
   '/gift/share/:cardId/:cardCode': {
     name: 'gift_share',
-    component: CardGiftShare
+    component: function (resolve) {
+      require(['./demos/CardGiftShare.vue'], resolve)
+    }
   },
   '/gift/share/result/:cardId/:cardCode': {
     name: 'gift_share_result',
-    component: CardGiftShareResult
+    component: function (resolve) {
+      require(['./demos/CardGiftShareResult.vue'], resolve)
+    }
   },
   '/gift/receive/:sign': {
     name: 'gift_receive',
-    component: CardGiftReceive
+    component: function (resolve) {
+      require(['./demos/CardGiftReceive.vue'], resolve)
+    }
   },
   '/help': {
     name: 'help',
-    component: CardHelp
+    component: function (resolve) {
+      require(['./demos/CardHelp.vue'], resolve)
+    }
   },
   '/guide': {
     name: 'guide',
-    component: CardGuide
+    component: function (resolve) {
+      require(['./demos/CardGuide.vue'], resolve)
+    }
   },
   '/notice': {
     name: 'notice',
-    component: CardNotice
+    component: function (resolve) {
+      require(['./demos/CardNotice.vue'], resolve)
+    }
   }
 }
