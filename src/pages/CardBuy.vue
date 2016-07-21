@@ -19,7 +19,7 @@
       <div class="popover fade bottom in" style="display: block;">
         <div class="arrow"></div>
         <div class="popover-content">
-          <x-input class="other-money" focus="true" placeholder="1-1000" type="number" :min=1 :max=1000
+          <x-input class="other-money" focus="true" placeholder="1-1000" :min=1 :max=3
                    :value.sync="otherMoney" keyboard="number"></x-input>
         </div>
       </div>
@@ -33,7 +33,7 @@
       <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
       <div v-show="invoice.enable">
         <x-input title="发票抬头" :value.sync="invoice.title" placeholder="单位名称或个人姓名"></x-input>
-        <cell title="发票内容" :value.sync="invoice.content" is-link @click="invoice.select=true"></cell>
+        <selector title="发票内容" :options="invoice.menus" :value.sync="invoice.content"></selector>
         <x-input title="收件人" :min=3 :max=4 :value.sync="invoice.name" placeholder="姓名"></x-input>
         <x-input title="联系电话" :value.sync="invoice.phone" placeholder="手机号码" keyboard="number"
                  is-type="china-mobile"></x-input>
@@ -41,8 +41,7 @@
                  :max="6"></x-input>
         <x-input title="详细地址" :value.sync="invoice.address" placeholder="省份 城市 街道 详细地址"></x-input>
       </div>
-      <actionsheet :show.sync="invoice.select" :menus="invoice.menus"
-                   @on-click-menu="invoiceContentSelect"></actionsheet>
+
     </group>
     <box style="padding:20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
@@ -70,7 +69,8 @@
       "Switch": require('../components/switch/index.vue'),
       "XInput": require('../components/x-input/index.vue'),
       "Box": require('../components/box/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "Alert": require('../components/alert/index.vue'),
+      "Selector": require('../components/selector/index.vue')
     },
     data () {
       return {
@@ -86,11 +86,7 @@
           phone: '',
           zip: '',
           address: '',
-          menus: {
-            menu1: '商品一批',
-            menu2: '食品一批',
-            menu3: '日用品一批'
-          },
+          menus: [{key: 'sap', value: '商品一批'}, {key: 'sip', value: '食品一批'}, {key: 'ryp', value: '日用品一批'}],
           content: '商品一批'
         },
         menus: {
@@ -100,12 +96,12 @@
         showMenus: false,
         cardId: '',
         orderId: '',
-        alert: {message: '', show: false, callback: ''},
+        alert: {message: '', show: false, callback: null}
       }
     },
     computed: {
       buyButtonDisable: function () {
-        return !((this.money > 0 || this.otherMoney.length > 0) && this.invoice_valid())
+        return !((this.money > 0 || (this.otherMoney.length > 0 && Number(this.otherMoney)<1000 && Number(this.otherMoney)>0)) && this.invoice_valid())
       }
     },
     methods: {
@@ -158,6 +154,8 @@
         self.loading = true;
         if (this.money == 0 && (Number(this.otherMoney) > 1000)) {  //Number(this.otherMoney)<0.01 || TODO
           self.alertMessage('输入的其他金额不符合要求')
+          self.loading = false
+          return
         }
         self.openid = Storage.wxOpenId
         var data = {
@@ -188,7 +186,7 @@
       alertMessage(msg, callback){
         this.alert.message = msg;
         this.alert.show = true
-        this.alert.callback = callback || null
+        this.alert.callback = callback || function(){}
       },
       invoice_valid(){
         return (!this.invoice.enable ||
