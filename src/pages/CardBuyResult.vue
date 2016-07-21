@@ -54,11 +54,7 @@
           home: '首页'
         },
         loading: false,
-        showMenus: false,
-        alert: {
-          message: '',
-          show: false
-        }
+        showMenus: false
       }
     },
     ready: function () {

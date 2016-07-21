@@ -31,7 +31,7 @@
       </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
-    <alert :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</alert>
+    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
   </div>
 </template>
 
@@ -48,7 +48,7 @@
       "Actionsheet": require('../components/actionsheet/index.vue'),
       "Loading": require('../components/loading/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "Toast": require('../components/toast/index.vue')
     },
     data () {
       return {
@@ -61,14 +61,15 @@
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
         statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-invalid', 'wxcard-disable', 'wxcard-invalid'],
         loading: false,
-        alert: {message: '', show: false}
+        alert: {type:'', message:'', show:false}
       }
     },
     methods: {
       onHome(){
         this.$route.router.replace({name: 'home'})
       },
-      alertMsg(msg){
+      alertMsg(type, msg){
+        this.alert.type = type;
         this.alert.message = msg
         this.alert.show = true
       },
@@ -110,7 +111,7 @@
 
         if (status >= 3) {
           self.loading = false;
-          self.alertMsg('该卡正在转赠中或已过期，不可使用');
+          self.alertMsg("warn", '该卡在转赠中或已过期');
           return
         }
 
@@ -125,11 +126,11 @@
               if (res.result == 0) {
                 self.cards[Number(index)].cardCode = res.data
                 self.cards[Number(index)].status = 1
-                self.alertMsg('该卡已成功添加到微信卡包');
+                self.alertMsg("success", '该卡已加至微信卡包');
               }
             }, function(){
               self.loading = false;
-              self.alertMsg('已成功添加到微信卡包, 服务器更新卡状态异常');
+              self.alertMsg("warn", '已加至微信卡包, 服务器更新异常');
             })
           }, function(){
             self.loading = false;

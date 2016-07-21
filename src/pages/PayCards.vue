@@ -29,7 +29,7 @@
         </p>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</alert>
+    <toast :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</toast>
     <loading :show.sync="loading"></loading>
   </div>
 </template>
@@ -46,7 +46,7 @@
       "Loading": require('../components/loading/index.vue'),
       "Actionsheet": require('../components/actionsheet/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "Toast": require('../components/toast/index.vue')
     },
     data () {
       return {
@@ -58,7 +58,7 @@
         cards: [],
         cards_online: [],
         no_data: false,
-        alert: {message: '', show: false},
+        alert: {type:'', message:'', show:false},
         loading: false
       }
     },
@@ -107,7 +107,8 @@
 
     },
     methods: {
-      alertMsg(msg){
+      alertMsg(type, msg){
+        this.alert.type = type;
         this.alert.message = msg
         this.alert.show = true
       },
@@ -119,11 +120,11 @@
         var cardId = attrs['data-cardid'].value;
         var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
         if (!cardId) {
-          this.alertMsg('请选择需要赠送的会员卡！');
+          this.alertMsg("warn", '请选择赠送的会员卡');
           return;
         }
         if (cardCode==0){
-          this.alertMsg('请先绑定微信会员卡后再消费！');
+          this.alertMsg("warn", '请先绑定微信会员卡');
           return;
         }
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)

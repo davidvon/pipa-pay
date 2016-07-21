@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="消息" button-text="知道了" @on-hide="goHome">{{alert.message}}</alert>
+    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
   </div>
 </template>
 
@@ -36,7 +36,7 @@
       "XHeader": require('../components/x-header/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "XTextarea": require('../components/x-textarea/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "Toast": require('../components/toast/index.vue')
     },
     data () {
       return {
@@ -51,7 +51,7 @@
           cardName: '',
           timestamp: ''
         },
-        alert: {message: '', show: false}
+        alert: {type:'', message: '', show: false}
       }
     },
     route: {
@@ -62,9 +62,13 @@
       }
     },
     methods: {
-      alertMsg(msg){
-        this.alert.message = msg
+      alertMessage(type, msg){
+        this.alert.type = type;
+        this.alert.message = msg;
         this.alert.show = true
+        this.timer = setTimeout(function () {
+          this.$route.router.go({name: 'home'})
+        }, 1500)
       },
       updateCardStatus(){
         var self = this
@@ -92,9 +96,6 @@
             self.maskShow = false
             logger.log('CardGiftShare', 'menu share error')
           })
-      },
-      goHome(){
-        this.$route.router.go({name: 'home'})
       }
     },
     ready(){
@@ -104,11 +105,11 @@
         var res = response.data
         logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
         if (res.result != 0) {
-          self.alertMsg('该卡已不存在')
+          self.alertMsg("warn", '该卡不存在')
           return
         }
         if (res.status > 2) {
-          self.alertMsg('该卡已经转赠,无法再继续转赠')
+          self.alertMsg("warn", '该卡已转赠')
         } else {
           logger.log('CardGiftShare', 'card sharing check ok')
           self.card = res.card

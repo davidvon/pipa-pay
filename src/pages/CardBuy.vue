@@ -1,10 +1,6 @@
 <template>
   <div class="order">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">购买</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
-                 @on-click-menu-home="onPage('home')"
-                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
+    <x-header :left-options='{showBack:true, backText:"返回"}'>购买</x-header>
     <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
     <checker class="center" :value.sync="money" default-item-class="money-item"
              selected-item-class="money-item-selected">
@@ -33,7 +29,7 @@
       <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
       <div v-show="invoice.enable">
         <x-input title="发票抬头" :value.sync="invoice.title" placeholder="单位名称或个人姓名"></x-input>
-        <selector title="发票内容" :options="invoice.menus" :value.sync="invoice.content"></selector>
+        <cell title="发票内容" @click="invoice.menuShow=true">{{invoice.content}}<span class="demo-icon" slot="icon"></span></cell>
         <x-input title="收件人" :min=3 :max=4 :value.sync="invoice.name" placeholder="姓名"></x-input>
         <x-input title="联系电话" :value.sync="invoice.phone" placeholder="手机号码" keyboard="number"
                  is-type="china-mobile"></x-input>
@@ -41,13 +37,22 @@
                  :max="6"></x-input>
         <x-input title="详细地址" :value.sync="invoice.address" placeholder="省份 城市 街道 详细地址"></x-input>
       </div>
-
     </group>
     <box style="padding:20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
-    <alert :show.sync="alert.show" title="消息" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
+    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
     <loading :show.sync="loading"></loading>
+    <div class="pop_wraper" id="pop1" v-show="invoice.menuShow">
+      <div class="pop_obottom">
+        <ul class="fselect_list invoice_list border b_top">
+          <li><div @click="invoiceClick(1)" class="border b_btm">商品一批</div></li>
+          <li><div @click="invoiceClick(2)" class="border b_btm">食品一批</div></li>
+          <li><div @click="invoiceClick(3)" class="border b_btm">日用品一批</div></li>
+          <li><div @click="invoiceClick(0)">取消</div></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,7 +63,6 @@
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
-      "Actionsheet": require('../components/actionsheet/index.vue'),
       "Loading": require('../components/loading/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "Checker": require('../components/checker/index.vue'),
@@ -69,34 +73,29 @@
       "Switch": require('../components/switch/index.vue'),
       "XInput": require('../components/x-input/index.vue'),
       "Box": require('../components/box/index.vue'),
-      "Alert": require('../components/alert/index.vue'),
+      "Toast": require('../components/toast/index.vue'),
       "Selector": require('../components/selector/index.vue')
     },
     data () {
       return {
         money: 50,
+        loading: false,
         otherMoney: "",
         count: 1,
         invoice: {
+          menuShow: false,
           enable: false,
-          select: false,
-          titleValid: true,
           title: '',
           name: '',
           phone: '',
           zip: '',
           address: '',
-          menus: [{key: 'sap', value: '商品一批'}, {key: 'sip', value: '食品一批'}, {key: 'ryp', value: '日用品一批'}],
+          menus: ['商品一批','食品一批','日用品一批'],
           content: '商品一批'
         },
-        menus: {
-          home: '首页',
-          cards: '我的卡包'
-        },
-        showMenus: false,
         cardId: '',
         orderId: '',
-        alert: {message: '', show: false, callback: null}
+        alert: {type:'', message: '', show: false}
       }
     },
     computed: {
@@ -105,15 +104,14 @@
       }
     },
     methods: {
-      invoiceContentSelect (item){
-        alert(this.invoice.select)
-        this.invoice.content = this.invoice.menus[item]
-        this.invoice.select = false
+      invoiceClick(i){
+        if(i!=0) this.invoice.content=this.invoice.menus[i-1]
+        this.invoice.menuShow=false
       },
       orderCommit(self, orderId, callback){
         self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
           if (response.result == 0) {
-            self.alertMessage("订单提交完成");
+            self.alertMessage("success", "订单已提交");
             logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
           } else {
             logger.log("wxPay", "orderId:" + orderId + " ,buy card fail:" + response.result)
@@ -123,9 +121,6 @@
           logger.log("wxPay", "orderId:" + orderId + " ,buy card exception")
           callback && callback()
         })
-      },
-      onCardResultShow(){
-        this.$route.router.go({name: 'buy_result', params: {orderId: this.orderId}});
       },
       wxPay(res){
         var self = this
@@ -141,11 +136,14 @@
             logger.log("wxPay", "orderId:" + orderId + " ,pay succeed")
             self.orderCommit(self, orderId, function () {
               self.orderId = orderId
-              self.alertMessage("订单支付成功", self.onCardResultShow);
+              self.alertMessage("success", "支付成功");
+              self.timer = setTimeout(function () {
+                self.$route.router.go({name: 'buy_result', params: {orderId: this.orderId}});
+              }, 1500);
             })
           },
           fail: function (res) {
-            self.alertMessage("订单支付失败");
+            self.alertMessage("warn", "支付失败");
           }
         });
       },
@@ -153,7 +151,7 @@
         var self = this;
         self.loading = true;
         if (this.money == 0 && (Number(this.otherMoney) > 1000)) {  //Number(this.otherMoney)<0.01 || TODO
-          self.alertMessage('输入的其他金额不符合要求')
+          self.alertMessage("warn", '输入金额不符')
           self.loading = false
           return
         }
@@ -172,21 +170,21 @@
           if (res.result == 0) {
             self.wxPay(res.content);
           } else if (res.result == 1) {
-            self.alertMessage("订单已完成现金支付，请等待商家确认");
+            self.alertMessage("success", "订单已支付");
           } else if (res.result == 255) {
-            self.alertMessage("订单已完成支付");
+            self.alertMessage("success", "支付已完成");
           } else {
-            self.alertMessage("支付异常，请稍后再试");
+            self.alertMessage("warn", "支付异常");
           }
         }, function () {
           self.loading = false;
-          self.alertMessage("系统错误，请稍后再试");
+          self.alertMessage("warn", "系统错误");
         })
       },
-      alertMessage(msg, callback){
+      alertMessage(type, msg){
+        this.alert.type = type;
         this.alert.message = msg;
         this.alert.show = true
-        this.alert.callback = callback || function(){}
       },
       invoice_valid(){
         return (!this.invoice.enable ||

@@ -50,10 +50,6 @@
           menu5: '用卡说明'
         },
         showMenus: false,
-        alert: {
-          message: '',
-          show: false
-        },
         loading: false
       }
     },

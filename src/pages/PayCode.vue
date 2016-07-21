@@ -23,7 +23,7 @@
       <a class="detail" @click="onPayDetail">交易明细</a>
       <br>
     </div>
-    <alert :show.sync="alert.show" @on-hide="onHome" title="信息" button-text="知道了">{{alert.message}}</alert>
+    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
     <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
@@ -35,7 +35,7 @@
   export default {
     components: {
       "Loading": require('../components/loading/index.vue'),
-      "Alert": require('../components/alert/index.vue'),
+      "Toast": require('../components/toast/index.vue'),
       "Barcode": require('../components/barcode/index.vue'),
       "Qrcode": require('../components/qrcode/index.js')
       },
@@ -51,7 +51,7 @@
           qrcode: ''
         },
         loading: false,
-        alert: {message: '', show: false}
+        alert: {type:'', message:'', show:false}
       }
     },
     route: {
@@ -62,9 +62,13 @@
       }
     },
     methods: {
-      alertMsg(msg){
+      alertMsg(type, msg){
+        this.alert.type = type
         this.alert.message = msg
         this.alert.show = true
+        this.timer = setTimeout(function () {
+          this.$route.router.go({name: 'home'})
+        }, 1500);
       },
       reload(){
         this.loading = true
@@ -77,7 +81,7 @@
           var ret = response.data
           if (ret && ret.result == 0) {
             if (ret.data.status > 2) {
-              self.alertMsg('该卡正在转赠中或已过期，不可使用');
+              self.alertMsg("warn", '该卡在转赠中或已过期');
             } else {
               self.card = ret.data
             }
@@ -93,9 +97,6 @@
       },
       onPayDetail(){
         this.$route.router.go({name: 'pay_records', params: {cardId: this.cardId}})
-      },
-      onHome(){
-        this.$route.router.go({name: 'home'})
       }
     },
     ready(){
