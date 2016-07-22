@@ -138,7 +138,7 @@
               self.orderId = orderId
               self.alertMessage("success", "支付成功");
               self.timer = setTimeout(function () {
-                self.$route.router.go({name: 'buy_result', params: {orderId: this.orderId}});
+                self.$route.router.go({name: 'buy_result', params: {orderId: self.orderId}});
               }, 1500);
             })
           },
