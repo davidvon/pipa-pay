@@ -29,7 +29,7 @@
         </p>
       </div>
     </div>
-    <toast :show.sync="alert.show" title="消息" button-text="知道了">{{alert.message}}</toast>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
   </div>
 </template>
@@ -46,7 +46,7 @@
       "Loading": require('../components/loading/index.vue'),
       "Actionsheet": require('../components/actionsheet/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
-      "Toast": require('../components/toast/index.vue')
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -58,7 +58,7 @@
         cards: [],
         cards_online: [],
         no_data: false,
-        alert: {type:'', message:'', show:false},
+        alert: {type:'', message:'', show:false, callback:null},
         loading: false
       }
     },
@@ -107,10 +107,10 @@
 
     },
     methods: {
-      alertMsg(type, msg){
-        this.alert.type = type;
+      alertMsg(msg, callback){
         this.alert.message = msg
         this.alert.show = true
+        this.alert.callback = callback || function(){}
       },
       goBuy (){
         this.$route.router.go({name: 'buy'})
@@ -120,11 +120,11 @@
         var cardId = attrs['data-cardid'].value;
         var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
         if (!cardId) {
-          this.alertMsg("warn", '请选择赠送的会员卡');
+          this.alertMsg('请选择赠送的会员卡');
           return;
         }
         if (cardCode==0){
-          this.alertMsg("warn", '请先绑定微信会员卡');
+          this.alertMsg('请先绑定微信会员卡');
           return;
         }
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)

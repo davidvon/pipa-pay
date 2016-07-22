@@ -41,7 +41,7 @@
     <box style="padding:20px">
       <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
     </box>
-    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
     <div class="pop_wraper" id="pop1" v-show="invoice.menuShow">
       <div class="pop_obottom">
@@ -73,7 +73,7 @@
       "Switch": require('../components/switch/index.vue'),
       "XInput": require('../components/x-input/index.vue'),
       "Box": require('../components/box/index.vue'),
-      "Toast": require('../components/toast/index.vue'),
+      "Alert": require('../components/alert/index.vue'),
       "Selector": require('../components/selector/index.vue')
     },
     data () {
@@ -95,7 +95,7 @@
         },
         cardId: '',
         orderId: '',
-        alert: {type:'', message: '', show: false}
+        alert: {type:'', message: '', show: false, callback:null}
       }
     },
     computed: {
@@ -111,7 +111,7 @@
       orderCommit(self, orderId, callback){
         self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
           if (response.result == 0) {
-            self.alertMsg("success", "订单已提交");
+            self.alertMsg("订单提交已成功");
             logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
           } else {
             logger.log("wxPay", "orderId:" + orderId + " ,buy card fail:" + response.result)
@@ -136,14 +136,13 @@
             logger.log("wxPay", "orderId:" + orderId + " ,pay succeed")
             self.orderCommit(self, orderId, function () {
               self.orderId = orderId
-              self.alertMsg("success", "支付成功");
-              self.timer = setTimeout(function () {
+              self.alertMsg("支付成功", function(){
                 self.$route.router.go({name: 'buy_result', params: {orderId: self.orderId}});
-              }, 1500);
+              });
             })
           },
           fail: function (res) {
-            self.alertMsg("warn", "支付失败");
+            self.alertMsg("支付失败,请稍后再试");
           }
         });
       },
@@ -151,7 +150,7 @@
         var self = this;
         self.loading = true;
         if (this.money == 0 && (Number(this.otherMoney) > 1000)) {  //Number(this.otherMoney)<0.01 || TODO
-          self.alertMsg("warn", '输入金额不符')
+          self.alertMsg('输入金额范围不符')
           self.loading = false
           return
         }
@@ -170,21 +169,21 @@
           if (res.result == 0) {
             self.wxPay(res.content);
           } else if (res.result == 1) {
-            self.alertMsg("success", "订单已支付");
+            self.alertMsg("订单已支付");
           } else if (res.result == 255) {
-            self.alertMsg("success", "支付已完成");
+            self.alertMsg("支付已完成");
           } else {
-            self.alertMsg("warn", "支付异常");
+            self.alertMsg("支付异常, 请稍后再试");
           }
         }, function () {
           self.loading = false;
-          self.alertMsg("warn", "系统错误");
+          self.alertMsg("系统错误, 或请联系公众号客服人员进行处理");
         })
       },
-      alertMsg(type, msg){
-        this.alert.type = type;
-        this.alert.message = msg;
+      alertMsg(msg, callback){
+        this.alert.message = msg
         this.alert.show = true
+        this.alert.callback = callback || function(){}
       },
       invoice_valid(){
         return (!this.invoice.enable ||

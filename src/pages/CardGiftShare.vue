@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -36,7 +36,7 @@
       "XHeader": require('../components/x-header/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "XTextarea": require('../components/x-textarea/index.vue'),
-      "Toast": require('../components/toast/index.vue')
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -51,7 +51,7 @@
           cardName: '',
           timestamp: ''
         },
-        alert: {type:'', message: '', show: false}
+        alert: {type:'', message:'', show:false, callback:null}
       }
     },
     route: {
@@ -62,14 +62,10 @@
       }
     },
     methods: {
-      alertMsg(type, msg){
-        this.alert.type = type;
-        this.alert.message = msg;
+      alertMsg(msg, callback){
+        this.alert.message = msg
         this.alert.show = true
-        var self = this
-        this.timer = setTimeout(function () {
-          self.$route.router.go({name: 'home'})
-        }, 1500)
+        this.alert.callback = callback || function(){}
       },
       updateCardStatus(){
         var self = this
@@ -106,11 +102,15 @@
         var res = response.data
         logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
         if (res.result != 0) {
-          self.alertMsg("warn", '该卡不存在')
+          self.alertMsg('该卡已不存在', function(){
+              self.$route.router.go({name: 'home'})
+          })
           return
         }
         if (res.status > 2) {
-          self.alertMsg("warn", '该卡已转赠')
+          self.alertMsg('该卡已转赠', function(){
+            self.$route.router.go({name: 'home'})
+          })
         } else {
           logger.log('CardGiftShare', 'card sharing check ok')
           self.card = res.card

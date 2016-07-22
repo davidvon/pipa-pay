@@ -21,7 +21,7 @@
       </div>
     </div>
     <p class="lk_tit"><span class="lk_cbox btn-card" @click="onMyCard">查看我的卡包</span></p>
-    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -33,23 +33,19 @@
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
-      "Toast": require('../components/toast/index.vue')
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
         share: {},
-        alert: {type:'', message: '', show: false}
+        alert: {type:'', message:'', show:false, callback:null}
       }
     },
     methods: {
-      alertMsg(type, msg){
-        var self = this
-        this.alert.type = type;
-        this.alert.message = msg;
+      alertMsg(msg, callback){
+        this.alert.message = msg
         this.alert.show = true
-        this.timer = setTimeout(function () {
-          self.$route.router.go({name: 'home'})
-        }, 1500)
+        this.alert.callback = callback || function(){}
       },
       onMyCard(){
         this.$route.router.go({name: 'memcards'})
@@ -61,10 +57,12 @@
         {openId: this.openid, cardId: this.cardId, cardCode: this.cardCode}).then(function (response) {
         var res = response.data
         if (res.result != 0){
-          self.alertMsg('warn', '赠的卡已不存在')
-          return
+          self.alertMsg('转赠的卡已不存在', function(){
+            self.$route.router.go({name: 'home'})
+          })
+        } else {
+          self.share = res.data
         }
-        self.share = res.data
       })
     },
     route: {

@@ -31,7 +31,7 @@
       </div>
     </div>
     <loading :show.sync="loading" :text=""></loading>
-    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -48,7 +48,7 @@
       "Actionsheet": require('../components/actionsheet/index.vue'),
       "Loading": require('../components/loading/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
-      "Toast": require('../components/toast/index.vue')
+      "Alert": require('../components/alert/index.vue')
     },
     data () {
       return {
@@ -61,17 +61,17 @@
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
         statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-invalid', 'wxcard-disable', 'wxcard-invalid'],
         loading: false,
-        alert: {type:'', message:'', show:false}
+        alert: {type:'', message:'', show:false, callback:null}
       }
     },
     methods: {
       goHome(){
         this.$route.router.replace({name: 'home'})
       },
-      alertMsg(type, msg){
-        this.alert.type = type;
+      alertMsg(msg, callback){
         this.alert.message = msg
         this.alert.show = true
+        this.alert.callback = callback || function(){}
       },
       goBuy (){
         this.$route.router.go({name: 'buy'})
@@ -99,6 +99,11 @@
           }
         })
       },
+      cardStatus(status){
+        var msgs = ['卡已购买,未放入微信卡包','卡已放入微信卡包,未激活', '卡已放入微信卡包,已激活',
+                    '卡已过期', '卡在赠送状态中', '卡已成功赠送']
+        return msgs[Number(status)]
+      },
       openCard (e){
         this.loading = true;
         var self = this
@@ -111,7 +116,7 @@
 
         if (status >= 3) {
           self.loading = false;
-          self.alertMsg("warn", '该卡在转赠中或已过期');
+          self.alertMsg(self.cardStatus(status))
           return
         }
 
@@ -126,11 +131,11 @@
               if (res.result == 0) {
                 self.cards[Number(index)].cardCode = res.data
                 self.cards[Number(index)].status = 1
-                self.alertMsg("success", '该卡已加至微信卡包');
+                self.alertMsg('该卡已加至微信卡包');
               }
             }, function(){
               self.loading = false;
-              self.alertMsg("warn", '已加至微信卡包, 服务器更新异常');
+              self.alertMsg('已加至微信卡包, 服务器更新异常');
             })
           }, function(){
             self.loading = false;
