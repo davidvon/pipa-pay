@@ -72,13 +72,20 @@
           var res = response.data
           logger.log("CardGiftReceive", "ack status:" + res.result)
 
-          if (res.result == 255) return
+          if (res.result == 255){
+            self.$route.router.go({name: 'memcards'})
+            return
+          }
           if (res.data.status == 1) {
             wxOpenCard(self, res.data.wxCardId, res.data.code, function (cardList) {
+              self.$route.router.go({name: 'memcards'})
+            }, function(){
               self.$route.router.go({name: 'memcards'})
             })
           } else {
             wxAddCard(self, res.data.cardGlobalId, self.openid, Const.API_URL, function (cardList) {
+              self.$route.router.go({name: 'memcards'})
+            }, function(){
               self.$route.router.go({name: 'memcards'})
             })
           }
