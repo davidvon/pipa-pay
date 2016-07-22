@@ -4,8 +4,8 @@
               @on-click-more="showMenus=true">支付
     </x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
-                 @on-click-menu-home="onPage('home')"
-                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
+                 @on-click-menu-home="goPage('home')"
+                 @on-click-menu-cards="goPage('memcards')"></actionsheet>
 
     <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
     </div>
@@ -25,7 +25,7 @@
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
         <p class="ncd_p3">
-          <x-button type="primary" @click="onBuyCard">购买电子卡</x-button>
+          <x-button type="primary" @click="goBuy">购买电子卡</x-button>
         </p>
       </div>
     </div>
@@ -112,7 +112,7 @@
         this.alert.message = msg
         this.alert.show = true
       },
-      onBuyCard (){
+      goBuy (){
         this.$route.router.go({name: 'buy'})
       },
       cardConsume(e){
@@ -130,7 +130,7 @@
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)
         this.$route.router.go({name: 'pay', params: {cardId: cardId, cardCode: cardCode}})
       },
-      onPage(name){
+      goPage(name){
         this.$route.router.replace({name: name})
       }
     }

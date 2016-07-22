@@ -62,12 +62,13 @@
       }
     },
     methods: {
-      alertMessage(type, msg){
+      alertMsg(type, msg){
         this.alert.type = type;
         this.alert.message = msg;
         this.alert.show = true
+        var self = this
         this.timer = setTimeout(function () {
-          this.$route.router.go({name: 'home'})
+          self.$route.router.go({name: 'home'})
         }, 1500)
       },
       updateCardStatus(){
@@ -124,7 +125,6 @@
 
 <style lang="less">
   @import '../styles/paycard.less';
-
   .card .title {
     color: #fff;
     font-size: 17px;

@@ -3,7 +3,7 @@
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
               @on-click-more="showMenus=true">我的卡包
     </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome"></actionsheet>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="goHome"></actionsheet>
     <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
     </div>
     <div class="content">
@@ -26,7 +26,7 @@
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可消费的电子卡</p>
         <p class="ncd_p3">
-          <x-button type="primary" @click="buyCard">购买电子卡</x-button>
+          <x-button type="primary" @click="goBuy">购买电子卡</x-button>
         </p>
       </div>
     </div>
@@ -65,7 +65,7 @@
       }
     },
     methods: {
-      onHome(){
+      goHome(){
         this.$route.router.replace({name: 'home'})
       },
       alertMsg(type, msg){
@@ -73,7 +73,7 @@
         this.alert.message = msg
         this.alert.show = true
       },
-      buyCard (){
+      goBuy (){
         this.$route.router.go({name: 'buy'})
       },
       chooseCard(){

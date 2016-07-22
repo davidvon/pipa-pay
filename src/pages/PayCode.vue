@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <a class="detail" @click="onPayDetail">交易明细</a>
+      <a class="detail" @click="goPayRecords">交易明细</a>
       <br>
     </div>
     <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
@@ -66,8 +66,9 @@
         this.alert.type = type
         this.alert.message = msg
         this.alert.show = true
+        var self = this
         this.timer = setTimeout(function () {
-          this.$route.router.go({name: 'home'})
+          self.$route.router.go({name: 'home'})
         }, 1500);
       },
       reload(){
@@ -95,7 +96,7 @@
           self.refresh()
         }, 60000);
       },
-      onPayDetail(){
+      goPayRecords(){
         this.$route.router.go({name: 'pay_records', params: {cardId: this.cardId}})
       }
     },

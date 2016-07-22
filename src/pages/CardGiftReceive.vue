@@ -5,8 +5,8 @@
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">赠送的电子卡不存在~~</p>
         <p class="ncd_p3">
-          <x-button type="primary" @click="onBuyCard">购买电子卡</x-button>
-          <x-button @click="onHome">首页</x-button>
+          <x-button type="primary" @click="goBuy">购买电子卡</x-button>
+          <x-button @click="goHome">首页</x-button>
         </p>
       </div>
       <div v-show="!no_data">
@@ -54,10 +54,10 @@
       }
     },
     methods: {
-      onHome(){
+      goHome(){
         this.$route.router.go({name: 'home'})
       },
-      onBuyCard(){
+      goBuy(){
         this.$route.router.go({name: 'buy'})
       },
       onReceiveCard(){
@@ -68,7 +68,6 @@
           openId: self.openid,
           sign: self.sign
         }).then(function (response) {
-
           this.loading = false
           var res = response.data
           logger.log("CardGiftReceive", "ack status:" + res.result)

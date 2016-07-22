@@ -4,8 +4,8 @@
               @on-click-more="showMenus=true">赠送卡
     </x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
-                 @on-click-menu-home="onPage('home')"
-                 @on-click-menu-cards="onPage('memcards')"></actionsheet>
+                 @on-click-menu-home="goPage('home')"
+                 @on-click-menu-cards="goPage('memcards')"></actionsheet>
     <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content card-list ">
       <!--没有数据-->
@@ -13,7 +13,7 @@
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
         <p class="ncd_p2">暂无可赠送的电子卡~~</p>
         <p class="ncd_p3">
-          <x-button type="primary" @click="onBuyCard">购买电子卡</x-button>
+          <x-button type="primary" @click="goBuy">购买电子卡</x-button>
         </p>
       </div>
       <checker :value.sync="cardIndex" default-item-class="card-item" selected-item-class="card-item-selected"
@@ -41,7 +41,7 @@
         </flexbox-item>
         <flexbox-item>
           <div style="padding:5px">
-            <x-button :disabled="cardIndex==-1" type="primary" @click="onShare">赠送</x-button>
+            <x-button :disabled="cardIndex==-1" type="primary" @click="goShare">赠送</x-button>
           </div>
         </flexbox-item>
       </flexbox>
@@ -89,13 +89,13 @@
         this.cardCodeSelect = this.cards[index].cardCode
         this.cardIndex = index
       },
-      onShare(){
+      goShare(){
         this.$route.router.go({name: 'gift_share', params: {cardId: this.cardIdSelect, cardCode: this.cardCodeSelect}});
       },
-      onBuyCard(){
+      goBuy(){
         this.$route.router.go({name: 'buy'})
       },
-      onPage(name){
+      goPage(name){
         this.$route.router.replace({name: name})
       }
     },

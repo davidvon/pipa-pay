@@ -9,7 +9,7 @@
         <p class="top_icop"><span class="ico_tip ico_success"></span></p>
         <p class="tips_p1">电子卡激活成功</p>
         <p class="card_pbtn">
-          <x-button type="primary" @click="clickMemCard">查看电子卡</x-button>
+          <x-button type="primary" @click="goMemCard">查看电子卡</x-button>
         </p>
       </div><!-- content end -->
 
@@ -55,7 +55,7 @@
     },
     route: {},
     methods: {
-      clickMemCard(){
+      goMemCard(){
         this.$route.router.go({name: 'memcards'})
       }
     },

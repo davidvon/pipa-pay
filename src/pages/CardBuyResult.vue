@@ -3,7 +3,7 @@
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
               @on-click-more="showMenus=true">购买
     </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="onHome"></actionsheet>
+    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="goHome"></actionsheet>
     <div id="result-page" class="flex">
       <div class="content pay_success" v-show="buy_status==1">
         <p class="top_icop"><span class="ico_tip ico_success"></span></p>
@@ -17,7 +17,8 @@
         <p class="tips_p2">你获得 <span class="col0 number">{{cards.number}}张</span> 面值 <span class="col0 amount">{{cards.amount}}元</span> 的礼品卡
         </p>
         <p class="card_pbtn">
-          <button class="blue_btn btn-memcard" type="button" @click="clickMemCard">放入微信卡包</button>
+          <x-button type="primary" @click="clickMemCard">转赠</x-button>
+          <x-button @click="goPayCards">去支付</x-button>
         </p>
       </div><!-- content end -->
 
@@ -39,6 +40,7 @@
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
+      "XButton": require('../components/x-button/index.vue'),
       "Actionsheet": require('../components/actionsheet/index.vue'),
       "Loading": require('../components/loading/index.vue')
     },
@@ -95,8 +97,11 @@
           self.Loading = false
         })
       },
-      onHome(){
+      goHome(){
         this.$route.router.replace({name: 'home'})
+      },
+      goPayCards(){
+        this.$route.router.replace({name: 'paycards'})
       }
     }
   }

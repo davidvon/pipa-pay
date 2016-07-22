@@ -111,7 +111,7 @@
       orderCommit(self, orderId, callback){
         self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
           if (response.result == 0) {
-            self.alertMessage("success", "订单已提交");
+            self.alertMsg("success", "订单已提交");
             logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
           } else {
             logger.log("wxPay", "orderId:" + orderId + " ,buy card fail:" + response.result)
@@ -136,14 +136,14 @@
             logger.log("wxPay", "orderId:" + orderId + " ,pay succeed")
             self.orderCommit(self, orderId, function () {
               self.orderId = orderId
-              self.alertMessage("success", "支付成功");
+              self.alertMsg("success", "支付成功");
               self.timer = setTimeout(function () {
                 self.$route.router.go({name: 'buy_result', params: {orderId: self.orderId}});
               }, 1500);
             })
           },
           fail: function (res) {
-            self.alertMessage("warn", "支付失败");
+            self.alertMsg("warn", "支付失败");
           }
         });
       },
@@ -151,7 +151,7 @@
         var self = this;
         self.loading = true;
         if (this.money == 0 && (Number(this.otherMoney) > 1000)) {  //Number(this.otherMoney)<0.01 || TODO
-          self.alertMessage("warn", '输入金额不符')
+          self.alertMsg("warn", '输入金额不符')
           self.loading = false
           return
         }
@@ -170,18 +170,18 @@
           if (res.result == 0) {
             self.wxPay(res.content);
           } else if (res.result == 1) {
-            self.alertMessage("success", "订单已支付");
+            self.alertMsg("success", "订单已支付");
           } else if (res.result == 255) {
-            self.alertMessage("success", "支付已完成");
+            self.alertMsg("success", "支付已完成");
           } else {
-            self.alertMessage("warn", "支付异常");
+            self.alertMsg("warn", "支付异常");
           }
         }, function () {
           self.loading = false;
-          self.alertMessage("warn", "系统错误");
+          self.alertMsg("warn", "系统错误");
         })
       },
-      alertMessage(type, msg){
+      alertMsg(type, msg){
         this.alert.type = type;
         this.alert.message = msg;
         this.alert.show = true

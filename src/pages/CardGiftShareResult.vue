@@ -21,6 +21,7 @@
       </div>
     </div>
     <p class="lk_tit"><span class="lk_cbox btn-card" @click="onMyCard">查看我的卡包</span></p>
+    <toast :time="1500" :type.sync="alert.type" :show.sync="alert.show">{{alert.message}}</toast>
   </div>
 </template>
 
@@ -32,13 +33,24 @@
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
+      "Toast": require('../components/toast/index.vue')
     },
     data () {
       return {
-        share: {}
+        share: {},
+        alert: {type:'', message: '', show: false}
       }
     },
     methods: {
+      alertMsg(type, msg){
+        var self = this
+        this.alert.type = type;
+        this.alert.message = msg;
+        this.alert.show = true
+        this.timer = setTimeout(function () {
+          self.$route.router.go({name: 'home'})
+        }, 1500)
+      },
       onMyCard(){
         this.$route.router.go({name: 'memcards'})
       }
@@ -48,7 +60,10 @@
       this.$http.post(Const.API_URL + 'card/share/info',
         {openId: this.openid, cardId: this.cardId, cardCode: this.cardCode}).then(function (response) {
         var res = response.data
-        if (res.result != 0) return
+        if (res.result != 0){
+          self.alertMsg('warn', '赠的卡已不存在')
+          return
+        }
         self.share = res.data
       })
     },
