@@ -68,7 +68,7 @@
           openId: self.openid,
           sign: self.sign
         }).then(function (response) {
-          this.loading = false
+          self.loading = false
           var res = response.data
           logger.log("CardGiftReceive", "ack status:" + res.result)
 
@@ -83,7 +83,7 @@
             })
           }
         }, function () {
-          this.loading = false
+          self.loading = false
         })
       }
     },
