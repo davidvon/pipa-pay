@@ -43,7 +43,7 @@
     </box>
     <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
-    <div class="pop_wraper" id="pop1" v-show="invoice.menuShow">
+    <div class="center pop_wraper" v-show="invoice.menuShow">
       <div class="pop_obottom">
         <ul class="fselect_list invoice_list border b_top">
           <li><div @click="invoiceClick(1)" class="border b_btm">商品一批</div></li>
