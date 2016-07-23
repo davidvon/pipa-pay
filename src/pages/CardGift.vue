@@ -1,11 +1,11 @@
 <template>
   <div class='wx-cards card gift flex' id="walmart_15_1">
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">赠送卡
-    </x-header>
+              @on-click-more="showMenus=true">赠送卡</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="goPage('home')"
                  @on-click-menu-cards="goPage('memcards')"></actionsheet>
+
     <div class="content card-list ">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <!--没有数据-->
@@ -31,11 +31,11 @@
               </div>
             </div>
           </div>
-          <div style="height:80px" v-show="$index==cards.length-1"></div>
+          <div style="height:60px" v-show="$index==cards.length-1"></div>
         </checker-item>
       </checker>
     </div>
-    <tabbar style="z-index:99;position:fixed;">
+    <tabbar>
       <flexbox v-show="!no_data">
         <flexbox-item>
           <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
@@ -141,9 +141,14 @@
 <style lang="less">
   @import '../styles/paycard.less';
 
-  .card .title {
+  .wx-cards .title {
     color: #fff;
     font-size: 17px;
+  }
+  .wx-cards .weui_tabbar{
+    z-index:99;
+    position:fixed;
+    background-color: #fff;
   }
 
 </style>

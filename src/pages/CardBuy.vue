@@ -1,46 +1,48 @@
 <template>
-  <div class="order">
+  <div class="order flex">
     <x-header :left-options='{showBack:true, backText:"返回"}'>购买</x-header>
-    <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
-    <checker class="center" :value.sync="money" default-item-class="money-item"
-             selected-item-class="money-item-selected">
-      <checker-item :value="50">50元</checker-item>
-      <checker-item :value="100">100元</checker-item>
-      <checker-item :value="200">200元</checker-item>
-      <checker-item :value="500">500元</checker-item>
-      <checker-item :value="1000">1000元</checker-item>
-      <checker-item :value="0">其他金额</checker-item>
-    </checker>
-    <div class="center other-money-input" v-show="!money">
-      <div class="popover fade bottom in" style="display: block;">
-        <div class="arrow"></div>
-        <div class="popover-content">
-          <x-input class="other-money" focus="true" placeholder="1-1000" :min=1 :max=3
-                   :value.sync="otherMoney" keyboard="number"></x-input>
+    <div class="content">
+      <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
+      <checker class="center" :value.sync="money" default-item-class="money-item"
+               selected-item-class="money-item-selected">
+        <checker-item :value="50">50元</checker-item>
+        <checker-item :value="100">100元</checker-item>
+        <checker-item :value="200">200元</checker-item>
+        <checker-item :value="500">500元</checker-item>
+        <checker-item :value="1000">1000元</checker-item>
+        <checker-item :value="0">其他金额</checker-item>
+      </checker>
+      <div class="center other-money-input" v-show="!money">
+        <div class="popover fade bottom in" style="display: block;">
+          <div class="arrow"></div>
+          <div class="popover-content">
+            <x-input class="other-money" focus="true" placeholder="1-1000" :min=1 :max=3
+                     :value.sync="otherMoney" keyboard="number"></x-input>
+          </div>
         </div>
       </div>
+      <group>
+        <x-number title="数量" :min="1" :max="10" :value.sync="count" type="inline"></x-number>
+        <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{count*money || count*otherMoney}}</span>
+        </cell>
+      </group>
+      <group>
+        <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
+        <div v-show="invoice.enable">
+          <x-input title="发票抬头" :value.sync="invoice.title" placeholder="单位名称或个人姓名"></x-input>
+          <cell title="发票内容" @click="invoice.menuShow=true">{{invoice.content}}<span class="demo-icon" slot="icon"></span></cell>
+          <x-input title="收件人" :min=3 :max=4 :value.sync="invoice.name" placeholder="姓名"></x-input>
+          <x-input title="联系电话" :value.sync="invoice.phone" placeholder="手机号码" keyboard="number"
+                   is-type="china-mobile"></x-input>
+          <x-input title="邮政编码" :value.sync="invoice.zip" placeholder="邮政编码" keyboard="number" :min="6"
+                   :max="6"></x-input>
+          <x-input title="详细地址" :value.sync="invoice.address" placeholder="省份 城市 街道 详细地址"></x-input>
+        </div>
+      </group>
+      <box style="padding:20px">
+        <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
+      </box>
     </div>
-    <group>
-      <x-number title="数量" :min="1" :max="10" :value.sync="count" type="inline"></x-number>
-      <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{count*money || count*otherMoney}}</span>
-      </cell>
-    </group>
-    <group>
-      <switch :value.sync="invoice.enable" title="需要发票(邮寄到付)"></switch>
-      <div v-show="invoice.enable">
-        <x-input title="发票抬头" :value.sync="invoice.title" placeholder="单位名称或个人姓名"></x-input>
-        <cell title="发票内容" @click="invoice.menuShow=true">{{invoice.content}}<span class="demo-icon" slot="icon"></span></cell>
-        <x-input title="收件人" :min=3 :max=4 :value.sync="invoice.name" placeholder="姓名"></x-input>
-        <x-input title="联系电话" :value.sync="invoice.phone" placeholder="手机号码" keyboard="number"
-                 is-type="china-mobile"></x-input>
-        <x-input title="邮政编码" :value.sync="invoice.zip" placeholder="邮政编码" keyboard="number" :min="6"
-                 :max="6"></x-input>
-        <x-input title="详细地址" :value.sync="invoice.address" placeholder="省份 城市 街道 详细地址"></x-input>
-      </div>
-    </group>
-    <box style="padding:20px">
-      <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
-    </box>
     <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading"></loading>
     <div class="center pop_wraper" v-show="invoice.menuShow">
@@ -173,11 +175,11 @@
           } else if (res.result == 255) {
             self.alertMsg("支付已完成");
           } else {
-            self.alertMsg("支付异常, 请稍后再试");
+            self.alertMsg("支付失败, 请稍后再试");
           }
         }, function () {
           self.loading = false;
-          self.alertMsg("系统错误, 或请联系公众号客服人员进行处理");
+          self.alertMsg("系统出现异常, 如需要请与公众号客服人员联系");
         })
       },
       alertMsg(msg, callback){
@@ -201,7 +203,9 @@
   .checker-popup {
     background: rgba(255, 255, 255, 0.5);
   }
-
+  .order .content{
+    text-align: left!important;
+  }
   .order .money-item {
     width: 100px;
     height: 50px;
@@ -211,6 +215,7 @@
     border: 1px solid #ccc;
     background-color: #fff;
     margin: 5px;
+    font-size: 17px;
   }
 
   .order .money-item-selected {
@@ -234,9 +239,9 @@
   }
 
   .order .other-money {
-    line-height: 2em;
-    height: 2em;
-    padding: 0 10px;
+    height: 15px;
+    padding: 10px;
+    font-size: 16px;
   }
 
   .order .other-money-input {
@@ -249,8 +254,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    padding: 1px;
-    width: 88%;
+    width: 84%;
     text-align: left;
     white-space: normal;
     background-color: #fff;
@@ -264,7 +268,7 @@
   }
 
   .popover.bottom {
-    margin: 10px 22px;
+    margin: 10px 8%;
   }
 
   .popover-content {
