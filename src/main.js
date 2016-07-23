@@ -16,7 +16,7 @@ require.ensure([], function (require) {
 Vue.use(VueResource)
 Vue.use(Router)
 Vue.config.devtools = true
-Vue.http.options.emulateJSON = true  //解决post-options
+Vue.http.options.emulateJSON = true  // 解决post-options
 
 const router = new Router({
   history: false
@@ -40,7 +40,7 @@ router.beforeEach(({to, next}) => {
   if (!to.query.code && !to.query.state) {
     const homeUrl = encodeURIComponent(Const.WX_HOST)
     const currentPath = to.path.split('?')[0]
-    var oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + homeUrl + '&response_type=code&scope=snsapi_base&state=' + currentPath + '#wechat_redirect'
+    var oauthUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + Const.WX_APPID + '&redirect_uri=' + homeUrl + '&response_type=code&scope=snsapi_userinfo&state=' + currentPath + '#wechat_redirect'
     logger.log('beforeEach', 'redirect url:' + oauthUrl)
     location.href = oauthUrl
     return
