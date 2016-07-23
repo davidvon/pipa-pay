@@ -6,8 +6,8 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="goPage('home')"
                  @on-click-menu-cards="goPage('memcards')"></actionsheet>
-    <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
     <div class="content card-list ">
+      <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
       <!--没有数据-->
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>
@@ -31,10 +31,11 @@
               </div>
             </div>
           </div>
+          <div style="height:80px" v-show="$index==cards.length-1"></div>
         </checker-item>
       </checker>
     </div>
-    <tabbar style="position:fixed;">
+    <tabbar style="z-index:99;position:fixed;">
       <flexbox v-show="!no_data">
         <flexbox-item>
           <div class="donation_d1">已选 <span class="choose-counter">{{cardIndex==-1?'0':'1'}}</span> 张</div>
@@ -46,6 +47,7 @@
         </flexbox-item>
       </flexbox>
     </tabbar>
+    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
@@ -54,7 +56,7 @@
   import Storage from '../services/storage'
   import Const from '../services/const'
   import logger from '../services/log'
-
+  import {wxRegister} from '../services/wxlib'
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
@@ -65,7 +67,8 @@
       "XButton": require('../components/x-button/index.vue'),
       "Tabbar": require('../components/tabbar/tabbar.vue'),
       "Flexbox": require('../components/flexbox/index.vue'),
-      "FlexboxItem": require('../components/flexbox-item/index.vue')
+      "FlexboxItem": require('../components/flexbox-item/index.vue'),
+      "Alert": require('../components/alert/index.vue')
     },
 
     data () {
@@ -80,17 +83,28 @@
         cards: [],
         showMenus: false,
         loading: false,
-        no_data: false
+        no_data: false,
+        alert: {type: '', message: '', show: false, callback: null}
       }
     },
     methods: {
+      alertMsg(msg, callback){
+        this.alert.message = msg
+        this.alert.show = true
+        this.alert.callback = callback || function () {
+          }
+      },
       onCardSelect (index){
         this.cardIdSelect = this.cards[index].cardId
         this.cardCodeSelect = this.cards[index].cardCode
         this.cardIndex = index
       },
       goShare(){
-        this.$route.router.go({name: 'gift_share', params: {cardId: this.cardIdSelect, cardCode: this.cardCodeSelect}});
+        if(!!this.cardCodeSelect){
+          this.$route.router.go({name: 'gift_share', params: {cardId: this.cardIdSelect, cardCode: this.cardCodeSelect}});
+        } else {
+          this.alertMsg('此卡还未与微信卡包绑定')
+        }
       },
       goBuy(){
         this.$route.router.go({name: 'buy'})
@@ -104,15 +118,20 @@
         var self = this
         self.loading = true
         self.openid = Storage.wxOpenId
-        this.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
+        wxRegister(this, function(){
           self.loading = false
-          logger.log("CardGift", " data:" + JSON.stringify(response.data))
-          var ret = response.data
-          if (ret && ret.result == 0) {
-            self.cards = ret.data
-            if (self.cards.length == 0)
-              self.no_data = true
-          }
+          self.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
+            self.loading = false
+            logger.log("CardGift", " data:" + JSON.stringify(response.data))
+            var ret = response.data
+            if (ret && ret.result == 0) {
+              self.cards = ret.data
+              if (self.cards.length == 0)
+                self.no_data = true
+            }
+          })
+        }, function(){
+          self.loading = false
         })
       }
     }

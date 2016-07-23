@@ -7,7 +7,7 @@
                  @on-click-menu-home="goPage('home')"
                  @on-click-menu-cards="goPage('memcards')"></actionsheet>
 
-    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+    <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
     </div>
     <div class="content">
       <div class="card_item" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards"
@@ -38,7 +38,6 @@
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
-  import { wxRegister } from '../services/wxlib'
 
   export default {
     components: {
@@ -70,17 +69,13 @@
     ready: function () {
       var self = this
       this.loading = true
-      wxRegister(this, function () {
-        self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-          self.loading = false
-          logger.log('PayCards', 'cards:' + JSON.stringify(response))
-          var data = response.data
-          if (data && data.result == 0)
-            self.cards = data.data
-          if (self.cards.length == 0) self.no_data = true
-        }, function () {
-          self.loading = false
-        })
+      self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+        self.loading = false
+        logger.log('PayCards', 'cards:' + JSON.stringify(response))
+        var data = response.data
+        if (data && data.result == 0)
+          self.cards = data.data
+        if (self.cards.length == 0) self.no_data = true
       }, function () {
         self.loading = false
       })

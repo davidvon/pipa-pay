@@ -4,7 +4,7 @@
               @on-click-more="showMenus=true">我的卡包
     </x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="goHome"></actionsheet>
-    <div class="weui_cells_title" v-show="cards.length>0">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+    <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
     </div>
     <div class="content">
       <div class="card_item" data-index={{$index}} data-globalid="{{item.globalId}}"
@@ -40,7 +40,6 @@
   import Storage from '../services/storage'
   import {wxAddCard, wxOpenCard} from '../services/wxcard'
   import logger from '../services/log'
-  import {wxRegister} from '../services/wxlib'
 
   export default {
     components: {
@@ -151,15 +150,11 @@
       var self = this
       self.openid = Storage.wxOpenId
       self.loading = true
-      wxRegister(self, function () {
-        self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-          self.loading = false
-          var res = response.data
-          if (res && res.result == 0) self.cards = res.data
-          if (self.cards.length == 0) self.no_data = true
-        }, function () {
-          self.loading = false
-        })
+      self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
+        self.loading = false
+        var res = response.data
+        if (res && res.result == 0) self.cards = res.data
+        if (self.cards.length == 0) self.no_data = true
       }, function () {
         self.loading = false
       })

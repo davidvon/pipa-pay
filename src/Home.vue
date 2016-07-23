@@ -50,6 +50,8 @@
       this.loading = true
       wxRegister(this, function(){
         self.loading = false
+      }, function(){
+        self.loading = false
       })
     },
     methods:{

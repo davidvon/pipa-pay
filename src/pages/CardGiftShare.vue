@@ -51,7 +51,8 @@
           cardName: '',
           timestamp: ''
         },
-        alert: {type:'', message:'', show:false, callback:null}
+        logo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue2.png',
+        alert: {type: '', message: '', show: false, callback: null}
       }
     },
     route: {
@@ -65,7 +66,8 @@
       alertMsg(msg, callback){
         this.alert.message = msg
         this.alert.show = true
-        this.alert.callback = callback || function(){}
+        this.alert.callback = callback || function () {
+          }
       },
       updateCardStatus(){
         var self = this
@@ -82,17 +84,15 @@
       onShare(){
         var self = this
         self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
-        logger.log('CardGiftShare', 'onShare url:' + self.shareUrl + ' card:' + self.card.cardName + ' content:' + self.content + ' logo:' + self.card.logo)
-
-        onMenuShareAppMessage(self.shareUrl, '点击领取' + self.card.cardName,
-          self.content, self.card.logo, function () {
-            logger.log('CardGiftShare', ' menu share ok')
-            self.maskShow = false
-            self.updateCardStatus()
-          }, function () {
-            self.maskShow = false
-            logger.log('CardGiftShare', 'menu share error')
-          })
+        logger.log('CardGiftShare', 'onShare url:' + self.shareUrl + ' card:' + self.card.cardName)
+        onMenuShareAppMessage(self.shareUrl, self.content, '点击领取' + self.card.cardName, self.logo, function () {
+          logger.log('CardGiftShare', ' menu share ok')
+          self.maskShow = false
+          self.updateCardStatus()
+        }, function () {
+          self.maskShow = false
+          logger.log('CardGiftShare', 'menu share cancel or error')
+        })
       }
     },
     ready(){
@@ -100,15 +100,15 @@
       this.$http.post(Const.API_URL + 'card/share/check',
         {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
         var res = response.data
-        logger.log('CardGiftShare', 'card sharing check error:' + JSON.stringify(res))
+        logger.log('CardGiftShare', 'card sharing check result:' + JSON.stringify(res))
         if (res.result != 0) {
-          self.alertMsg('该卡已不存在', function(){
-              self.$route.router.go({name: 'home'})
+          self.alertMsg(res.result == 254 ? '此卡还未与微信卡包绑定' : '此卡不存在', function () {
+            self.$route.router.go({name: 'home'})
           })
           return
         }
         if (res.status > 2) {
-          self.alertMsg('该卡已转赠', function(){
+          self.alertMsg('此卡已转赠', function () {
             self.$route.router.go({name: 'home'})
           })
         } else {
@@ -125,6 +125,7 @@
 
 <style lang="less">
   @import '../styles/paycard.less';
+
   .card .title {
     color: #fff;
     font-size: 17px;
