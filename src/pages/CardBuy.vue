@@ -174,12 +174,14 @@
             self.alertMsg("订单已支付");
           } else if (res.result == 255) {
             self.alertMsg("支付已完成");
+          } else if (res.result == 250) {
+            self.alertMsg("请客户先关注公众号");
           } else {
             self.alertMsg("支付失败, 请稍后再试");
           }
         }, function () {
           self.loading = false;
-          self.alertMsg("系统出现异常, 如需要请与公众号客服人员联系");
+          self.alertMsg("系统出现异常, 请稍后再试");
         })
       },
       alertMsg(msg, callback){
