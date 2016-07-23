@@ -122,13 +122,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  @import '../styles/paycard.less';
-
-  .card .title {
-    color: #fff;
-    font-size: 17px;
-  }
-
-</style>

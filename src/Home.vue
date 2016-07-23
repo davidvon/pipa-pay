@@ -79,7 +79,9 @@
   .home .bg {
     background-color: #fff;
   }
-
+  .home .content{
+    padding: 0;
+  }
   .home .vue-home.center {
     margin-top: 0;
     /*margin-bottom: 15px;*/

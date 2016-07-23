@@ -1,5 +1,5 @@
 <template>
-  <div class='card flex'>
+  <div class='paycards flex'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
               @on-click-more="showMenus=true">支付</x-header>
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
@@ -130,42 +130,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  .wx-cards .wxcard-enable {
-    margin-left: 0 !important;
-    color: grey;
-    font-size: 14px;
-    text-align: right;
-  }
-
-  .wx-cards .wxcard-invalid {
-    margin-left: 0 !important;
-    color: darkgrey;
-    font-size: 14px;
-    text-align: right;
-  }
-
-  .wx-cards .wxcard-disable {
-    margin-left: 0 !important;
-    color: red;
-    font-size: 14px;
-    text-align: right;
-  }
-
-  .wx-cards .title {
-    margin-top: 6px;
-    color: #fff;
-    font-size: 18px;
-    width: 100%;
-  }
-
-  .wx-cards .sub-title {
-    color: #fff;
-    font-size: 12px;
-    width: 100%;
-  }
-  .card .content{
-    padding:5px 10px
-  }
-</style>

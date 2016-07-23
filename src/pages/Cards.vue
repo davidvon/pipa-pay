@@ -1,5 +1,5 @@
 <template>
-  <div class='wx-cards card flex'>
+  <div class='memcards card flex'>
     <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
               @on-click-more="showMenus=true">我的卡包
     </x-header>
@@ -161,10 +161,3 @@
     }
   }
 </script>
-
-<style scoped>
-  @import '../styles/other.less';
-  .content{
-    padding:5px 10px
-  }
-</style>
