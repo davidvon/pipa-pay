@@ -23,7 +23,9 @@ Vue.config.devtools = true
 Vue.http.options.emulateJSON = true  // 解决post-options
 
 const router = new Router({
-  history: false
+  hashbang: false,
+  transitionOnLoad: true,
+  history: true
 })
 
 router.beforeEach(({to, next}) => {
@@ -56,9 +58,10 @@ router.beforeEach(({to, next}) => {
       var res = response.data
       if (res.result === 0) {
         Storage.wxOpenId = res.openid
-        var currentUrl = Const.WX_HOST + '/#!' + to.query.state
-        logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
-        location.href = currentUrl
+        // var currentUrl = Const.WX_HOST + to.query.state
+        // logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
+        // location.href = currentUrl
+        to.router.replace({path: to.query.state, params: {}, query: {}})
       } else {
         Storage.wxOpenId = ''
       }
