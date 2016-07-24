@@ -6,10 +6,10 @@
       <div class="content">
         <p class="donation_top">请输入转赠留言</p>
         <div class="donation_text border b_top_btm">
-          <x-textarea :max="30" :placeholder="content" :value.sync="content"></x-textarea>
+          <x-textarea :max="15" :placeholder="content" :value.sync="content"></x-textarea>
         </div>
         <p class="donation_btn">
-          <x-button type="primary" @click="maskShow=true">转赠</x-button>
+          <x-button type="primary" @click="onShareButton">转赠</x-button>
         </p>
         <p class="donation_p1">温馨提示</p>
         <p class="donation_p2"><span>1.</span> <span>转赠后，礼品卡即处于“转赠中”状态。待好友领取后，即与转赠者解绑，并与被转赠者建立绑定关系。</span></p>
@@ -93,6 +93,10 @@
           self.maskShow = false
           logger.log('CardGiftShare', 'menu share cancel or error')
         })
+      },
+      onShareButton(){
+        this.maskShow = true
+        this.onShare()
       }
     },
     ready(){
