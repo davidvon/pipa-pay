@@ -225,7 +225,7 @@
   }
 
   .order .money-item-selected {
-    border-color: #9BADEF;
+    border-color: #e64340;
   }
 
   .order .center {
