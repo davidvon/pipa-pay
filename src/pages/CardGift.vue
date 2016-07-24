@@ -7,7 +7,7 @@
                  @on-click-menu-cards="goPage('memcards')"></actionsheet>
 
     <div class="content card-list">
-      <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡</div>
+      <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡</div>
       <!--没有数据-->
       <div class="not_card" v-show="no_data">
         <p class="ncd_p1"><span class="ico_nocard"></span></p>

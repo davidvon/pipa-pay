@@ -234,12 +234,12 @@
   }
 
   .order .money-symbol {
-    color: #ff4a00;
+    color: #e64340;
     font-size: 20px
   }
 
   .order .money {
-    color: #ff4a00;
+    color: #e64340;
     font-size: 23px
   }
 

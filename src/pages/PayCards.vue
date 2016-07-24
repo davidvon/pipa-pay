@@ -5,9 +5,8 @@
     <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
                  @on-click-menu-home="goPage('home')"
                  @on-click-menu-cards="goPage('memcards')"></actionsheet>
-
     <div class="content">
-      <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#6A6AD6">{{cards.length}}</span>张礼品卡
+      <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡
       </div>
       <div class="card_item" data-cardid="{{item.cardId}}" data-cardcode="{{item.cardCode}}" v-for="item in cards"
            @click="cardConsume">
