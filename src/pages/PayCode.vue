@@ -21,7 +21,7 @@
         </div>
       </div>
       <a class="detail" @click="goPayRecords">交易明细</a>
-      <br>
+      <p>每分钟自动更新</p>
     </div>
     <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
     <loading :show.sync="loading" :text=""></loading>
@@ -116,15 +116,18 @@
     height: 100%;
   }
   .pay .background {
-    height: 100%;
     background-color: #275F98 !important;
     font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, STHeiTi, sans-serif, tahoma, arial;
     text-align: center;
+    min-height: 700px;
+  }
+  .pay .background p{
+    color:rgba(255, 255, 255, 0.3);
   }
 
   .pay .pay-card {
     width: 75%;
-    margin: 0 13%;
+    margin: 10px 13%;
     background-color: #FFF;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -132,7 +135,7 @@
   }
 
   .pay .pay-card .title {
-    margin: 0px;
+    margin: 0;
     padding-top: 20px;
     line-height: 20px;
     font-size: 17px;
@@ -140,7 +143,7 @@
   }
 
   .pay .pay-card .sub-title {
-    margin: 0px;
+    margin: 0;
     line-height: 40px;
     font-size: 20px;
     color: #5F5E5E;
@@ -173,12 +176,12 @@
   }
 
   .pay .detail {
-    margin: 15px;
+    margin: 10px;
     color: white;
     display: block;
   }
 
   .pay .code-img {
-    padding: 10px 0 20px;
+    padding: 15px 0 20px;
   }
 </style>

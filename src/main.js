@@ -1,12 +1,16 @@
 var Vue = require('vue')
 var Router = require('vue-router')
 var VueResource = require('vue-resource')
+
 var App = require('./App')
 import Storage from './services/storage'
 import Const from './services/const'
 import logger from './services/log'
 import { default as routes } from './route'
 import { clearCookie } from './libs/util'
+
+// filters
+Vue.filter('discount', require('./filters/amount_discount').discount)
 
 require.ensure([], function (require) {
   const FastClick = require('fastclick')

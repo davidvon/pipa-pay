@@ -23,7 +23,9 @@
       </div>
       <group>
         <x-number title="数量" :min="1" :max="10" :value.sync="count" type="inline"></x-number>
-        <cell title="合计"><span class="money-symbol">￥</span><span class="money">{{count*money || count*otherMoney}}</span>
+        <cell title="合计">
+          <del class="total_amount">￥{{count*money || count*otherMoney}}</del>
+          <span class="money-symbol">￥</span><span class="money">{{(count*money||count*otherMoney) |discount}}</span>
         </cell>
       </group>
       <group>
@@ -207,22 +209,23 @@
   }
   .order .content{
     text-align: left!important;
+    padding:0
   }
   .order .money-item {
     width: 100px;
     height: 50px;
     line-height: 50px;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 6px;
     border: 1px solid #ccc;
     background-color: #fff;
     margin: 5px;
     font-size: 17px;
+    color: #666;
   }
 
   .order .money-item-selected {
-    background: #ffffff url(../assets/images/active.png) no-repeat right bottom;
-    border-color: #ff4a00;
+    border-color: #9BADEF;
   }
 
   .order .center {
@@ -251,7 +254,10 @@
     display: block;
     height: 60px
   }
-
+  .order .weui_cell{
+    color: #666;
+    font-size: 16px;
+  }
   .popover {
     position: absolute;
     top: 0;

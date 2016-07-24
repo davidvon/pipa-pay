@@ -4,11 +4,6 @@
   </div>
 </template>
 
-<script>
-  export default {
-  }
-</script>
-
 <style lang="less">
 @import './styles/other.less';
 @import './styles/weui.0.4.2.min.css';
@@ -20,5 +15,8 @@ body {
 }
 #app{
   height: 100%;
+}
+.vux-header{
+  border-bottom: 1px solid #eee;
 }
 </style>

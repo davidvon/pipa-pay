@@ -113,27 +113,26 @@
         this.$route.router.replace({name: name})
       }
     },
-    route: {
-      data (transition){
-        var self = this
-        self.loading = true
-        self.openid = Storage.wxOpenId
-        wxRegister(this, function(){
+    ready: function(){
+      var self = this
+      self.loading = true
+      self.openid = Storage.wxOpenId
+      wxRegister(this, function(){
+        self.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
           self.loading = false
-          self.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
-            self.loading = false
-            logger.log("CardGift", " data:" + JSON.stringify(response.data))
-            var ret = response.data
-            if (ret && ret.result == 0) {
-              self.cards = ret.data
-              if (self.cards.length == 0)
-                self.no_data = true
-            }
-          })
+          logger.log("CardGift", " data:" + JSON.stringify(response.data))
+          var ret = response.data
+          if (ret && ret.result == 0) {
+            self.cards = ret.data
+            if (self.cards.length == 0)
+              self.no_data = true
+          }
         }, function(){
           self.loading = false
         })
-      }
+      }, function(){
+        self.loading = false
+      })
     }
   }
 </script>
