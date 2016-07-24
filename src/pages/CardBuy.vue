@@ -179,7 +179,7 @@
           } else if (res.result == 250) {
             self.alertMsg("请客户先关注公众号");
           } else {
-            self.alertMsg("支付失败, 请稍后再试");
+            self.alertMsg("支付失败: "+ res.msg);
           }
         }, function () {
           self.loading = false;
