@@ -20,12 +20,12 @@ require.ensure([], function (require) {
 Vue.use(VueResource)
 Vue.use(Router)
 Vue.config.devtools = true
-Vue.http.options.emulateJSON = true  // 解决post-options
+//Vue.http.options.emulateJSON = true  // 解决post-options
 
 const router = new Router({
   hashbang: false,
-  transitionOnLoad: true,
-  history: true
+  history: true,
+  transitionOnLoad: true
 })
 
 router.beforeEach(({to, next}) => {

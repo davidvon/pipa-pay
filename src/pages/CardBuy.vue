@@ -146,7 +146,7 @@
             })
           },
           fail: function (res) {
-            self.alertMsg("支付失败,请稍后再试");
+            self.alertMsg("支付失败:"+ res.errMsg +", 请稍后再试");
           }
         });
       },
