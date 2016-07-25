@@ -14,6 +14,7 @@ export function onMenuShareAppMessage(link, title, desc, logo, callback, errback
       callback && callback()
     },
     cancel: function () {
+      logger.log('onMenuShareAppMessage', 'cancel')
       errback && errback()
     }
   });
@@ -26,9 +27,11 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback) 
     desc: desc, // 分享描述
     imgUrl: logo, // 分享图标
     success: function () {
+      logger.log('onMenuShareTimeline', 'success')
       callback && callback()
     },
     cancel: function () {
+      logger.log('onMenuShareTimeline', 'cancel')
       errback && errback()
     }
   });

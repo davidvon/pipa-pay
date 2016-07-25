@@ -168,13 +168,12 @@
         }
         self.openid = Storage.wxOpenId
         var data = {
-          price: self.amountDiscount * self.count,
+          price: self.amountDiscount,
           count: self.count,
           openId: self.openid,
           cardId: Const.cardId
         };
-        logger.log("CardBuy", "openid:" + data.openId + " cardId:" + data.cardId +
-          " price:" + data.price + " count:" + data.count)
+        logger.log("CardBuy", "openid:" + data.openId + " cardId:" + data.cardId + " discount:" + self.amountDiscount)
         this.$http.post(Const.API_URL + 'card/buy', data).then(function (response) {
           var res = response.data
           self.loading = false;
