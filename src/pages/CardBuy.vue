@@ -16,7 +16,7 @@
         <div class="popover fade bottom in" style="display: block;">
           <div class="arrow"></div>
           <div class="popover-content">
-            <x-input class="other-money" focus="true" placeholder="1-1000" :min=1 :max=3
+            <x-input class="other-money" focus="true" placeholder="1-1000" :min=1 :max=4
                      :value.sync="otherMoney" keyboard="number"></x-input>
           </div>
         </div>
@@ -103,16 +103,18 @@
     },
     computed: {
       buyButtonDisable: function () {
-        return !((this.money > 0 || (this.otherMoney.length > 0 && Number(this.otherMoney)<1000 && Number(this.otherMoney)>0)) && this.invoice_valid())
+        return !((this.money > 0 || (this.otherMoney.length > 0 && Number(this.otherMoney)<=1000 && Number(this.otherMoney)>0)) && this.invoice_valid())
       },
       amountDiscount: function(){
         var amount = this.count*(this.money||this.otherMoney)
-        if(amount < 500) return amount
-        if(amount < 1000) return amount*0.98
-        if(amount < 2000) return amount*0.96
-        if(amount < 5000) return amount*0.94
-        if(amount < 8000) return amount*0.92
-        return amount * 0.9
+        var val = 0
+        if(amount < 500) val = amount
+        else if(amount < 1000) val = amount*0.98
+        else if(amount < 2000) val = amount*0.96
+        else if(amount < 5000) val = amount*0.94
+        else if(amount < 8000) val = amount*0.92
+        else val = amount * 0.9
+        return /^(\d+\.\d+)?$/.test(val.toString()) ? parseFloat(val).toFixed(2):val
       }
     },
     methods: {
@@ -233,6 +235,7 @@
 
   .order .money-item-selected {
     border-color: #e64340;
+    color: #e64340;
   }
 
   .order .center {
