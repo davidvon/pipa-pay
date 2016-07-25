@@ -27,9 +27,9 @@
 
 <script>
   import Const from '../services/const'
-  import { onMenuShareAppMessage } from '../services/wxlib'
   import Storage from '../services/storage'
   import logger from '../services/log'
+  import {onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
 
   export default {
     components: {
@@ -83,7 +83,7 @@
       },
       onShare(){
         var self = this
-        self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
+        self.shareUrl = 'http://' + location.host + '/gift/receive/' + self.card.sign
         logger.log('CardGiftShare', 'onShare url:' + self.shareUrl + ' card:' + self.card.cardName)
         onMenuShareAppMessage(self.shareUrl, self.content, '点击领取' + self.card.cardName, self.logo, function () {
           logger.log('CardGiftShare', ' menu share ok')

@@ -36,7 +36,7 @@
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
-
+  import {onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
@@ -67,6 +67,8 @@
     ready: function () {
       var self = this
       this.loading = true
+      onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+      onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
         self.loading = false
         logger.log('PayCards', 'cards:' + JSON.stringify(response))

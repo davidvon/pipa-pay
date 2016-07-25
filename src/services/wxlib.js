@@ -57,7 +57,7 @@ export function wxRegister(self, callback, errback) {
         timestamp: response.data['timestamp'],
         nonceStr: response.data['nonceStr'],
         signature: response.data['signature'],
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseImage', 'uploadImage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'scanQRCode', 'openCard', 'addCard', 'chooseWXPay']
       });
 
       wx.ready(function () {

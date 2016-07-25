@@ -9,9 +9,6 @@ import logger from './services/log'
 import { default as routes } from './route'
 import { clearCookie } from './libs/util'
 
-// filters
-Vue.filter('discount', require('./filters/amount_discount').discount)
-
 require.ensure([], function (require) {
   const FastClick = require('fastclick')
   FastClick.attach(document.body)
@@ -58,9 +55,6 @@ router.beforeEach(({to, next}) => {
       var res = response.data
       if (res.result === 0) {
         Storage.wxOpenId = res.openid
-        // var currentUrl = Const.WX_HOST + to.query.state
-        // logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
-        // location.href = currentUrl
         to.router.replace({path: to.query.state, params: {}, query: {}})
       } else {
         Storage.wxOpenId = ''

@@ -25,7 +25,7 @@
         <x-number title="数量" :min="1" :max="10" :value.sync="count" type="inline"></x-number>
         <cell title="合计">
           <del class="total_amount">￥{{count*money || count*otherMoney}}</del>
-          <span class="money-symbol">￥</span><span class="money">{{(count*money||count*otherMoney) |discount}}</span>
+          <span class="money-symbol">￥</span><span class="money">{{amountDiscount}}</span>
         </cell>
       </group>
       <group>
@@ -78,7 +78,6 @@
       "XInput": require('../components/x-input/index.vue'),
       "Box": require('../components/box/index.vue'),
       "Alert": require('../components/alert/index.vue'),
-      "Selector": require('../components/selector/index.vue')
     },
     data () {
       return {
@@ -105,6 +104,15 @@
     computed: {
       buyButtonDisable: function () {
         return !((this.money > 0 || (this.otherMoney.length > 0 && Number(this.otherMoney)<1000 && Number(this.otherMoney)>0)) && this.invoice_valid())
+      },
+      amountDiscount: function(){
+        var amount = this.count*(this.money||this.otherMoney)
+        if(amount < 500) return amount
+        if(amount < 1000) return amount*0.98
+        if(amount < 2000) return amount*0.96
+        if(amount < 5000) return amount*0.94
+        if(amount < 8000) return amount*0.92
+        return amount * 0.9
       }
     },
     methods: {
@@ -160,7 +168,7 @@
         }
         self.openid = Storage.wxOpenId
         var data = {
-          price: (self.money || Number(self.otherMoney)) * self.count,
+          price: self.amountDiscount * self.count,
           count: self.count,
           openId: self.openid,
           cardId: Const.cardId
