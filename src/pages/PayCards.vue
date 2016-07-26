@@ -36,7 +36,6 @@
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
-  import {onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
@@ -67,8 +66,6 @@
     ready: function () {
       var self = this
       this.loading = true
-      onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-      onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
         self.loading = false
         logger.log('PayCards', 'cards:' + JSON.stringify(response))
@@ -79,27 +76,6 @@
       }, function () {
         self.loading = false
       })
-
-//      var self = this
-//      var url = location.href.split('#')[0]
-//      this.$http.post(Const.API_URL + 'weixin/card/choose/sign').then(function (response) {
-//        if (response && response.data){
-//          var data = response.data
-//          console.log(response.data)
-//          wx.chooseCard({
-//            timestamp: data['timestamp'], // 卡券签名时间戳
-//            nonceStr: data['nonceStr'], // 卡券签名随机串
-//            signType: 'SHA1',         // 签名方式，默认'SHA1'
-//            cardSign: data['cardSign'], // 卡券签名
-//            success: function (res) {
-//              self.cards_online = res.cardList; // 用户选中的卡券列表信息
-//              alert(self.cards_online)
-//            }
-//          })
-//        }
-//      })
-
-
     },
     methods: {
       alertMsg(msg, callback){

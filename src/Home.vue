@@ -32,9 +32,8 @@
 </template>
 
 <script>
-  import {wxRegister} from './services/wxlib'
+  import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from './services/wxlib'
   import Const from './services/const'
-
   export default {
     components: {
       "Loading": require('./components/loading/index.vue')
@@ -45,12 +44,14 @@
         buy_url: '/buy/'+Const.cardId
       }
     },
-    ready: function() {
+    ready: function () {
       var self = this
       this.loading = true
-      wxRegister(this, function(){
+      wxRegister(this, 'index', function () {
         self.loading = false
-      }, function(){
+        onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+        onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+      }, function () {
         self.loading = false
       })
     },

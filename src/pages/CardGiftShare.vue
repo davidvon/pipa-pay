@@ -22,6 +22,7 @@
       </div>
     </div>
     <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
+    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -29,14 +30,15 @@
   import Const from '../services/const'
   import Storage from '../services/storage'
   import logger from '../services/log'
-  import {onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
+  import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
 
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "XTextarea": require('../components/x-textarea/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "Alert": require('../components/alert/index.vue'),
+      "Loading": require('../components/loading/index.vue'),
     },
     data () {
       return {
@@ -51,6 +53,7 @@
           cardName: '',
           timestamp: ''
         },
+        loading: false,
         logo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue2.png',
         alert: {type: '', message: '', show: false, callback: null}
       }
@@ -83,7 +86,7 @@
       },
       onShare(){
         var self = this
-        self.shareUrl = 'http://' + location.host + '/gift/receive/' + self.card.sign
+        self.shareUrl = 'http://' + location.host + '/#!/gift/receive/' + self.card.sign
         logger.log('CardGiftShare', 'onShare url:' + self.shareUrl + ' card:' + self.card.cardName)
         onMenuShareAppMessage(self.shareUrl, self.content, '点击领取' + self.card.cardName, self.logo, function () {
           logger.log('CardGiftShare', ' menu share ok')
@@ -101,9 +104,12 @@
     },
     ready(){
       var self = this
-      this.$http.post(Const.API_URL + 'card/share/check',
-        {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
+      this.loading = true
+      self.$http.post(Const.API_URL + 'card/share/check',
+                      {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
+        self.loading = false
         var res = response.data
+
         logger.log('CardGiftShare', 'card sharing check result:' + JSON.stringify(res))
         if (res.result != 0) {
           self.alertMsg(res.result == 254 ? '此卡还未与微信卡包绑定' : '此卡不存在', function () {
@@ -111,16 +117,22 @@
           })
           return
         }
+
         if (res.status > 2) {
           self.alertMsg('此卡已转赠', function () {
             self.$route.router.go({name: 'home'})
           })
-        } else {
-          logger.log('CardGiftShare', 'card sharing check ok')
-          self.card = res.card
-          self.onShare()
+          return
         }
+
+        logger.log('CardGiftShare', 'card sharing check ok')
+        self.card = res.card
+        wxRegister(self, 'index', function () {
+          self.onShare()
+        })
+
       }, function () {
+        self.loading = false
         logger.log('CardGiftShare', 'card sharing check exception')
       })
     }

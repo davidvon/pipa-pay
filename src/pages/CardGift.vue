@@ -56,7 +56,8 @@
   import Storage from '../services/storage'
   import Const from '../services/const'
   import logger from '../services/log'
-  import {onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
+  import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
+
   export default {
     components: {
       "XHeader": require('../components/x-header/index.vue'),
@@ -113,22 +114,25 @@
         this.$route.router.replace({name: name})
       }
     },
-    ready: function(){
+    ready: function () {
       var self = this
       self.loading = true
       self.openid = Storage.wxOpenId
-      onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-      onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
-        self.loading = false
         logger.log("CardGift", " data:" + JSON.stringify(response.data))
         var ret = response.data
         if (ret && ret.result == 0) {
+          self.loading = false
           self.cards = ret.data
-          if (self.cards.length == 0)
-            self.no_data = true
+          if (self.cards.length == 0) self.no_data = true
+          wxRegister(self, 'index', function () {
+            onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+            onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+          })
+        } else {
+          self.loading = false
         }
-      }, function(){
+      }, function () {
         self.loading = false
       })
     }

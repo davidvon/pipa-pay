@@ -9,10 +9,10 @@ import logger from './services/log'
 import { default as routes } from './route'
 import { clearCookie } from './libs/util'
 
-require.ensure([], function (require) {
-  const FastClick = require('fastclick')
-  FastClick.attach(document.body)
-}, 'fastclick')
+// require.ensure([], function (require) {
+//   const FastClick = require('fastclick')
+//   FastClick.attach(document.body)
+// }, 'fastclick')
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -20,8 +20,8 @@ Vue.config.devtools = true
 Vue.http.options.emulateJSON = true  // 解决post-options
 
 const router = new Router({
-  hashbang: false,
-  history: true,
+  hashbang: true,
+  history: false,
   transitionOnLoad: true
 })
 
@@ -55,7 +55,9 @@ router.beforeEach(({to, next}) => {
       var res = response.data
       if (res.result === 0) {
         Storage.wxOpenId = res.openid
-        to.router.replace({path: to.query.state, params: {}, query: {}})
+        var currentUrl = Const.WX_HOST + '/#!' + to.query.state
+        logger.log('beforeEach', 'openid:' + Storage.wxOpenId + ', url:' + currentUrl)
+        location.href = currentUrl
       } else {
         Storage.wxOpenId = ''
       }

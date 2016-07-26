@@ -3,12 +3,12 @@ import Const from '../services/const'
 import Storage from '../services/storage'
 
 export function onMenuShareAppMessage(link, title, desc, logo, callback, errback) {
-  logger.log('onMenuShareAppMessage', 'title:' + title)
-  wx && wx.onMenuShareAppMessage({
-    title: title, // 分享标题
-    desc: desc, // 分享描述
-    link: link, // 分享链接
-    imgUrl: logo, // 分享图标
+  logger.log('onMenuShareAppMessage', 'title:' + title + ', wx:' + wx)
+  wx.onMenuShareAppMessage({
+    title: title,
+    desc: desc,
+    link: link,
+    imgUrl: logo,
     success: function () {
       logger.log('onMenuShareAppMessage', 'success')
       callback && callback()
@@ -16,12 +16,15 @@ export function onMenuShareAppMessage(link, title, desc, logo, callback, errback
     cancel: function () {
       logger.log('onMenuShareAppMessage', 'cancel')
       errback && errback()
+    },
+    fail: function (res) {
+      alert(JSON.stringify(res));
     }
   });
 }
 
 export function onMenuShareTimeline(link, title, desc, logo, callback, errback) {
-  wx && wx.onMenuShareTimeline({
+  wx.onMenuShareTimeline({
     title: title, // 分享标题
     link: link, // 分享链接
     desc: desc, // 分享描述
@@ -37,11 +40,10 @@ export function onMenuShareTimeline(link, title, desc, logo, callback, errback) 
   });
 }
 
-export function wxRegister(self, callback, errback) {
-  const openid = Storage.wxOpenId
-  const status = Storage.wxConfigStatus
-  if (!openid || status) {
-    logger.log("wxRegister", "discarded, openid:" + openid + ', wxConfig status:' + status)
+export function wxRegister(self, mode, callback, errback) {
+  const now_mode = Storage.wxConfigMode
+  if (now_mode == mode) {
+    logger.log("wxRegister", "discarded, wxConfig now mode:" + now_mode + ", input mode:" + mode)
     callback && callback()
     return
   }
@@ -65,9 +67,7 @@ export function wxRegister(self, callback, errback) {
 
       wx.ready(function () {
         logger.log("wxRegister", "wx.config ok...");
-        Storage.wxConfigEnable()
-        onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
-        onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
+        Storage.wxConfigModeSet(mode)
         callback && callback()
       });
 
@@ -75,7 +75,7 @@ export function wxRegister(self, callback, errback) {
         logger.log("wxRegister", "wx config error:" + res.errMsg);
         errback && errback()
       });
-    } else{
+    } else {
       errback && errback()
     }
   }, function (err) {

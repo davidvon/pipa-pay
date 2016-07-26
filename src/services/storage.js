@@ -1,10 +1,10 @@
 import {getCookie, setCookie} from '../libs/util'
 
 module.exports = {
-  wxConfigStatus: false,
+  wxConfigMode: '',
 
-  wxConfigEnable: function () {
-    this.wxConfigStatus = true
+  wxConfigModeSet: function (mode) {
+    this.wxConfigMode = mode
   },
   set wxOpenId(wxOpenId) {
     setCookie('PIPA_OPENID', wxOpenId, 360*3)
