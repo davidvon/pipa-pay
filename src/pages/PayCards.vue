@@ -1,10 +1,5 @@
 <template>
   <div class='paycards flex'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">支付</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
-                 @on-click-menu-home="goPage('home')"
-                 @on-click-menu-cards="goPage('memcards')"></actionsheet>
     <div class="content">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡
       </div>
@@ -27,8 +22,6 @@
         </p>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
-    <loading :show.sync="loading"></loading>
   </div>
 </template>
 
@@ -37,25 +30,19 @@
   import Storage from '../services/storage'
   import logger from '../services/log'
   export default {
+    attached () {
+      this.$root.navTitle = '支付'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
-      "Loading": require('../components/loading/index.vue'),
-      "Actionsheet": require('../components/actionsheet/index.vue'),
-      "XButton": require('../components/x-button/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "XButton": require('../components/x-button/index.vue')
     },
     data () {
       return {
-        menus: {
-          home: '首页',
-          cards: '我的卡包'
-        },
-        showMenus: false,
         cards: [],
         cards_online: [],
-        no_data: false,
-        alert: {type:'', message:'', show:false, callback:null},
-        loading: false
+        no_data: false
       }
     },
     route: {
@@ -65,24 +52,19 @@
     },
     ready: function () {
       var self = this
-      this.loading = true
+      self.$dispatch('showLoading')
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-        self.loading = false
+        self.$dispatch('hideLoading')
         logger.log('PayCards', 'cards:' + JSON.stringify(response))
         var data = response.data
         if (data && data.result == 0)
           self.cards = data.data
         if (self.cards.length == 0) self.no_data = true
       }, function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
       })
     },
     methods: {
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function(){}
-      },
       goBuy (){
         this.$route.router.go({name: 'buy'})
       },
@@ -91,11 +73,11 @@
         var cardId = attrs['data-cardid'].value;
         var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
         if (!cardId) {
-          this.alertMsg('请选择赠送的会员卡');
+          this.$dispatch('alert', '请选择赠送的会员卡');
           return;
         }
         if (cardCode==0){
-          this.alertMsg('请先绑定微信会员卡');
+          this.$dispatch('alert', '请先绑定微信会员卡');
           return;
         }
         logger.log('PayCards', 'cardConsume, cardid:' + cardId + ', code:' + cardCode)

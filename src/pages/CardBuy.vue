@@ -1,6 +1,5 @@
 <template>
   <div class="order flex">
-    <x-header :left-options='{showBack:true, backText:"返回"}'>购买</x-header>
     <div class="content">
       <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
       <checker class="center" :value.sync="money" default-item-class="money-item"
@@ -45,8 +44,6 @@
         <x-button :disabled="buyButtonDisable" type="primary" @click="buyCard">购卡</x-button>
       </box>
     </div>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
-    <loading :show.sync="loading"></loading>
     <div class="center pop_wraper" v-show="invoice.menuShow">
       <div class="pop_obottom">
         <ul class="fselect_list invoice_list border b_top">
@@ -64,10 +61,15 @@
   import Const from '../services/const'
   import logger from '../services/log'
   import Storage from '../services/storage'
+
   export default {
+    attached () {
+      this.$root.navTitle = '电子卡购买'
+      this.$root.showHeader = true
+      document.title = '电子卡购买'
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
-      "Loading": require('../components/loading/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "Checker": require('../components/checker/index.vue'),
       "CheckerItem": require('../components/checker-item/index.vue'),
@@ -76,13 +78,11 @@
       "Cell": require('../components/cell/index.vue'),
       "Switch": require('../components/switch/index.vue'),
       "XInput": require('../components/x-input/index.vue'),
-      "Box": require('../components/box/index.vue'),
-      "Alert": require('../components/alert/index.vue'),
+      "Box": require('../components/box/index.vue')
     },
     data () {
       return {
         money: 50,
-        loading: false,
         otherMoney: "",
         count: 1,
         invoice: {
@@ -97,8 +97,7 @@
           content: '商品一批'
         },
         cardId: '',
-        orderId: '',
-        alert: {type:'', message: '', show: false, callback:null}
+        orderId: ''
       }
     },
     computed: {
@@ -125,7 +124,7 @@
       orderCommit(self, orderId, callback){
         self.$http.post(Const.API_URL + 'card/buy/commit', {orderId: orderId}).then(function (response) {
           if (response.result == 0) {
-            self.alertMsg("订单提交已成功");
+            self.$dispatch('alert', "订单提交已成功");
             logger.log("wxPay", "orderId:" + orderId + " ,buy card success")
           } else {
             logger.log("wxPay", "orderId:" + orderId + " ,buy card fail:" + response.result)
@@ -150,22 +149,22 @@
             logger.log("wxPay", "orderId:" + orderId + " ,pay succeed")
             self.orderCommit(self, orderId, function () {
               self.orderId = orderId
-              self.alertMsg("支付成功", function(){
+              self.$dispatch('alert', "支付成功", function(){
                 self.$route.router.go({name: 'buy_result', params: {orderId: self.orderId}});
               });
             })
           },
           fail: function (res) {
-            self.alertMsg("支付失败:"+ res.errMsg +", 请稍后再试");
+            self.$dispatch('alert', "支付失败:"+ res.errMsg +", 请稍后再试");
           }
         });
       },
       buyCard(){
         var self = this;
-        self.loading = true;
+        this.$dispatch('showLoading')
         if (this.money == 0 && (Number(this.otherMoney) > 1000)) {  //Number(this.otherMoney)<0.01 || TODO
-          self.alertMsg('输入金额范围不符')
-          self.loading = false
+          self.$dispatch('alert', '输入金额范围不符')
+          self.$dispatch('hideLoading')
           return
         }
         self.openid = Storage.wxOpenId
@@ -178,27 +177,22 @@
         logger.log("CardBuy", "openid:" + data.openId + " cardId:" + data.cardId + " discount:" + self.amountDiscount)
         this.$http.post(Const.API_URL + 'card/buy', data).then(function (response) {
           var res = response.data
-          self.loading = false;
+          self.$dispatch('hideLoading')
           if (res.result == 0) {
             self.wxPay(res.content);
           } else if (res.result == 1) {
-            self.alertMsg("订单已支付");
+            self.$dispatch('alert', "订单已支付");
           } else if (res.result == 255) {
-            self.alertMsg("支付已完成");
+            self.$dispatch('alert', "支付已完成");
           } else if (res.result == 250) {
-            self.alertMsg("请客户先关注公众号");
+            self.$dispatch('alert', "请客户先关注公众号");
           } else {
-            self.alertMsg("支付失败: "+ res.msg);
+            self.$dispatch('alert', "支付失败: "+ res.msg);
           }
         }, function () {
-          self.loading = false;
-          self.alertMsg("系统出现异常, 请稍后再试");
+          self.$dispatch('hideLoading')
+          self.$dispatch('alert', "系统出现异常, 请稍后再试");
         })
-      },
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function(){}
       },
       invoice_valid(){
         return (!this.invoice.enable ||

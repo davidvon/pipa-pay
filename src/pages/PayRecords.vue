@@ -25,7 +25,11 @@
   import logger from '../services/log'
 
   export default {
-    components: {},
+    attached () {
+      this.$root.navTitle = '消费记录';
+      this.$root.showHeader = true
+    },
+
     data () {
       return {
         no_data: false,

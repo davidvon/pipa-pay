@@ -1,9 +1,5 @@
 <template>
   <div class="order-result">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">购买
-    </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="goHome"></actionsheet>
     <div id="result-page" class="flex">
       <div class="content pay_success" v-show="buy_status==1">
         <p class="top_icop"><span class="ico_tip ico_success"></span></p>
@@ -28,7 +24,6 @@
         <p class="tips_p2">请致电4000-888-400联系客服人员进行处理</p>
       </div><!-- content end -->
     </div>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -38,11 +33,13 @@
   import { wxAddCard, wxAddCards } from '../services/wxcard'
 
   export default {
+    attached () {
+      this.$root.navTitle = '购买结果'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
-      "XButton": require('../components/x-button/index.vue'),
-      "Actionsheet": require('../components/actionsheet/index.vue'),
-      "Loading": require('../components/loading/index.vue')
+      "XButton": require('../components/x-button/index.vue')
     },
     data () {
       return {
@@ -51,19 +48,14 @@
         cards: {
           number: 0,
           amount: 0
-        },
-        menus: {
-          home: '首页'
-        },
-        loading: false,
-        showMenus: false
+        }
       }
     },
     ready: function () {
       var self = this
-      self.loading = true
+      self.$dispatch('showLoading')
       self.$http.post(Const.API_URL + 'card/dispatch', {order_id: self.order_id}).then(function (response) {
-        self.loading = false
+        self.$dispatch('hideLoading')
         var res = response.data
         if (res.result == 0) {
           self.cards.number = res.data.count
@@ -71,11 +63,11 @@
           self.buy_status = 0
         } else {
           self.buy_status = 255
-          self.loading = false
+          self.$dispatch('hideLoading')
         }
       }, function () {
         self.buy_status = 255
-        self.loading = false
+        self.$dispatch('hideLoading')
       })
     },
     route: {
@@ -88,13 +80,13 @@
       clickMemCard(){
         if (this.cards.number == 0) return
         var self = this
-        self.Loading = true
+        self.$dispatch('showLoading')
         wxAddCards(self, self.order_id, self.openid, Const.API_URL, function (cardList) {
-          self.Loading = false
+          self.$dispatch('hideLoading')
           console.log('wx.addCard:' + cardList)
           self.$route.router.replace({name: 'memcards'})
         }, function () {
-          self.Loading = false
+          self.$dispatch('hideLoading')
         })
       },
       goHome(){

@@ -1,11 +1,5 @@
 <template>
   <div class='wx-cards flex' id="walmart_15_1">
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">赠送卡</x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel
-                 @on-click-menu-home="goPage('home')"
-                 @on-click-menu-cards="goPage('memcards')"></actionsheet>
-
     <div class="content card-list">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡</div>
       <!--没有数据-->
@@ -47,8 +41,6 @@
         </flexbox-item>
       </flexbox>
     </tabbar>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -59,17 +51,18 @@
   import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
 
   export default {
+    attached () {
+      this.$root.navTitle = '电子卡赠送'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
-      "Actionsheet": require('../components/actionsheet/index.vue'),
-      "Loading": require('../components/loading/index.vue'),
       "Checker": require('../components/checker/index.vue'),
       "CheckerItem": require('../components/checker-item/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
       "Tabbar": require('../components/tabbar/tabbar.vue'),
       "Flexbox": require('../components/flexbox/index.vue'),
-      "FlexboxItem": require('../components/flexbox-item/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "FlexboxItem": require('../components/flexbox-item/index.vue')
     },
 
     data () {
@@ -77,24 +70,11 @@
         cardIndex: -1,
         cardIdSelect: '',
         cardCodeSelect: '',
-        menus: {
-          home: '首页',
-          cards: '我的卡包'
-        },
         cards: [],
-        showMenus: false,
-        loading: false,
-        no_data: false,
-        alert: {type: '', message: '', show: false, callback: null}
+        no_data: false
       }
     },
     methods: {
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function () {
-          }
-      },
       onCardSelect (index){
         this.cardIdSelect = this.cards[index].cardId
         this.cardCodeSelect = this.cards[index].cardCode
@@ -104,7 +84,7 @@
         if(!!this.cardCodeSelect){
           this.$route.router.go({name: 'gift_share', params: {cardId: this.cardIdSelect, cardCode: this.cardCodeSelect}});
         } else {
-          this.alertMsg('此卡还未与微信卡包绑定')
+          this.$dispatch('alert', '此卡还未与微信卡包绑定')
         }
       },
       goBuy(){
@@ -116,13 +96,12 @@
     },
     ready: function () {
       var self = this
-      self.loading = true
+      self.$dispatch('showLoading')
       self.openid = Storage.wxOpenId
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid, share: 1}).then(function (response) {
-        logger.log("CardGift", " data:" + JSON.stringify(response.data))
         var ret = response.data
         if (ret && ret.result == 0) {
-          self.loading = false
+          self.$dispatch('hideLoading')
           self.cards = ret.data
           if (self.cards.length == 0) self.no_data = true
           wxRegister(self, 'index', function () {
@@ -130,10 +109,10 @@
             onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
           })
         } else {
-          self.loading = false
+          self.$dispatch('hideLoading')
         }
       }, function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
       })
     }
   }

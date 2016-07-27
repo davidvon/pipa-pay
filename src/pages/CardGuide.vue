@@ -1,6 +1,5 @@
 <template>
   <div class='guide'>
-    <x-header :left-options='{showBack:true, backText:"返回"}'>购卡向导</x-header>
     <iframe src="http://wx.cdn.pipapay.com/static/html/card_guild.html" width="{{width}}" height="{{height}}"
             frameborder="no" marginwidth="0" marginheight="0" border="0" allowtransparency="yes"></iframe>
   </div>
@@ -10,9 +9,11 @@
   import Const from '../services/const'
 
   export default {
-    components: {
-      "XHeader": require('../components/x-header/index.vue')
+    attached () {
+      this.$root.navTitle = '向导';
+      this.$root.showHeader = true
     },
+
     data () {
       return {
         width: 0,

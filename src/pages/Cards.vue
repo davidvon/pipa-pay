@@ -1,9 +1,5 @@
 <template>
   <div class='memcards card flex'>
-    <x-header :left-options='{showBack:true, backText:"返回"}' :right-options="{showMore:true}"
-              @on-click-more="showMenus=true">我的卡包
-    </x-header>
-    <actionsheet :menus="menus" :show.sync="showMenus" show-cancel @on-click-menu-home="goHome"></actionsheet>
     <div class="content">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡
       </div>
@@ -30,8 +26,6 @@
         </p>
       </div>
     </div>
-    <loading :show.sync="loading" :text=""></loading>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
   </div>
 </template>
 
@@ -42,35 +36,26 @@
   import logger from '../services/log'
 
   export default {
+    attached () {
+      this.$root.navTitle = '电子卡列表'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
       "Actionsheet": require('../components/actionsheet/index.vue'),
-      "Loading": require('../components/loading/index.vue'),
-      "XButton": require('../components/x-button/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+      "XButton": require('../components/x-button/index.vue')
     },
     data () {
       return {
-        menus: {
-          home: '首页'
-        },
-        showMenus: false,
         no_data: false,
         cards: [],
         statusStr: ['未入微信卡包', '已入微信卡包,未激活', '已激活', '已过期', '转赠中', '已转赠'],
-        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-invalid', 'wxcard-disable', 'wxcard-invalid'],
-        loading: false,
-        alert: {type:'', message:'', show:false, callback:null}
+        statusClass: ['wxcard-disable', 'wxcard-enable', 'wxcard-enable', 'wxcard-invalid', 'wxcard-disable', 'wxcard-invalid']
       }
     },
     methods: {
       goHome(){
         this.$route.router.replace({name: 'home'})
-      },
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function(){}
       },
       goBuy (){
         this.$route.router.go({name: 'buy'})
@@ -104,8 +89,8 @@
         return msgs[Number(status)]
       },
       openCard (e){
-        this.loading = true;
         var self = this
+        self.$dispatch('showLoading')
         var attrs = e.currentTarget.attributes;
         var index = attrs['data-index'].value
         var cardGlobalId = attrs['data-globalid'].value;
@@ -114,33 +99,32 @@
         logger.log('cards', 'open card:' + cardGlobalId);
 
         if (status >= 3) {
-          self.loading = false;
-          self.alertMsg(self.cardStatus(status))
+          self.$dispatch('hideLoading')
+          self.$dispatch('alert', self.cardStatus(status))
           return
         }
 
         if (status == 0) {
-          self.loading = true;
           wxAddCard(self, cardGlobalId, self.openid, Const.API_URL, function (cardList) {
             self.$http.post(Const.API_URL + 'card/add/status/update', {
               openid: self.openid,
               cardGlobalId: cardGlobalId
             }).then(function (res) {
-              self.loading = false;
+              self.$dispatch('hideLoading')
               if (res.result == 0) {
                 self.cards[Number(index)].cardCode = res.data
                 self.cards[Number(index)].status = 1
-                self.alertMsg('该卡已加至微信卡包');
+                self.$dispatch('alert', '该卡已加至微信卡包');
               }
             }, function(){
-              self.loading = false;
-              self.alertMsg('已加至微信卡包, 服务器更新异常');
+              self.$dispatch('hideLoading')
+              self.$dispatch('alert', '已加至微信卡包, 服务器更新异常');
             })
           }, function(){
-            self.loading = false;
+            self.$dispatch('hideLoading')
           })
         } else {
-          self.loading = false;
+          self.$dispatch('hideLoading')
           var cardCode = (attrs['data-cardcode'] && attrs['data-cardcode'].value) || 0;
           wxOpenCard(self, cardId, cardCode);
         }
@@ -149,14 +133,14 @@
     ready(){
       var self = this
       self.openid = Storage.wxOpenId
-      self.loading = true
+      self.$dispatch('showLoading')
       self.$http.post(Const.API_URL + 'cards', {openid: self.openid}).then(function (response) {
-        self.loading = false
+        self.$dispatch('hideLoading')
         var res = response.data
         if (res && res.result == 0) self.cards = res.data
         if (self.cards.length == 0) self.no_data = true
       }, function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
       })
     }
   }

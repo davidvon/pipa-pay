@@ -23,7 +23,6 @@
         <p class="lk_tit2 none"><span class="lk_cbox text-status"></span></p>
       </div>
     </div>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -34,8 +33,12 @@
   import logger from '../services/log'
 
   export default {
+    attached () {
+      this.$root.navTitle = '电子卡接收'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "Loading": require('../components/loading/index.vue'),
       "XButton": require('../components/x-button/index.vue')
     },
     data () {
@@ -49,7 +52,6 @@
           giveStatus: 0,
           acquireUserOpenId: ''
         },
-        loading: false,
         statusStr: ''
       }
     },
@@ -61,14 +63,14 @@
         this.$route.router.go({name: 'buy'})
       },
       onReceiveCard(){
-        this.loading = true
         var self = this
+        self.$dispatch('showLoading')
         logger.log("CardGiftReceive", " openid:" + self.openid + " sign:" + self.sign)
         this.$http.post(Const.API_URL + 'card/receive', {
           openId: self.openid,
           sign: self.sign
         }).then(function (response) {
-          self.loading = false
+          self.$dispatch('hideLoading')
           var res = response.data
           logger.log("CardGiftReceive", "ack status:" + res.result)
 
@@ -90,25 +92,26 @@
             })
           }
         }, function () {
-          self.loading = false
+          self.$dispatch('hideLoading')
         })
       }
     },
     ready(){
       var self = this
-      this.loading = true
+      self.$dispatch('showLoading')
       this.$http.post(Const.API_URL + 'card/receive/check', {
         openId: self.openid,
         sign: self.sign
       }).then(function (response) {
-        self.loading = false
+        self.$dispatch('hideLoading')
         var res = response.data
         if (res.result == 255) {
           self.no_data = true
           return
         }
         self.info = res.data
-        logger.log('CardGiftReceive', 'myself:' + self.openid + ' giving status:' + self.info.giveStatus + ', card status:' + self.info.cardStatus)
+        logger.log('CardGiftReceive', 'myself:' + self.openid + ' giving status:' + self.info.giveStatus +
+                   ', card status:' + self.info.cardStatus)
         if (self.info.giveStatus == 0) {
           self.statusStr = '领取电子卡'
         } else if (self.info.acquireUserOpenId != self.openid) {

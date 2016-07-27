@@ -23,8 +23,6 @@
       <a class="detail" @click="goPayRecords">交易明细</a>
       <p>每分钟自动更新</p>
     </div>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -33,9 +31,12 @@
   import logger from '../services/log'
 
   export default {
+    attached () {
+      this.$root.navTitle = '支付码'
+      this.$root.showHeader = false
+    },
+
     components: {
-      "Loading": require('../components/loading/index.vue'),
-      "Alert": require('../components/alert/index.vue'),
       "Barcode": require('../components/barcode/index.vue'),
       "Qrcode": require('../components/qrcode/index.js')
       },
@@ -49,9 +50,7 @@
           cardName: '',
           balance: 0,
           qrcode: ''
-        },
-        loading: false,
-        alert: {type:'', message:'', show:false, callback:null}
+        }
       }
     },
     route: {
@@ -62,23 +61,18 @@
       }
     },
     methods: {
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function(){}
-      },
       reload(){
-        this.loading = true
         var self = this
+        self.$dispatch('showLoading')
         this.$http.post(Const.API_URL + 'card/pay/code', {
           cardId: this.cardId,
           cardCode: this.carCode
         }).then(function (response) {
-          self.loading = false
+          self.$dispatch('hideLoading')
           var ret = response.data
           if (ret && ret.result == 0) {
             if (ret.data.status > 2) {
-              self.alertMsg('该卡在转赠中或已过期', function(){
+              self.$dispatch('alert', '该卡在转赠中或已过期', function(){
                 self.$route.router.go({name: 'home'})
               })
             } else {

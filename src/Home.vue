@@ -27,7 +27,6 @@
         </div>
       </div>
     </div>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -35,6 +34,11 @@
   import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from './services/wxlib'
   import Const from './services/const'
   export default {
+    attached () {
+      this.$root.navTitle = '噼啪支付'
+      this.$root.showHeader = false
+    },
+
     components: {
       "Loading": require('./components/loading/index.vue')
     },
@@ -46,13 +50,13 @@
     },
     ready: function () {
       var self = this
-      this.loading = true
+      self.$dispatch('showLoading')
       wxRegister(this, 'index', function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
         onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
         onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       }, function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
       })
     },
     methods:{

@@ -1,7 +1,5 @@
 <template>
   <div class='wx-cards card gift'>
-    <x-header :left-options='{showBack:true, backText:"返回"}'>赠送卡
-    </x-header>
     <div class="container" data-js="">
       <div class="content">
         <p class="donation_top">请输入转赠留言</p>
@@ -21,8 +19,6 @@
         </div>
       </div>
     </div>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
-    <loading :show.sync="loading" :text=""></loading>
   </div>
 </template>
 
@@ -33,18 +29,19 @@
   import {wxRegister, onMenuShareTimeline, onMenuShareAppMessage} from '../services/wxlib'
 
   export default {
+    attached () {
+      this.$root.navTitle = '电子卡分享'
+      this.$root.showHeader = true
+    },
+
     components: {
-      "XHeader": require('../components/x-header/index.vue'),
       "XButton": require('../components/x-button/index.vue'),
-      "XTextarea": require('../components/x-textarea/index.vue'),
-      "Alert": require('../components/alert/index.vue'),
-      "Loading": require('../components/loading/index.vue'),
+      "XTextarea": require('../components/x-textarea/index.vue')
     },
     data () {
       return {
         cardId: '',
         cardCode: '',
-        maskShow: false,
         content: '小小卡片，浓浓情义',
         shareUrl: '',
         card: {
@@ -53,9 +50,7 @@
           cardName: '',
           timestamp: ''
         },
-        loading: false,
-        logo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue2.png',
-        alert: {type: '', message: '', show: false, callback: null}
+        logo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue2.png'
       }
     },
     route: {
@@ -66,18 +61,15 @@
       }
     },
     methods: {
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function () {
-          }
-      },
       updateCardStatus(){
         var self = this
-        this.$http.post(Const.API_URL + 'card/share',
-          {
-            openId: self.openid, sign: self.card.sign, cardId: self.cardId, cardCode: self.cardCode,
-            timestamp: self.card.timestamp, content: self.content
+        this.$http.post(Const.API_URL + 'card/share', {
+            openId: self.openid,
+            sign: self.card.sign,
+            cardId: self.cardId,
+            cardCode: self.cardCode,
+            timestamp: self.card.timestamp,
+            content: self.content
           }).then(function (response) {
           var res = response.data
           if (res.result != 0) return
@@ -104,22 +96,22 @@
     },
     ready(){
       var self = this
-      this.loading = true
+      self.$dispatch('showLoading')
       self.$http.post(Const.API_URL + 'card/share/check',
-                      {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
-        self.loading = false
+        {openId: self.openid, cardId: self.cardId, cardCode: self.cardCode}).then(function (response) {
+        self.$dispatch('hideLoading')
         var res = response.data
 
         logger.log('CardGiftShare', 'card sharing check result:' + JSON.stringify(res))
         if (res.result != 0) {
-          self.alertMsg(res.result == 254 ? '此卡还未与微信卡包绑定' : '此卡不存在', function () {
+          self.$dispatch('alert', res.result == 254 ? '此卡还未与微信卡包绑定' : '此卡不存在', function () {
             self.$route.router.go({name: 'home'})
           })
           return
         }
 
         if (res.status > 2) {
-          self.alertMsg('此卡已转赠', function () {
+          self.$dispatch('alert', '此卡已转赠', function () {
             self.$route.router.go({name: 'home'})
           })
           return
@@ -132,7 +124,7 @@
         })
 
       }, function () {
-        self.loading = false
+        self.$dispatch('hideLoading')
         logger.log('CardGiftShare', 'card sharing check exception')
       })
     }

@@ -1,6 +1,5 @@
 <template>
   <div class='notice'>
-    <x-header :left-options='{showBack:true, backText:"返回"}'>电子卡章程</x-header>
     <iframe src="http://wx.cdn.pipapay.com/static/html/card_notice.html" width="{{width}}" height="{{height}}"
             frameborder="no" marginwidth="0" marginheight="0" border="0" allowtransparency="yes"></iframe>
   </div>
@@ -8,8 +7,9 @@
 
 <script>
   export default {
-    components: {
-      "XHeader": require('../components/x-header/index.vue')
+    attached () {
+      this.$root.navTitle = '注意事项';
+      this.$root.showHeader = true
     },
     data () {
       return {

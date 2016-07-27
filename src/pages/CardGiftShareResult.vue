@@ -1,6 +1,5 @@
 <template>
   <div class='wx-cards card gift flex' style="text-align:center;">
-    <x-header :left-options='{showBack:true, backText:"返回"}'>赠送卡</x-header>
     <div class="lk_top">
       <div class="lk_toux"><span class="toux_img"><img :src="share.cardLogo" class="give-user"></span></div>
       <p class="lk_tp1">{{share.cardName}}</p>
@@ -31,33 +30,30 @@
   import logger from '../services/log'
 
   export default {
-    components: {
-      "XHeader": require('../components/x-header/index.vue'),
-      "Alert": require('../components/alert/index.vue')
+    attached () {
+      this.$root.navTitle = '电子卡赠送结果'
+      this.$root.showHeader = true
     },
+
     data () {
       return {
-        share: {},
-        alert: {type:'', message:'', show:false, callback:null}
+        share: {}
       }
     },
     methods: {
-      alertMsg(msg, callback){
-        this.alert.message = msg
-        this.alert.show = true
-        this.alert.callback = callback || function(){}
-      },
       onMyCard(){
         this.$route.router.go({name: 'memcards'})
       }
     },
     ready(){
       var self = this
-      this.$http.post(Const.API_URL + 'card/share/info',
-        {openId: this.openid, cardId: this.cardId, cardCode: this.cardCode}).then(function (response) {
+      this.$http.post(Const.API_URL + 'card/share/info', {
+        openId: this.openid,
+        cardId: this.cardId,
+        cardCode: this.cardCode }).then(function (response) {
         var res = response.data
         if (res.result != 0){
-          self.alertMsg('转赠的卡已不存在', function(){
+          self.$dispatch('alert', '转赠的卡已不存在', function(){
             self.$route.router.go({name: 'home'})
           })
         } else {

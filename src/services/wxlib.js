@@ -53,7 +53,6 @@ export function wxRegister(self, mode, callback, errback) {
 
   self.$http.post(Const.API_URL + 'weixin/sign/jsapi', {url: url}).then(function (response) {
     logger.log("wxRegister", "jsapi response ok")
-    self.loading = false
 
     if (response && response.data) {
       wx.config({
