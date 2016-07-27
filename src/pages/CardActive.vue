@@ -1,20 +1,18 @@
 <template>
-  <div class="order-result">
-    <div id="result-page" class="flex">
-      <div class="content trade_success" v-show="active_status==0">
-        <p class="top_icop"><span class="ico_tip ico_success"></span></p>
-        <p class="tips_p1">电子卡激活成功</p>
-        <p class="card_pbtn">
-          <x-button type="primary" @click="goMemCard">查看电子卡</x-button>
-        </p>
-      </div><!-- content end -->
+  <div id="result-page">
+    <div class="content trade_success" v-show="active_status==0">
+      <p class="top_icop"><span class="ico_tip ico_success"></span></p>
+      <p class="tips_p1">电子卡激活成功</p>
+      <p class="card_pbtn">
+        <x-button type="primary" @click="goMemCard">查看电子卡</x-button>
+      </p>
+    </div><!-- content end -->
 
-      <div class="content trade_fail" v-show="active_status==255">
-        <p class="top_icop"><span class="ico_tip ico_fail"></span></p>
-        <p class="tips_p1">电子卡激活失败</p>
-        <p class="tips_p2">请稍后重新尝试</p>
-      </div><!-- content end -->
-    </div>
+    <div class="content trade_fail" v-show="active_status==255">
+      <p class="top_icop"><span class="ico_tip ico_fail"></span></p>
+      <p class="tips_p1">电子卡激活失败</p>
+      <p class="tips_p2">请稍后重新尝试</p>
+    </div><!-- content end -->
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class='wx-cards flex' id="walmart_15_1">
+  <div class='wx-cards' id="walmart_15_1">
     <div class="content card-list">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡</div>
       <!--没有数据-->

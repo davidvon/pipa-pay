@@ -1,7 +1,9 @@
 <template>
-  <div :class="['app', 'app-' + $route.name]">
+  <div :class="['flex', 'app-' + $route.name]">
     <app-header :nav-title.sync="navTitle"></app-header>
-    <router-view></router-view>
+    <div class="page-content">
+      <router-view></router-view>
+    </div>
     <loading :show.sync="loading.show" :text=""></loading>
     <alert
       :show.sync="alert.show"
@@ -99,5 +101,14 @@ body {
 }
 .vux-header{
   border-bottom: 1px solid #eee;
+}
+.page-content{
+  overflow: auto;
+  text-align: center;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 </style>

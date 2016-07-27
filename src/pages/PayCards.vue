@@ -1,5 +1,5 @@
 <template>
-  <div class='paycards flex'>
+  <div class='paycards'>
     <div class="content">
       <div class="weui_cells_title" v-show="!no_data">你共有<span style="color:#e64340">{{cards.length}}</span>张礼品卡
       </div>

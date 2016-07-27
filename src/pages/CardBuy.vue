@@ -1,5 +1,5 @@
 <template>
-  <div class="order flex">
+  <div class="order">
     <div class="content">
       <div class="weui_cells_title">欢迎选购电子礼品卡,礼品卡面值(最低1元)</div>
       <checker class="center" :value.sync="money" default-item-class="money-item"
@@ -66,7 +66,6 @@
     attached () {
       this.$root.navTitle = '电子卡购买'
       this.$root.showHeader = true
-      document.title = '电子卡购买'
     },
 
     components: {

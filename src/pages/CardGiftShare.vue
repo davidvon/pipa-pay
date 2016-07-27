@@ -1,22 +1,20 @@
 <template>
-  <div class='wx-cards card gift'>
-    <div class="container" data-js="">
-      <div class="content">
-        <p class="donation_top">请输入转赠留言</p>
-        <div class="donation_text border b_top_btm">
-          <x-textarea :max="15" :placeholder="content" :value.sync="content"></x-textarea>
-        </div>
-        <p class="donation_btn">
-          <x-button type="primary" @click="onShareButton">转赠</x-button>
-        </p>
-        <p class="donation_p1">温馨提示</p>
-        <p class="donation_p2"><span>1.</span> <span>转赠后，礼品卡即处于“转赠中”状态。待好友领取后，即与转赠者解绑，并与被转赠者建立绑定关系。</span></p>
-        <p class="donation_p2"><span>2.</span> <span>若超过24小时未领取。则过期不可再领取。同时礼品卡从“转赠中”状态恢复正常。</span></p>
-      </div><!-- content end -->
-      <div class="s_wraper share_id" v-show="maskShow" @click="maskShow=false">
-        <div class="pop_otop">
-          <p class="box_share"><span class="ico_share"></span></p>
-        </div>
+  <div class="container">
+    <div class="content">
+      <p class="donation_top">请输入转赠留言</p>
+      <div class="donation_text border b_top_btm">
+        <x-textarea :max="15" :placeholder="content" :value.sync="content"></x-textarea>
+      </div>
+      <p class="donation_btn">
+        <x-button type="primary" @click="onShareButton">转赠</x-button>
+      </p>
+      <p class="donation_p1">温馨提示</p>
+      <p class="donation_p2"><span>1.</span> <span>转赠后，礼品卡即处于“转赠中”状态。待好友领取后，即与转赠者解绑，并与被转赠者建立绑定关系。</span></p>
+      <p class="donation_p2"><span>2.</span> <span>若超过24小时未领取。则过期不可再领取。同时礼品卡从“转赠中”状态恢复正常。</span></p>
+    </div><!-- content end -->
+    <div class="s_wraper share_id" v-show="maskShow" @click="maskShow=false">
+      <div class="pop_otop">
+        <p class="box_share"><span class="ico_share"></span></p>
       </div>
     </div>
   </div>

@@ -21,7 +21,7 @@
     route:{
       data (transition){
         this.width = window.innerWidth
-        this.height = window.innerHeight-52
+        this.height = window.innerHeight-53
       }
     }
   }

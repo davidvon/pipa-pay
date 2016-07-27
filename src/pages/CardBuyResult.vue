@@ -1,30 +1,28 @@
 <template>
-  <div class="order-result">
-    <div id="result-page" class="flex">
-      <div class="content pay_success" v-show="buy_status==1">
-        <p class="top_icop"><span class="ico_tip ico_success"></span></p>
-        <p class="tips_p1">支付成功</p>
-        <p class="tips_p2">正在为你分配礼品卡，请稍后…</p>
-      </div><!-- content end -->
+  <div class="buy-result">
+    <div class="pay_success" v-show="buy_status==1">
+      <p class="top_icop"><span class="ico_tip ico_success"></span></p>
+      <p class="tips_p1">支付成功</p>
+      <p class="tips_p2">正在为你分配礼品卡，请稍后…</p>
+    </div><!-- content end -->
 
-      <div class="content trade_success" v-show="buy_status==0">
-        <p class="top_icop"><span class="ico_tip ico_success"></span></p>
-        <p class="tips_p1">购卡成功</p>
-        <p class="tips_p2">你获得 <span class="col0 number">{{cards.number}}张</span> 面值 <span class="col0 amount">{{cards.amount}}元</span> 的礼品卡
-        </p>
-        <p class="card_pbtn">
-          <x-button type="primary" @click="clickMemCard">转赠</x-button>
-          <x-button @click="goPayCards">去支付</x-button>
-        </p>
-      </div><!-- content end -->
+    <div class="trade_success" v-show="buy_status==0">
+      <p class="top_icop"><span class="ico_tip ico_success"></span></p>
+      <p class="tips_p1">购卡成功</p>
+      <p class="tips_p2">你获得 <span class="col0 number">{{cards.number}}张</span> 面值 <span class="col0 amount">{{cards.amount}}元</span> 的礼品卡
+      </p>
+      <p class="card_pbtn">
+        <x-button type="primary" @click="clickMemCard">转赠</x-button>
+        <x-button @click="goPayCards">去支付</x-button>
+      </p>
+    </div><!-- content end -->
 
-      <div class="content trade_fail" v-show="buy_status==255">
-        <p class="top_icop"><span class="ico_tip ico_fail"></span></p>
-        <p class="tips_p1">购卡失败, 订单号:{{order_id}}</p>
-        <p class="tips_p2">请致电4000-888-400联系客服人员进行处理</p>
-      </div><!-- content end -->
+    <div class="trade_fail" v-show="buy_status==255">
+      <p class="top_icop"><span class="ico_tip ico_fail"></span></p>
+      <p class="tips_p1">购卡失败, 订单号:{{order_id}}</p>
+      <p class="tips_p2">请致电4000-888-400联系客服人员进行处理</p>
+    </div><!-- content end -->
     </div>
-  </div>
 </template>
 
 <script>

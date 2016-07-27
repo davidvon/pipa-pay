@@ -1,5 +1,5 @@
 <template>
-  <div class='wx-cards card gift flex' style="text-align:center;">
+  <div class='wx-cards card gift' style="text-align:center;">
     <div class="lk_top">
       <div class="lk_toux"><span class="toux_img"><img :src="share.cardLogo" class="give-user"></span></div>
       <p class="lk_tp1">{{share.cardName}}</p>
