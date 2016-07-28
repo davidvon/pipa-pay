@@ -26,8 +26,6 @@ const router = new Router({
 })
 
 router.beforeEach(({to, next}) => {
-  logger.log('beforeEach', 'wxOpenId:' + Storage.wxOpenId + ' to.path:' + to.path)
-
   if (to.path === '/clear') {
     Storage.clear()
     clearCookie('PIPA_OPENID', '')
@@ -40,6 +38,7 @@ router.beforeEach(({to, next}) => {
     return
   }
 
+  logger.log('beforeEach', 'wxOpenId:' + Storage.wxOpenId + ' to.path:' + to.path)
   if (!to.query.code && !to.query.state) {
     const homeUrl = encodeURIComponent(Const.WX_HOST)
     const currentPath = to.path.split('?')[0]

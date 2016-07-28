@@ -35,7 +35,7 @@
   import Const from './services/const'
   export default {
     attached () {
-      this.$root.navTitle = '噼啪支付'
+      this.$root.navTitle = '首页'
       this.$root.showHeader = false
     },
 

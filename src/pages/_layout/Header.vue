@@ -36,7 +36,6 @@ export default {
       // 所以这里修改了title后，立即创建一个请求，加载一个空的iframe
       if (this.$root.isWeixin && this.$root.isApple) {
         let iframe = document.createElement('iframe')
-        iframe.setAttribute('src', '/favicon.ico')
         iframe.setAttribute('style', 'display: none; width:0; height:0;')
         let handler = () => {
           setTimeout(() => {

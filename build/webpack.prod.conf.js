@@ -47,8 +47,7 @@ config.plugins = (config.plugins || []).concat([
   }),
   new CommonsChunkPlugin(
     { name: 'vendor',
-      filename:'[name].[hash:12].js',
-      minChunks: 2
+      filename:'[name].[hash:12].js'
     }
   ),
   new webpack.optimize.OccurenceOrderPlugin(),

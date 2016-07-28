@@ -48,6 +48,7 @@
           cardName: '',
           timestamp: ''
         },
+        maskShow: false,
         logo: 'http://wx.cdn.pipapay.com/static/images/pipalogo-blue2.png'
       }
     },
