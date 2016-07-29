@@ -40,9 +40,7 @@ config.plugins = (config.plugins || []).concat([
     }
   }),
   new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false
-    },
+    compress: { warnings: false },
     sourceMap: false
   }),
   new CommonsChunkPlugin(
@@ -50,6 +48,7 @@ config.plugins = (config.plugins || []).concat([
       filename:'[name].[hash:12].js'
     }
   ),
+  new webpack.optimize.MinChunkSizePlugin({minChunkSize: 30000}),
   new webpack.optimize.OccurenceOrderPlugin(),
   // extract css into its own file
   new ExtractTextPlugin('[name].[contenthash:12].css'),

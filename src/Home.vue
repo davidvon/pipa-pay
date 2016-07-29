@@ -50,13 +50,13 @@
     },
     ready: function () {
       var self = this
-      self.$dispatch('showLoading')
+//      self.$dispatch('showLoading')
       wxRegister(this, 'index', function () {
-        self.$dispatch('hideLoading')
+//        self.$dispatch('hideLoading')
         onMenuShareTimeline(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
         onMenuShareAppMessage(location.origin + location.pathname, Const.shareTitle, Const.shareDesc, Const.shareLogo)
       }, function () {
-        self.$dispatch('hideLoading')
+//        self.$dispatch('hideLoading')
       })
     },
     methods:{

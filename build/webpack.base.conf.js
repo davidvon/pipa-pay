@@ -7,7 +7,9 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: {
     app: './src/main.js',
-    vendor: [ 'vue', 'vue-router', 'vue-resource']
+    vendor: [ 'vue', 'vue-router', 'vue-resource',
+          './src/components/qrcode/index.js',
+          './src/components/barcode/JsBarcode.code128.min.js']
   },
   output: {
     path: path.resolve(__dirname, '../site/static'),
