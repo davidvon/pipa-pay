@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="card_ibtm">
-          <div class="card_ib1">余额: <span class="col4">￥<em>{{item.amount}}</em></span></div>
+          <div class="card_ib1">余额: <span class="col4">￥<em>{{item.balance}}</em></span></div>
           <div class="card_ib2"><span class="{{statusClass[item.status]}}">{{statusStr[item.status]}}</span></div>
         </div>
       </div>

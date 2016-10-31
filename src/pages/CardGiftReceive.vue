@@ -1,27 +1,25 @@
 <template>
   <div>
-    <div class="content">
-      <div class="not_card" v-show="no_data">
-        <p class="ncd_p1"><span class="ico_nocard"></span></p>
-        <p class="ncd_p2">赠送的电子卡不存在~~</p>
-        <p class="ncd_p3">
-          <x-button type="primary" @click="goBuy">购买电子卡</x-button>
-          <x-button @click="goHome">首页</x-button>
-        </p>
+    <div class="not_card" v-show="no_data">
+      <p class="ncd_p1"><span class="ico_nocard"></span></p>
+      <p class="ncd_p2">赠送的电子卡不存在~~</p>
+      <p class="ncd_p3">
+        <x-button type="primary" @click="goBuy">购买电子卡</x-button>
+        <x-button @click="goHome">首页</x-button>
+      </p>
+    </div>
+    <div v-show="!no_data">
+      <div class="lk_top">
+        <div class="lk_toux"><span class="toux_img"><img :src="info.giveUserHeadImg" class="give-user"></span></div>
+        <p class="lk_tp1"><em class="give-user-name">{{info.giveUsername}}</em>赠送的礼品卡</p>
+        <p class="lk_tp2 give-content">{{info.shareContent}}</p>
       </div>
-      <div v-show="!no_data">
-        <div class="lk_top">
-          <div class="lk_toux"><span class="toux_img"><img :src="info.giveUserHeadImg" class="give-user"></span></div>
-          <p class="lk_tp1"><em class="give-user-name">{{info.giveUsername}}</em>赠送的礼品卡</p>
-          <p class="lk_tp2 give-content">{{info.shareContent}}</p>
-        </div>
-        <p class="lk_btn_p can-receive">
-          <x-button :type="info.giveStatus==0?'primary':''" :disabled="info.giveStatus!=0" @click="onReceiveCard">
-            {{statusStr}}
-          </x-button>
-        </p>
-        <p class="lk_tit2 none"><span class="lk_cbox text-status"></span></p>
-      </div>
+      <p class="lk_btn_p can-receive">
+        <x-button :type="info.giveStatus==0?'primary':''" :disabled="info.giveStatus!=0" @click="onReceiveCard">
+          {{statusStr}}
+        </x-button>
+      </p>
+      <p class="lk_tit2 none"><span class="lk_cbox text-status"></span></p>
     </div>
   </div>
 </template>
@@ -35,7 +33,7 @@
   export default {
     attached () {
       this.$root.navTitle = '电子卡接收'
-      this.$root.showHeader = true
+      this.$root.showHeader = false
     },
 
     components: {

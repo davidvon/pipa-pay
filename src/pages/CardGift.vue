@@ -20,7 +20,7 @@
                 <div class="card_it2">{{item.title}}</div>
               </div>
               <div class="card_ibtm">
-                <div class="card_ib1">余额: <span class="col4">￥<em>{{item.amount}}</em></span></div>
+                <div class="card_ib1">余额: <span class="col4">￥<em>{{item.balance}}</em></span></div>
                 <div class="card_ib2">有效期至{{item.expireDate}}</div>
               </div>
             </div>

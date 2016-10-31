@@ -48,9 +48,9 @@
     ready(){
       var self = this
       self.$dispatch('showLoading')
-      var params = this.$route.query
-      this.$http.post(Const.API_URL + 'card/active', params).then(function (response) {
-        this.$dispatch('hideLoading')
+      var params = self.$route.query
+      self.$http.post(Const.API_URL + 'card/active', params).then(function (response) {
+        self.$dispatch('hideLoading')
         logger.log("CardActive", "card active:" + response.data)
         var ret = response.data
         if (ret && ret.result == 0) {

@@ -5,7 +5,7 @@
       <div class="pay-card">
         <div>
           <div class="title">{{card.merchantName}}</div>
-          <div class="sub-title">余额：￥{{card.amount}}</div>
+          <div class="sub-title">余额：￥{{card.balance}}</div>
         </div>
         <div class="line-part">
           <div class="line left"></div>

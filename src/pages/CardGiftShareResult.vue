@@ -20,7 +20,6 @@
       </div>
     </div>
     <p class="lk_tit"><span class="lk_cbox btn-card" @click="onMyCard">查看我的卡包</span></p>
-    <alert :show.sync="alert.show" title="" button-text="知道了" @on-hide="alert.callback">{{alert.message}}</alert>
   </div>
 </template>
 

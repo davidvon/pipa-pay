@@ -45,7 +45,7 @@
         buy_status: 1, //1:等待;0:成功;255:失败
         cards: {
           number: 0,
-          amount: 0
+          balance: 0
         }
       }
     },
@@ -57,7 +57,7 @@
         var res = response.data
         if (res.result == 0) {
           self.cards.number = res.data.count
-          self.cards.amount = res.data.amount
+          self.cards.balance = res.data.balance
           self.buy_status = 0
         } else {
           self.buy_status = 255

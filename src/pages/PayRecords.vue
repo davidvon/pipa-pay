@@ -9,7 +9,7 @@
             <p class="sr_itp1">{{item.merchantName}}</p>
             <p class="sr_itp2">{{item.date}}</p>
           </div>
-          <div class="sr_it2"><span>{item.amount}</span></div>
+          <div class="sr_it2"><span>{item.balance}</span></div>
         </div>
         <div class="no_data" v-show="no_data_display">
           <p class="nodata_p"><span class="ico_nodata"></span></p>
